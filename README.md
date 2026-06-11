@@ -1,4 +1,4 @@
-# ARCA-GIS v3.0 — Agro-Rescue Climate Africa
+# ARCA-GIS v4.0 — Agro-Rescue Climate Africa
 
 Plateforme géomatique africaine complète pour l'agriculture, les urgences et le climat.
 
@@ -6,50 +6,39 @@ Plateforme géomatique africaine complète pour l'agriculture, les urgences et l
 
 ```
 ARCA-GIS/
-├── backend/          # Django + GeoDjango (16 apps, 80+ endpoints)
-├── ai_module/        # FastAPI v3 (NDVI, rendement, jumeau numérique, vocal)
-├── mobile/           # Flutter v3 (Android/iOS/Web PWA)
+├── backend/          # Django + GeoDjango (23 apps, 100+ endpoints)
+├── ai_module/        # FastAPI v4 (diagnostic photo, irrigation, ML persisté)
+├── mobile/           # Flutter v4 (forum, formation, gamification, diagnostic)
+├── iot/firmware/     # ESP32 capteurs sol
 ├── deploy/           # Nginx, Docker prod, Kubernetes
 └── docker-compose.yml
 ```
 
-## Fonctionnalités v3.0
+## Fonctionnalités v4.0
 
-### Communication & Accessibilité
-- **SMS/USSD SOS** — Africa's Talking / Twilio (`*384*ARCA#`)
-- **Notifications vocales** — FR, EN, SW, Bambara
-- **Radio communautaire** — diffusion d'alertes
-- **Assistant vocal IA** — conseils multilingues
-- **Paiements mobile** — Orange Money, MTN MoMo, Wave
+### Nouveautés principales
+- **Abonnements freemium** — plans gratuit, agriculteur, coopérative
+- **Forum communautaire** — échanges par région
+- **Formation vidéo** — cours agricoles avec progression
+- **Gamification** — badges, points, classement
+- **Assurance paramétrique** — polices sécheresse/inondation
+- **API partenaires** — clés `X-ARCA-API-Key` pour ONG/gouvernement
+- **Mentorat** — sessions agriculteur expérimenté / débutant
+- **Marketplace B2B** — annonces de vente de récoltes
+- **Calendrier cultural** — semis/récoltes par région
+- **Diagnostic maladies** — analyse photo IA
+- **Irrigation intelligente** — conseils basés humidité sol
+- **IoT étendu** — bouées fluviales, pièges à insectes
+- **Appels vocaux SOS** — Twilio Voice
+- **GDPR** — export/suppression données personnelles
+- **Dashboard ONG** — stats régionales + export CSV
+- **Tuiles offline** — cache cartographique Flutter
+- **Mode feature phone** — interface ultra-légère
+- **CI/CD** — GitHub Actions (backend, IA, Flutter)
+- **Backup S3** — sauvegarde planifiée
 
-### Agriculture avancée
-- **NDVI Sentinel-2** (enhanced)
-- **Détection auto parcelles** par satellite
-- **Prédiction rendement** (tonnes/ha)
-- **Jumeau numérique** — simulation sécheresse/inondation/optimal
-- **Carte des sols** FAO/ISRIC
-- **Prix marchés** en temps réel
-- **Traçabilité blockchain** des récoltes
-
-### Collaboration
-- **Coopératives** — gestion collective
-- **7 rôles** — agriculteur, secours, admin, agent, vétérinaire, ONG, gouvernement
-- **Workflow d'approbation** des alertes
-- **Drones** — missions cartographie/pulvérisation/NDVI
-
-### Sécurité & Infrastructure
-- **2FA TOTP** (Google Authenticator)
-- **Signature numérique** rapports PDF
-- **OpenAPI/Swagger** — `/api/docs/`
-- **Rate limiting** + audit logs
-- **Sentry** monitoring
-- **Kubernetes** manifests
-- **Multi-région** (west-africa)
-
-### Mobile
-- Mode hors-ligne, AR, chat, GPS secours, géofencing
-- Coopératives, marchés, traçabilité, assistant vocal
-- Multilingue FR/EN/SW, mode ultra-léger
+### Héritage v1-v3
+SMS/USSD, 2FA, NDVI Sentinel, jumeau numérique, blockchain, drones, paiements mobile, chat, GPS secours, géofencing, coopératives, OpenAPI/Swagger.
 
 ## Démarrage
 
@@ -72,12 +61,16 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 |-----|-------------|
 | `http://localhost:8003/api/docs/` | Swagger OpenAPI |
 | `http://localhost:8003/dashboard/` | Dashboard admin |
-| `POST /api/communications/ussd/` | Webhook USSD |
-| `POST /api/communications/sms/send/` | Envoi SMS |
-| `POST /api/payments/initiate/` | Paiement mobile |
-| `GET /api/traceability/verify/{cert}/` | Vérifier certificat |
-| `POST /api/ai/digital-twin/` | Jumeau numérique |
-| `POST /api/ai/voice/` | Assistant vocal |
+| `GET /api/analytics/ngo/stats/` | Stats ONG/gouvernement |
+| `GET /api/analytics/ngo/export/?format=csv` | Export parcelles CSV |
+| `POST /api/communications/voice/call/` | Appel vocal SOS |
+| `GET /api/marketplace/listings/` | Annonces B2B |
+| `GET /api/climate/calendar/` | Calendrier cultural |
+| `POST /api/climate/irrigation/advice/` | Conseil irrigation |
+| `GET /api/gamification/leaderboard/` | Classement |
+| `GET /api/core/gdpr/export/` | Export données RGPD |
+| `POST /api/iot/buoys/ingest/` | Données bouée fluviale |
+| `POST /api/iot/pest-traps/ingest/` | Données piège insectes |
 
 ## Comptes démo
 
@@ -86,6 +79,13 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | admin | admin1234 | Admin |
 | kouassi | farmer1234 | Agriculteur |
 | secours | rescue1234 | Secours |
+
+## Tests & CI
+
+```bash
+cd backend && pytest tests/ -v
+cd mobile/arca_gis_app && flutter analyze
+```
 
 ## Production
 
