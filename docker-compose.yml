@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: arca_gis_db
+    environment:
+      POSTGRES_DB: arca_gis
+      POSTGRES_USER: arca_user
+      POSTGRES_PASSWORD: arca_secret_2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arca_user -d arca_gis"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: arca_gis_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: arca_gis_backend
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             daphne -b 0.0.0.0 -p 8000 arca_gis.asgi:application"
+    volumes:
+      - ./backend:/app
+      - ./ai_module:/ai_module
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - DATABASE_URL=postgis://arca_user:arca_secret_2024@db:5432/arca_gis
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=arca-gis-dev-secret-key-change-in-production
+      - ALLOWED_HOSTS=*
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://10.0.2.2:8000
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  ai_module:
+    build:
+      context: ./ai_module
+      dockerfile: Dockerfile
+    container_name: arca_gis_ai
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./ai_module:/app
+    environment:
+      - BACKEND_URL=http://backend:8000
+
+volumes:
+  postgres_data:

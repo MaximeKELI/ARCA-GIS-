@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+*.sqlite3
+
+# Django
+backend/staticfiles/
+backend/media/
+
+# Flutter
+mobile/arca_gis_app/.dart_tool/
+mobile/arca_gis_app/.flutter-plugins
+mobile/arca_gis_app/.flutter-plugins-dependencies
+mobile/arca_gis_app/.packages
+mobile/arca_gis_app/build/
+mobile/arca_gis_app/.idea/
+mobile/arca_gis_app/*.iml
+mobile/arca_gis_app/.metadata
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Docker
+postgres_data/
