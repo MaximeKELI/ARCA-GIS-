@@ -40,7 +40,7 @@ services:
       - ./backend:/app
       - ./ai_module:/ai_module
     ports:
-      - "8000:8000"
+      - "8002:8000"
     environment:
       - DEBUG=True
       - DATABASE_URL=postgis://arca_user:arca_secret_2024@db:5432/arca_gis
