@@ -5,13 +5,15 @@ from datetime import datetime
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-from climate_analyzer import analyze_climate, generate_weather_for_location
+from climate_analyzer import WeatherData, analyze_climate, generate_weather_for_location
 from crop_advisor import assess_crop_health, generate_recommendations
+from forecast_engine import generate_forecast
+from ndvi_analyzer import compute_ndvi
 
 app = FastAPI(
     title="ARCA-GIS AI Module",
-    description="Analyse climatique et recommandations agricoles pour l'Afrique",
-    version="1.0.0",
+    description="Analyse climatique, NDVI et recommandations agricoles pour l'Afrique",
+    version="2.0.0",
 )
 
 
@@ -29,15 +31,27 @@ class BatchAnalyzeRequest(BaseModel):
     locations: list[AnalyzeRequest]
 
 
+class ForecastRequest(BaseModel):
+    lat: float
+    lng: float
+    crop_type: str = "maize"
+    days: int = Field(default=14, ge=1, le=30)
+
+
+class NDVIRequest(BaseModel):
+    lat: float
+    lng: float
+    crop_type: str = "maize"
+
+
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "arca-gis-ai", "version": "1.0.0"}
+    return {"status": "ok", "service": "arca-gis-ai", "version": "2.0.0"}
 
 
 @app.post("/analyze")
 def analyze(request: AnalyzeRequest):
     if request.temperature is not None:
-        from climate_analyzer import WeatherData
         weather = WeatherData(
             temperature=request.temperature,
             rainfall_mm=request.rainfall_mm or 0,
@@ -50,6 +64,7 @@ def analyze(request: AnalyzeRequest):
     risks = analyze_climate(weather, request.lat, request.lng)
     crop_health, health_score = assess_crop_health(request.crop_type, weather, risks)
     recommendations = generate_recommendations(request.crop_type, weather, risks)
+    ndvi = compute_ndvi(request.lat, request.lng, request.crop_type)
 
     confidence = 0.85 if request.temperature else 0.75
 
@@ -64,16 +79,13 @@ def analyze(request: AnalyzeRequest):
             "soil_moisture": weather.soil_moisture,
         },
         "risks": [
-            {
-                "type": r.risk_type,
-                "severity": r.severity,
-                "probability": r.probability,
-                "description": r.description,
-            }
+            {"type": r.risk_type, "severity": r.severity,
+             "probability": r.probability, "description": r.description}
             for r in risks
         ],
         "crop_health": crop_health,
         "health_score": health_score,
+        "ndvi": ndvi,
         "recommendations": recommendations,
         "confidence": confidence,
         "source": "ai_module",
@@ -84,6 +96,16 @@ def analyze(request: AnalyzeRequest):
 @app.post("/analyze/batch")
 def analyze_batch(request: BatchAnalyzeRequest):
     return {"results": [analyze(loc) for loc in request.locations]}
+
+
+@app.post("/forecast")
+def forecast(request: ForecastRequest):
+    return generate_forecast(request.lat, request.lng, request.crop_type, request.days)
+
+
+@app.post("/ndvi")
+def ndvi_analysis(request: NDVIRequest):
+    return compute_ndvi(request.lat, request.lng, request.crop_type)
 
 
 @app.get("/crops")
