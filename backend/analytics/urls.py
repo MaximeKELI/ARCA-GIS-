@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .ngo_views import NGOExportView, NGOStatsView
 from .views import (
     AnalyticsSnapshotListView,
     CropHistoryListView,

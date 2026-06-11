@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .backup_views import BackupTriggerView
 from .gdpr_views import ConsentView, DataDeleteView, DataExportView
 from .views import (
     AuditLogListView,
