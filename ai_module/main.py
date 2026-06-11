@@ -12,6 +12,9 @@ from forecast_engine import generate_forecast
 from ndvi_analyzer import compute_ndvi
 from parcel_detector import detect_parcels
 from sentinel_ndvi import compute_enhanced_ndvi
+from disease_detector import detect_from_image, detect_from_pest_count
+from irrigation_advisor import advise_irrigation
+from ml_model import predict_health, retrain
 from voice_assistant import get_voice_response
 from yield_predictor import predict_yield
 
@@ -51,7 +54,7 @@ class NDVIRequest(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "arca-gis-ai", "version": "3.0.0"}
+    return {"status": "ok", "service": "arca-gis-ai", "version": "4.0.0"}
 
 
 @app.post("/analyze")
@@ -175,3 +178,56 @@ def list_crops():
         crop: {"name": p["name"], "optimal_temp": p["optimal_temp"]}
         for crop, p in CROP_PROFILES.items()
     }
+
+
+class DiseaseRequest(BaseModel):
+    image_b64: str | None = None
+    crop_type: str = "maize"
+
+
+class PestDetectRequest(BaseModel):
+    pest_count: int = 0
+    crop_type: str = "maize"
+
+
+class IrrigationRequest(BaseModel):
+    lat: float
+    lng: float
+    crop_type: str = "maize"
+    soil_moisture: float = 50.0
+
+
+class HealthPredictRequest(BaseModel):
+    temperature: float = 28.0
+    rainfall_mm: float = 5.0
+    humidity: float = 60.0
+    soil_moisture: float = 50.0
+    ndvi: float = 0.5
+
+
+@app.post("/disease-detect")
+def disease_detect(request: DiseaseRequest):
+    return detect_from_image(request.image_b64, request.crop_type)
+
+
+@app.post("/disease-detect/pest")
+def pest_detect(request: PestDetectRequest):
+    return detect_from_pest_count(request.pest_count, request.crop_type)
+
+
+@app.post("/irrigation")
+def irrigation_advice(request: IrrigationRequest):
+    return advise_irrigation(request.lat, request.lng, request.crop_type, request.soil_moisture)
+
+
+@app.post("/predict-health")
+def health_predict(request: HealthPredictRequest):
+    return predict_health(
+        request.temperature, request.rainfall_mm, request.humidity,
+        request.soil_moisture, request.ndvi,
+    )
+
+
+@app.post("/retrain")
+def model_retrain(samples: list[dict]):
+    return retrain(samples)
