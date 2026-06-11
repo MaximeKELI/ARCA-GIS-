@@ -13,4 +13,6 @@ urlpatterns = [
     path("crop-history/", CropHistoryListView.as_view()),
     path("crop-history/record/", RecordCropHistoryView.as_view()),
     path("snapshots/", AnalyticsSnapshotListView.as_view()),
+    path("ngo/stats/", NGOStatsView.as_view()),
+    path("ngo/export/", NGOExportView.as_view()),
 ]

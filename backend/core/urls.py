@@ -21,4 +21,5 @@ urlpatterns = [
     path("gdpr/consent/", ConsentView.as_view()),
     path("gdpr/export/", DataExportView.as_view()),
     path("gdpr/delete/", DataDeleteView.as_view()),
+    path("backup/", BackupTriggerView.as_view()),
 ]
