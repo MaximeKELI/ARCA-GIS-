@@ -7,13 +7,18 @@ from pydantic import BaseModel, Field
 
 from climate_analyzer import WeatherData, analyze_climate, generate_weather_for_location
 from crop_advisor import assess_crop_health, generate_recommendations
+from digital_twin import simulate_scenarios
 from forecast_engine import generate_forecast
 from ndvi_analyzer import compute_ndvi
+from parcel_detector import detect_parcels
+from sentinel_ndvi import compute_enhanced_ndvi
+from voice_assistant import get_voice_response
+from yield_predictor import predict_yield
 
 app = FastAPI(
     title="ARCA-GIS AI Module",
     description="Analyse climatique, NDVI et recommandations agricoles pour l'Afrique",
-    version="2.0.0",
+    version="3.0.0",
 )
 
 
@@ -46,7 +51,7 @@ class NDVIRequest(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "arca-gis-ai", "version": "2.0.0"}
+    return {"status": "ok", "service": "arca-gis-ai", "version": "3.0.0"}
 
 
 @app.post("/analyze")
@@ -106,6 +111,61 @@ def forecast(request: ForecastRequest):
 @app.post("/ndvi")
 def ndvi_analysis(request: NDVIRequest):
     return compute_ndvi(request.lat, request.lng, request.crop_type)
+
+
+class YieldRequest(BaseModel):
+    crop_type: str = "maize"
+    area_hectares: float = 1.0
+    ndvi_score: float = 0.5
+    soil_moisture: float = 50.0
+    temperature: float = 28.0
+
+
+class DetectRequest(BaseModel):
+    lat: float
+    lng: float
+    radius_km: float = 2.0
+
+
+class TwinRequest(BaseModel):
+    lat: float
+    lng: float
+    crop_type: str = "maize"
+    area_hectares: float = 1.0
+
+
+class VoiceRequest(BaseModel):
+    query: str
+    language: str = "fr"
+    context: dict | None = None
+
+
+@app.post("/yield")
+def yield_prediction(request: YieldRequest):
+    return predict_yield(
+        request.crop_type, request.area_hectares,
+        request.ndvi_score, request.soil_moisture, request.temperature,
+    )
+
+
+@app.post("/detect-parcels")
+def auto_detect_parcels(request: DetectRequest):
+    return {"parcels": detect_parcels(request.lat, request.lng, request.radius_km)}
+
+
+@app.post("/sentinel-ndvi")
+def sentinel_ndvi(request: NDVIRequest):
+    return compute_enhanced_ndvi(request.lat, request.lng, request.crop_type)
+
+
+@app.post("/digital-twin")
+def digital_twin(request: TwinRequest):
+    return simulate_scenarios(request.lat, request.lng, request.crop_type, request.area_hectares)
+
+
+@app.post("/voice")
+def voice_assistant(request: VoiceRequest):
+    return get_voice_response(request.query, request.language, request.context)
 
 
 @app.get("/crops")
