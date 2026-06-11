@@ -52,6 +52,21 @@ ROOT_URLCONF = "arca_gis.urls"
 WSGI_APPLICATION = "arca_gis.wsgi.application"
 ASGI_APPLICATION = "arca_gis.asgi.application"
 
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
 DATABASES = {
     "default": env.db(
         "DATABASE_URL",
