@@ -17,7 +17,8 @@ class AlertListView(generics.ListAPIView):
         user = self.request.user
         qs = Alert.objects.filter(is_broadcast=True)
         if not user.is_admin_user:
-            qs = qs.filter(target_user__isnull=True) | qs.filter(target_user=user)
+            from django.db.models import Q
+            qs = qs.filter(Q(target_user__isnull=True) | Q(target_user=user))
         return qs
 
 
