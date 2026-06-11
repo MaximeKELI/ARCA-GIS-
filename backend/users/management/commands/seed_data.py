@@ -227,5 +227,78 @@ class Command(BaseCommand):
 
         seed_market_prices()
 
+        self.stdout.write("Création données v4...")
+        from climate.models import CropCalendar
+        from forum.models import ForumCategory, ForumPost
+        from gamification.models import Badge, UserProfile
+        from gamification.services import award_points
+        from insurance.models import InsurancePolicy
+        from marketplace.models import CropListing
+        from subscriptions.models import Plan, UserSubscription
+        from training.models import Course
+        from iot.models import PestTrap, RiverBuoy
+
+        for tier, name, price, parcels in [
+            ("free", "Gratuit", 0, 3), ("farmer", "Agriculteur Pro", 5000, 20),
+            ("coop", "Coopérative", 25000, 100),
+        ]:
+            Plan.objects.get_or_create(tier=tier, defaults={
+                "name": name, "price_monthly": price, "max_parcels": parcels,
+                "features": ["alertes", "carte", "ia"],
+            })
+        free_plan = Plan.objects.get(tier="free")
+        UserSubscription.objects.get_or_create(user=farmer, defaults={"plan": free_plan})
+
+        CropCalendar.objects.get_or_create(crop_type="maize", region="Bouaké", defaults={
+            "crop_name": "Maïs", "planting_start": "04-01", "planting_end": "05-15",
+            "harvest_start": "08-01", "harvest_end": "09-30",
+            "treatments": ["herbicide J+15", "engrais NPK J+30"],
+            "tips": "Semis après premières pluies.",
+        })
+
+        cat, _ = ForumCategory.objects.get_or_create(slug="bouake", defaults={
+            "name": "Bouaké", "region": "Bouaké", "description": "Échanges locaux",
+        })
+        ForumPost.objects.get_or_create(title="Meilleur moment pour semer le maïs ?", defaults={
+            "author": farmer, "category": cat,
+            "content": "Quand commencez-vous les semis cette année ?",
+        })
+
+        Course.objects.get_or_create(title="Irrigation efficace", defaults={
+            "description": "Techniques d'arrosage économes en eau",
+            "category": "water", "language": "fr", "duration_minutes": 15,
+            "crop_types": ["maize", "rice"], "difficulty": "beginner", "is_published": True,
+        })
+
+        Badge.objects.get_or_create(slug="first_parcel", defaults={
+            "name": "Première parcelle", "description": "Enregistrer sa première parcelle",
+            "icon": "🌱", "points": 50,
+        })
+        profile, _ = UserProfile.objects.get_or_create(user=farmer)
+        award_points(farmer, "login")
+
+        InsurancePolicy.objects.get_or_create(
+            user=farmer, crop_type="maize", defaults={
+                "coverage_amount": 500000, "premium_amount": 15000,
+                "trigger_event": "drought", "status": "active",
+            },
+        )
+
+        CropListing.objects.get_or_create(
+            seller=farmer, crop_type="maize", region="Bouaké", defaults={
+                "quantity_kg": 500, "price_per_kg": 250, "quality_grade": "A",
+                "description": "Maïs jaune, récolte 2024",
+            },
+        )
+
+        RiverBuoy.objects.get_or_create(device_id="BUOY-001", defaults={
+            "name": "Bouée Bandama", "river_name": "Bandama",
+            "location": Point(-5.050, 7.700, srid=4326), "alert_level_m": 4.0,
+        })
+        PestTrap.objects.get_or_create(device_id="TRAP-001", defaults={
+            "name": "Piège Maïs Nord", "location": Point(-5.033, 7.693, srid=4326),
+            "parcel": Parcel.objects.first(),
+        })
+
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès!"))
         self.stdout.write("Comptes: admin/admin1234, kouassi/farmer1234, secours/rescue1234")
