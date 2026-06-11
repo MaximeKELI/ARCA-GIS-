@@ -63,7 +63,7 @@ class ChatService {
       try {
         final json = jsonDecode(data);
         if (json is Map && json.containsKey('message')) {
-          _messages.add(ChatMessage.fromJson(json));
+          _messages.add(ChatMessage.fromJson(Map<String, dynamic>.from(json)));
         }
       } catch (_) {}
     });

@@ -51,7 +51,7 @@ class GPSTrackingService {
       try {
         final json = jsonDecode(data);
         if (json is Map && json.containsKey('lat')) {
-          final pos = RescuePosition.fromJson(json);
+          final pos = RescuePosition.fromJson(Map<String, dynamic>.from(json));
           _positions[pos.userId] = pos;
           _controller.add(positions);
         }
