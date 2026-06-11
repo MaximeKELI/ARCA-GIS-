@@ -20,7 +20,7 @@ class WebSocketService {
 
     try {
       _channel = WebSocketChannel.connect(
-        Uri.parse('${AppConfig.wsBaseUrl}?token=$token'),
+        Uri.parse('${AppConfig.wsAlertsUrl}?token=$token'),
       );
 
       _channel!.stream.listen(
