@@ -43,12 +43,12 @@ class PestTrapIngestView(APIView):
             try:
                 import requests
                 from django.conf import settings
-                resp = requests.post(f"{settings.AI_MODULE_URL}/disease-detect",
+                resp = requests.post(f"{settings.AI_MODULE_URL}/disease-detect/pest",
                                      json={"pest_count": count, "crop_type": "maize"}, timeout=5)
                 trap.ai_diagnosis = resp.json()
             except Exception:
                 trap.ai_diagnosis = {"risk": "high", "recommendation": "Traitement préventif"}
-            trap.save()
             broadcast_alert("crop", "Ravageurs détectés", f"{count} insectes au piège {trap.name}",
                             "medium", {"trap_id": trap.id, "count": count}, "farmer")
+        trap.save()
         return Response({"status": "ok", "count": count, "diagnosis": trap.ai_diagnosis})

@@ -277,12 +277,17 @@ class Command(BaseCommand):
         profile, _ = UserProfile.objects.get_or_create(user=farmer)
         award_points(farmer, "login")
 
-        InsurancePolicy.objects.get_or_create(
-            user=farmer, crop_type="maize", defaults={
-                "coverage_amount": 500000, "premium_amount": 15000,
-                "trigger_event": "drought", "status": "active",
-            },
-        )
+        from datetime import date
+        first_parcel = Parcel.objects.first()
+        if first_parcel:
+            InsurancePolicy.objects.get_or_create(
+                farmer=farmer, parcel=first_parcel, policy_type="drought",
+                defaults={
+                    "coverage_amount": 500000, "premium": 15000,
+                    "start_date": date.today(), "end_date": date(2026, 12, 31),
+                    "trigger_threshold": {"rainfall_mm": 50, "days": 30},
+                },
+            )
 
         CropListing.objects.get_or_create(
             seller=farmer, crop_type="maize", region="Bouaké", defaults={
