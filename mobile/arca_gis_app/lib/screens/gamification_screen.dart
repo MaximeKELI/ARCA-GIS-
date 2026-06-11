@@ -23,7 +23,7 @@ class _GamificationScreenState extends State<GamificationScreen> {
 
   Future<void> _load() async {
     try {
-      final profile = await _api.get('/gamification/profile/');
+      final profile = await _api.get('/gamification/me/');
       final board = await _api.get('/gamification/leaderboard/');
       setState(() {
         _profile = profile is Map<String, dynamic> ? profile : {};
@@ -69,9 +69,9 @@ class _GamificationScreenState extends State<GamificationScreen> {
                 ..._leaderboard.take(10).map((e) {
                   final entry = e as Map<String, dynamic>;
                   return ListTile(
-                    leading: CircleAvatar(child: Text('${entry['rank'] ?? ''}')),
+                    leading: CircleAvatar(child: Text('${i + 1}')),
                     title: Text(entry['username']?.toString() ?? ''),
-                    trailing: Text('${entry['points'] ?? 0} pts'),
+                    trailing: Text('${entry['total_points'] ?? 0} pts'),
                   );
                 }),
               ],

@@ -13,6 +13,12 @@ import 'marketplace_screen.dart';
 import 'voice_assistant_screen.dart';
 import 'ar_screen.dart';
 import 'traceability_screen.dart';
+import 'forum_screen.dart';
+import 'training_screen.dart';
+import 'gamification_screen.dart';
+import 'insurance_screen.dart';
+import 'disease_screen.dart';
+import 'feature_phone_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -85,6 +91,19 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const TraceabilityScreen())); }),
             ListTile(leading: const Icon(Icons.sms), title: const Text('SOS par SMS/USSD'),
               subtitle: const Text('*384*ARCA#'), onTap: () => Navigator.pop(context)),
+            const Divider(),
+            ListTile(leading: const Icon(Icons.forum), title: const Text('Forum'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ForumScreen())); }),
+            ListTile(leading: const Icon(Icons.school), title: const Text('Formation'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const TrainingScreen())); }),
+            ListTile(leading: const Icon(Icons.emoji_events), title: const Text('Badges & Points'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const GamificationScreen())); }),
+            ListTile(leading: const Icon(Icons.shield), title: const Text('Assurance'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const InsuranceScreen())); }),
+            ListTile(leading: const Icon(Icons.biotech), title: const Text('Diagnostic maladies'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const DiseaseScreen())); }),
+            ListTile(leading: const Icon(Icons.phone_android), title: const Text('Mode feature phone'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const FeaturePhoneScreen())); }),
           ],
         ),
       ),
