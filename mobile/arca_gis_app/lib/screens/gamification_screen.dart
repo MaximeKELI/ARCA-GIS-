@@ -66,10 +66,10 @@ class _GamificationScreenState extends State<GamificationScreen> {
                 ),
                 const SizedBox(height: 16),
                 const Text('Classement', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ..._leaderboard.take(10).map((e) {
-                  final entry = e as Map<String, dynamic>;
+                ..._leaderboard.take(10).toList().asMap().entries.map((item) {
+                  final e = item.value as Map<String, dynamic>;
                   return ListTile(
-                    leading: CircleAvatar(child: Text('${i + 1}')),
+                    leading: CircleAvatar(child: Text('${item.key + 1}')),
                     title: Text(e['username']?.toString() ?? ''),
                     trailing: Text('${e['total_points'] ?? 0} pts'),
                   );

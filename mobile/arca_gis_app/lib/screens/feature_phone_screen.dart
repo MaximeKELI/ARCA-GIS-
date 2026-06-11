@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/lightweight_config.dart';
 import '../config/theme.dart';
-import '../widgets/sos_button.dart';
-
 /// Interface simplifiée pour téléphones d'entrée de gamme (KaiOS / feature phone).
 class FeaturePhoneScreen extends StatelessWidget {
   const FeaturePhoneScreen({super.key});
@@ -29,7 +27,6 @@ class FeaturePhoneScreen extends StatelessWidget {
           _bigButton(context, Icons.cloud, 'Météo', AppTheme.primaryGreen, () {}),
           _bigButton(context, Icons.grass, 'Mes parcelles', AppTheme.primaryGreen, () {}),
           _bigButton(context, Icons.phone, 'Appel vocal', AppTheme.accentOrange, () {}),
-          const Padding(padding: EdgeInsets.all(16), child: SosButton()),
         ],
       ),
     );

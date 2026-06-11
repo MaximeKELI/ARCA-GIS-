@@ -52,7 +52,7 @@ class _DiseaseScreenState extends State<DiseaseScreen> {
         child: Column(
           children: [
             DropdownButtonFormField<String>(
-              value: _crop,
+              initialValue: _crop,
               decoration: const InputDecoration(labelText: 'Culture'),
               items: const [
                 DropdownMenuItem(value: 'maize', child: Text('Maïs')),
