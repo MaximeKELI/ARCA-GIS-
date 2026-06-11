@@ -44,9 +44,17 @@ def generate_parcel_report(parcel, analysis: dict | None = None) -> bytes:
         for rec in analysis.get("recommendations", []):
             elements.append(Paragraph(f"• {rec}", styles["Normal"]))
 
+    import hashlib
+    sig_data = f"{parcel.id}:{parcel.name}:{datetime.now().isoformat()}:ARCA-GIS"
+    signature = hashlib.sha256(sig_data.encode()).hexdigest()[:16].upper()
+
     elements.append(Spacer(1, 24))
     elements.append(Paragraph(
         f"Généré le {datetime.now().strftime('%d/%m/%Y %H:%M')} — ARCA-GIS Africa",
+        styles["Normal"],
+    ))
+    elements.append(Paragraph(
+        f"<i>Signature numérique: ARCA-{signature}</i>",
         styles["Normal"],
     ))
     doc.build(elements)

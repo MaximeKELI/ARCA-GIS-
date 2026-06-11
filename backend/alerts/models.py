@@ -32,6 +32,12 @@ class Alert(models.Model):
     )
     is_read = models.BooleanField(default=False)
     is_broadcast = models.BooleanField(default=True)
+    requires_approval = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=True)
+    approved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name="approved_alerts",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

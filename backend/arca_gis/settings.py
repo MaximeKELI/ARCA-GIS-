@@ -40,6 +40,14 @@ INSTALLED_APPS = [
     "iot",
     "analytics",
     "notifications",
+    "cooperatives",
+    "marketplace",
+    "drones",
+    "traceability",
+    "communications",
+    "payments",
+    "soils",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -163,6 +171,28 @@ CHANNEL_LAYERS = {
 AI_MODULE_URL = env("AI_MODULE_URL", default="http://localhost:8001")
 OPENWEATHER_API_KEY = env("OPENWEATHER_API_KEY", default="")
 FCM_SERVER_KEY = env("FCM_SERVER_KEY", default="")
+AFRICAS_TALKING_API_KEY = env("AFRICAS_TALKING_API_KEY", default="")
+AFRICAS_TALKING_USERNAME = env("AFRICAS_TALKING_USERNAME", default="")
+TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default="")
+TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN", default="")
+TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default="")
+SENTRY_DSN = env("SENTRY_DSN", default="")
+REGION = env("REGION", default="west-africa")
+MAP_TILE_CDN = env("MAP_TILE_CDN", default="https://tile.openstreetmap.org/{z}/{x}/{y}.png")
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "ARCA-GIS API",
+    "DESCRIPTION": "Plateforme géomatique africaine — Agriculture, Urgences, Climat",
+    "VERSION": "3.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+REST_FRAMEWORK["DEFAULT_SCHEMA_CLASS"] = "drf_spectacular.openapi.AutoSchema"
+
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()], traces_sample_rate=0.1)
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True

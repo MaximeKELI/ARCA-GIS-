@@ -58,3 +58,31 @@ class BroadcastAlertView(APIView):
             target_role=request.data.get("target_role", ""),
         )
         return Response(AlertSerializer(alert).data, status=status.HTTP_201_CREATED)
+
+
+class PendingApprovalListView(generics.ListAPIView):
+    serializer_class = AlertSerializer
+    permission_classes = [IsAdmin]
+
+    def get_queryset(self):
+        return Alert.objects.filter(requires_approval=True, is_approved=False)
+
+
+class ApproveAlertView(APIView):
+    permission_classes = [IsAdmin]
+
+    def post(self, request, pk):
+        try:
+            alert = Alert.objects.get(pk=pk)
+        except Alert.DoesNotExist:
+            return Response({"error": "Alerte introuvable"}, status=404)
+        alert.is_approved = True
+        alert.approved_by = request.user
+        alert.is_broadcast = True
+        alert.save()
+        from .services import broadcast_alert
+        broadcast_alert(
+            alert.alert_type, alert.title, alert.message,
+            alert.severity, alert.data, alert.target_role,
+        )
+        return Response(AlertSerializer(alert).data)
