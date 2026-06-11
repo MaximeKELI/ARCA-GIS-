@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCA-GIS — Dashboard Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7f5; color: #333; }
+        header { background: #2E7D32; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.4rem; }
+        .login-box { max-width: 400px; margin: 4rem auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+        .login-box input { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ddd; border-radius: 8px; }
+        .login-box button { width: 100%; padding: 0.75rem; background: #2E7D32; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 1rem; }
+        .dashboard { display: none; padding: 2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .stat-card h3 { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; }
+        .stat-card .value { font-size: 2rem; font-weight: bold; color: #2E7D32; }
+        .stat-card.danger .value { color: #D32F2F; }
+        .stat-card.warning .value { color: #FF6F00; }
+        .section { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .section h2 { margin-bottom: 1rem; font-size: 1.1rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.6rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { color: #666; font-size: 0.85rem; }
+        .badge { padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; }
+        .badge.critical { background: #ffebee; color: #D32F2F; }
+        .badge.high { background: #fff3e0; color: #FF6F00; }
+        .badge.medium { background: #e3f2fd; color: #1565C0; }
+        #logout { background: transparent; border: 1px solid white; color: white; padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌍 ARCA-GIS Dashboard</h1>
+        <button id="logout" style="display:none" onclick="logout()">Déconnexion</button>
+    </header>
+
+    <div id="login" class="login-box">
+        <h2 style="margin-bottom:1rem">Connexion Admin</h2>
+        <input type="text" id="username" placeholder="Utilisateur" value="admin">
+        <input type="password" id="password" placeholder="Mot de passe" value="admin1234">
+        <button onclick="login()">Se connecter</button>
+        <p id="login-error" style="color:red;margin-top:0.5rem"></p>
+    </div>
+
+    <div id="dashboard" class="dashboard">
+        <div class="stats-grid" id="stats"></div>
+        <div class="section">
+            <h2>🚨 Incidents SOS actifs</h2>
+            <table><thead><tr><th>Titre</th><th>Statut</th><th>Priorité</th><th>Signalé par</th></tr></thead>
+            <tbody id="sos-table"></tbody></table>
+        </div>
+        <div class="section">
+            <h2>🌦️ Événements climatiques</h2>
+            <table><thead><tr><th>Titre</th><th>Type</th><th>Sévérité</th><th>Région</th></tr></thead>
+            <tbody id="climate-table"></tbody></table>
+        </div>
+        <div class="section">
+            <h2>📡 Capteurs IoT</h2>
+            <table><thead><tr><th>Nom</th><th>Type</th><th>Batterie</th><th>Dernière valeur</th></tr></thead>
+            <tbody id="iot-table"></tbody></table>
+        </div>
+    </div>
+
+    <script>
+        const API = window.location.origin + '/api';
+        let token = localStorage.getItem('arca_token');
+
+        async function api(path) {
+            const r = await fetch(API + path, { headers: { Authorization: 'Bearer ' + token } });
+            if (r.status === 401) { logout(); return null; }
+            return r.json();
+        }
+
+        async function login() {
+            const r = await fetch(API + '/auth/token/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value,
+                }),
+            });
+            if (!r.ok) { document.getElementById('login-error').textContent = 'Identifiants incorrects'; return; }
+            const data = await r.json();
+            token = data.access;
+            localStorage.setItem('arca_token', token);
+            showDashboard();
+        }
+
+        function logout() {
+            token = null;
+            localStorage.removeItem('arca_token');
+            document.getElementById('login').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('logout').style.display = 'none';
+        }
+
+        async function showDashboard() {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('logout').style.display = 'block';
+            await loadData();
+            setInterval(loadData, 30000);
+        }
+
+        async function loadData() {
+            const stats = await api('/analytics/dashboard/');
+            if (!stats) return;
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card"><h3>Parcelles actives</h3><div class="value">${stats.parcels.total}</div></div>
+                <div class="stat-card warning"><h3>SOS actifs</h3><div class="value">${stats.incidents.active_sos}</div></div>
+                <div class="stat-card danger"><h3>Incidents total</h3><div class="value">${stats.incidents.total}</div></div>
+                <div class="stat-card"><h3>Événements climat</h3><div class="value">${stats.climate.active_events}</div></div>
+                <div class="stat-card"><h3>Humidité moyenne</h3><div class="value">${(stats.parcels.avg_moisture||0).toFixed(0)}%</div></div>
+                <div class="stat-card warning"><h3>Alertes non lues</h3><div class="value">${stats.alerts.unread}</div></div>
+            `;
+
+            const sos = await api('/incidents/sos/active/');
+            document.getElementById('sos-table').innerHTML = (sos?.results || sos || []).map(i =>
+                `<tr><td>${i.title}</td><td>${i.status_display}</td>
+                <td><span class="badge critical">${i.priority_display}</span></td><td>${i.reporter_name}</td></tr>`
+            ).join('') || '<tr><td colspan="4">Aucun SOS actif</td></tr>';
+
+            const climate = await api('/climate/events/');
+            document.getElementById('climate-table').innerHTML = (climate?.results || climate || []).map(e =>
+                `<tr><td>${e.title}</td><td>${e.event_type_display}</td>
+                <td><span class="badge ${e.severity}">${e.severity_display}</span></td><td>${e.region}</td></tr>`
+            ).join('');
+
+            const iot = await api('/iot/sensors/');
+            document.getElementById('iot-table').innerHTML = (iot?.results || iot || []).map(s =>
+                `<tr><td>${s.name}</td><td>${s.sensor_type_display}</td>
+                <td>${s.battery_level}%</td><td>${s.latest_value ?? '—'}</td></tr>`
+            ).join('') || '<tr><td colspan="4">Aucun capteur</td></tr>';
+        }
+
+        if (token) showDashboard();
+    </script>
+</body>
+</html>
