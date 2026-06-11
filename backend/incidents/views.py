@@ -71,6 +71,12 @@ class SOSView(APIView):
             },
             target_role="rescue",
         )
+        if request.user.phone:
+            try:
+                from communications.services import send_sms
+                send_sms(request.user.phone, "SOS ARCA-GIS confirmé. Secours en route.", "sos")
+            except Exception:
+                pass
 
         return Response(
             IncidentSerializer(incident, context={"request": request}).data,
