@@ -1,0 +1,23 @@
+{
+  "@@locale": "fr",
+  "appTitle": "ARCA-GIS",
+  "appSubtitle": "Agro-Rescue Climate Africa",
+  "map": "Carte",
+  "parcels": "Parcelles",
+  "alerts": "Alertes",
+  "profile": "Profil",
+  "login": "Se connecter",
+  "register": "Créer un compte",
+  "logout": "Déconnexion",
+  "sos": "SOS",
+  "sosConfirm": "Déclencher SOS",
+  "offline": "Mode hors-ligne",
+  "syncPending": "Synchronisation en attente",
+  "drawParcel": "Dessiner une parcelle",
+  "analytics": "Analytiques",
+  "chat": "Messagerie",
+  "forecast": "Prévisions",
+  "rescueTeam": "Équipes secours",
+  "geofenceAlert": "Alerte géofencing",
+  "language": "Langue"
+}

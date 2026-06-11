@@ -1,0 +1,23 @@
+{
+  "@@locale": "sw",
+  "appTitle": "ARCA-GIS",
+  "appSubtitle": "Agro-Rescue Climate Africa",
+  "map": "Ramani",
+  "parcels": "Viwanja",
+  "alerts": "Tahadhari",
+  "profile": "Wasifu",
+  "login": "Ingia",
+  "register": "Jisajili",
+  "logout": "Ondoka",
+  "sos": "SOS",
+  "sosConfirm": "Tuma SOS",
+  "offline": "Hali ya nje ya mtandao",
+  "syncPending": "Usawazishaji unasubiri",
+  "drawParcel": "Chora shamba",
+  "analytics": "Takwimu",
+  "chat": "Ujumbe",
+  "forecast": "Utabiri",
+  "rescueTeam": "Timu za uokoaji",
+  "geofenceAlert": "Tahadhari ya eneo",
+  "language": "Lugha"
+}

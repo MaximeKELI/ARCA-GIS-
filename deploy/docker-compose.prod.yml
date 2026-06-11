@@ -1,0 +1,49 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../backend/staticfiles:/app/staticfiles
+      - ../backend/media:/app/media
+    depends_on:
+      - backend
+
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: arca_gis
+      POSTGRES_USER: arca_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_prod:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+
+  backend:
+    build: ../backend
+    command: daphne -b 0.0.0.0 -p 8000 arca_gis.asgi:application
+    environment:
+      - DEBUG=False
+      - DATABASE_URL=postgis://arca_user:${DB_PASSWORD}@db:5432/arca_gis
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - FCM_SERVER_KEY=${FCM_SERVER_KEY}
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  ai_module:
+    build: ../ai_module
+    restart: always
+
+volumes:
+  postgres_prod:

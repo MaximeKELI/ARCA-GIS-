@@ -1,13 +1,15 @@
 name: arca_gis_app
 description: "ARCA-GIS — Plateforme géomatique africaine pour l'agriculture, les urgences et le climat."
 publish_to: 'none'
-version: 1.0.0+1
+version: 2.0.0+2
 
 environment:
   sdk: ^3.12.1
 
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   cupertino_icons: ^1.0.8
   flutter_map: ^7.0.2
@@ -20,6 +22,11 @@ dependencies:
   google_fonts: ^6.2.1
   intl: ^0.19.0
   flutter_spinkit: ^5.2.1
+  shared_preferences: ^2.3.3
+  connectivity_plus: ^6.1.0
+  fl_chart: ^0.69.0
+  path_provider: ^2.1.5
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -28,3 +35,4 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
