@@ -17,4 +17,7 @@ urlpatterns = [
     path("offline/sync/", OfflineSyncView.as_view()),
     path("offline/process/", OfflineSyncProcessView.as_view()),
     path("audit/", AuditLogListView.as_view()),
+    path("gdpr/consent/", ConsentView.as_view()),
+    path("gdpr/export/", DataExportView.as_view()),
+    path("gdpr/delete/", DataDeleteView.as_view()),
 ]

@@ -39,6 +39,17 @@ class VoiceMessageView(APIView):
         return Response(generate_voice_message(text, language))
 
 
+class VoiceCallView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        phone = request.data.get("phone", request.user.phone)
+        message = request.data.get("message", "Urgence ARCA-GIS. Secours en route.")
+        if not phone:
+            return Response({"error": "Numéro requis"}, status=400)
+        return Response(initiate_voice_call(phone, message))
+
+
 class RadioBroadcastView(APIView):
     permission_classes = [IsAdmin]
 
