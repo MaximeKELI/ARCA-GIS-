@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .listings_models import CropListing
+from .models import CropListing
 
 
 class CropListingSerializer(serializers.ModelSerializer):

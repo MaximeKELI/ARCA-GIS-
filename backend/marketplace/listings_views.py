@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions
 
-from .listings_models import CropListing
+from .models import CropListing
 from .listings_serializers import CropListingSerializer
 
 

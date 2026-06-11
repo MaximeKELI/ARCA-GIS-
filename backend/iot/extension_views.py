@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from alerts.services import broadcast_alert
 
-from .sensor_extensions import PestTrap, RiverBuoy
+from .models import PestTrap, RiverBuoy
 
 
 class BuoyIngestView(APIView):
