@@ -4,7 +4,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .calendar_models import CropCalendar
+from .models import CropCalendar
 
 
 class CropCalendarListView(generics.ListAPIView):

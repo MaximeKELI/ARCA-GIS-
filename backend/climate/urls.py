@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .calendar_views import CropCalendarListView, CurrentSeasonView
+from .irrigation_views import IrrigationAdviceView
 from .views import (
     AIAnalysisView,
     ClimateEventDetailView,
@@ -23,5 +24,5 @@ urlpatterns = [
     path("readings/", WeatherReadingListView.as_view(), name="weather-readings"),
     path("calendar/", CropCalendarListView.as_view()),
     path("calendar/current/", CurrentSeasonView.as_view()),
-    path("irrigation/advice/", __import__("climate.irrigation_views", fromlist=["IrrigationAdviceView"]).IrrigationAdviceView.as_view()),
+    path("irrigation/advice/", IrrigationAdviceView.as_view()),
 ]
