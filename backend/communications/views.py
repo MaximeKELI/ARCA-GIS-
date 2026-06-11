@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from users.permissions import IsAdmin
 
-from .services import broadcast_radio, generate_voice_message, handle_ussd, send_sms
+from .services import broadcast_radio, generate_voice_message, handle_ussd, initiate_voice_call, send_sms
 
 
 class SendSMSView(APIView):

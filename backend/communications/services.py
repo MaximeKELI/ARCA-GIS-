@@ -92,6 +92,37 @@ def generate_voice_message(text: str, language: str = "fr") -> dict:
     }
 
 
+def initiate_voice_call(phone: str, message: str) -> dict:
+    """Appel vocal SOS via Twilio."""
+    from .models import SMSLog
+
+    log = SMSLog.objects.create(phone=phone, message=message, message_type="voice")
+
+    sid = getattr(settings, "TWILIO_ACCOUNT_SID", None)
+    token = getattr(settings, "TWILIO_AUTH_TOKEN", None)
+    from_number = getattr(settings, "TWILIO_PHONE_NUMBER", None)
+
+    if sid and token and from_number:
+        try:
+            twiml = f'<Response><Say language="fr-FR">{message}</Say></Response>'
+            resp = requests.post(
+                f"https://api.twilio.com/2010-04-01/Accounts/{sid}/Calls.json",
+                auth=(sid, token),
+                data={"To": phone, "From": from_number, "Twiml": twiml},
+                timeout=10,
+            )
+            log.status = "sent" if resp.status_code == 201 else "failed"
+            log.provider = "twilio_voice"
+            log.save()
+            return {"status": log.status, "provider": "twilio_voice"}
+        except requests.RequestException as e:
+            logger.warning("Voice call failed: %s", e)
+
+    log.status = "queued"
+    log.save()
+    return {"status": "queued", "note": "Configurer Twilio pour appels vocaux"}
+
+
 def broadcast_radio(station_name: str, region: str, message: str, alert_type: str) -> dict:
     from django.utils import timezone
     from .models import RadioBroadcast
