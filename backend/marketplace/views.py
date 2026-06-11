@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,6 +22,6 @@ class MarketSeedView(APIView):
 
     def post(self, request):
         if not request.user.is_admin_user:
-            return Response({"error": "Admin requis"}, status=403)
+            return Response({"error": "Admin requis"}, status=status.HTTP_403_FORBIDDEN)
         seed_market_prices()
         return Response({"status": "ok"})
