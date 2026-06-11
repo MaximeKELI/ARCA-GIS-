@@ -83,7 +83,18 @@ class _MapScreenState extends State<MapScreen> {
                         point: LatLng(i.lat, i.lng),
                         width: 44,
                         height: 44,
-                        child: const Icon(Icons.emergency, color: AppTheme.sosRed, size: 36),
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(context, MaterialPageRoute(
+                            builder: (_) => ChatScreen(incidentId: i.id, incidentTitle: i.title),
+                          )),
+                          child: const Icon(Icons.emergency, color: AppTheme.sosRed, size: 36),
+                        ),
+                      )),
+                  ...mapProvider.rescuePositions.map((r) => Marker(
+                        point: LatLng(r.lat, r.lng),
+                        width: 36,
+                        height: 36,
+                        child: const Icon(Icons.local_hospital, color: AppTheme.climateBlue, size: 28),
                       )),
                 ],
               ),
@@ -128,6 +139,16 @@ class _MapScreenState extends State<MapScreen> {
                   backgroundColor: AppTheme.climateBlue,
                   foregroundColor: Colors.white,
                   child: const Icon(Icons.psychology),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton.small(
+                  heroTag: 'draw',
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(
+                    builder: (_) => const ParcelDrawScreen(),
+                  )).then((_) => mapProvider.loadAllData()),
+                  backgroundColor: AppTheme.primaryGreen,
+                  foregroundColor: Colors.white,
+                  child: const Icon(Icons.draw),
                 ),
               ],
             ),

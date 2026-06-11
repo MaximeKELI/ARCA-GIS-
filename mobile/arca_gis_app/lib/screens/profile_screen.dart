@@ -55,6 +55,23 @@ class ProfileScreen extends StatelessWidget {
           if (user.phone.isNotEmpty) _infoTile(Icons.phone, 'Téléphone', user.phone),
           _infoTile(Icons.public, 'Pays', user.country),
           if (user.region.isNotEmpty) _infoTile(Icons.location_on, 'Région', user.region),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.language, color: AppTheme.primaryGreen),
+              title: const Text('Langue'),
+              trailing: DropdownButton<String>(
+                value: context.watch<LocaleProvider>().locale.languageCode,
+                underline: const SizedBox(),
+                items: const [
+                  DropdownMenuItem(value: 'fr', child: Text('Français')),
+                  DropdownMenuItem(value: 'en', child: Text('English')),
+                  DropdownMenuItem(value: 'sw', child: Text('Kiswahili')),
+                ],
+                onChanged: (v) => context.read<LocaleProvider>().setLocale(v!),
+              ),
+            ),
+          ),
           const SizedBox(height: 24),
           Card(
             child: Column(

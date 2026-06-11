@@ -69,6 +69,7 @@ class SOSView(APIView):
                 "lng": data["lng"],
                 "reporter": request.user.get_full_name() or request.user.username,
             },
+            target_role="rescue",
         )
 
         return Response(
