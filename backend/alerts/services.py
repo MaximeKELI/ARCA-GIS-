@@ -11,6 +11,7 @@ def broadcast_alert(
     severity: str = "medium",
     data: dict | None = None,
     target_role: str = "",
+    target_user=None,
 ):
     """Crée une alerte et la diffuse via WebSocket."""
     alert = Alert.objects.create(
