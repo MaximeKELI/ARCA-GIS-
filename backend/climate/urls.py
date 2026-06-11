@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .calendar_views import CropCalendarListView, CurrentSeasonView
 from .views import (
     AIAnalysisView,
     ClimateEventDetailView,
