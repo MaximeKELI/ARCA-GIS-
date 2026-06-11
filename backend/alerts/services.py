@@ -21,6 +21,7 @@ def broadcast_alert(
         message=message,
         data=data or {},
         target_role=target_role,
+        target_user=target_user,
         is_broadcast=True,
     )
 
@@ -42,11 +43,13 @@ def broadcast_alert(
         if target_role:
             async_to_sync(channel_layer.group_send)(f"role_{target_role}", payload)
 
-    if target_role:
-        try:
-            from notifications.services import send_push_to_role
+    try:
+        from notifications.services import send_push_notification, send_push_to_role
+        if target_user:
+            send_push_notification(target_user, title, message, data)
+        elif target_role:
             send_push_to_role(target_role, title, message, data)
-        except Exception:
-            pass
+    except Exception:
+        pass
 
     return alert
