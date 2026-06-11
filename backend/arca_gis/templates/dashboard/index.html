@@ -58,6 +58,11 @@
             <tbody id="climate-table"></tbody></table>
         </div>
         <div class="section">
+            <h2>🏛️ Vue ONG / Gouvernement</h2>
+            <p id="ngo-stats" style="margin-bottom:1rem"></p>
+            <button onclick="exportCSV()" style="padding:0.5rem 1rem;background:#2E7D32;color:white;border:none;border-radius:8px;cursor:pointer">Exporter parcelles CSV</button>
+        </div>
+        <div class="section">
             <h2>📡 Capteurs IoT</h2>
             <table><thead><tr><th>Nom</th><th>Type</th><th>Batterie</th><th>Dernière valeur</th></tr></thead>
             <tbody id="iot-table"></tbody></table>
@@ -129,6 +134,14 @@
                 `<tr><td>${e.title}</td><td>${e.event_type_display}</td>
                 <td><span class="badge ${e.severity}">${e.severity_display}</span></td><td>${e.region}</td></tr>`
             ).join('');
+
+            const ngo = await api('/analytics/ngo/stats/');
+            if (ngo && !ngo.error) {
+                document.getElementById('ngo-stats').innerHTML =
+                    `<strong>${ngo.farmers}</strong> agriculteurs · <strong>${ngo.parcels.total}</strong> parcelles · ` +
+                    `<strong>${(ngo.parcels.total_area_ha||0).toFixed(1)}</strong> ha · ` +
+                    `<strong>${ngo.incidents.active_sos}</strong> SOS actifs`;
+            }
 
             const iot = await api('/iot/sensors/');
             document.getElementById('iot-table').innerHTML = (iot?.results || iot || []).map(s =>
