@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arca-gis-backend
+  namespace: arca-gis
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arca-gis-backend
+  template:
+    metadata:
+      labels:
+        app: arca-gis-backend
+    spec:
+      containers:
+        - name: backend
+          image: arca_gis_backend:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: arca-gis-secrets
+                  key: database-url
+            - name: REDIS_URL
+              value: redis://arca-gis-redis:6379/0
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: arca-gis-secrets
+                  key: secret-key
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/schema/
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10

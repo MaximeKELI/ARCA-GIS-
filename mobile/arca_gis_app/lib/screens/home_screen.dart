@@ -8,6 +8,11 @@ import 'forecast_screen.dart';
 import 'map_screen.dart';
 import 'parcels_screen.dart';
 import 'profile_screen.dart';
+import 'cooperatives_screen.dart';
+import 'marketplace_screen.dart';
+import 'voice_assistant_screen.dart';
+import 'ar_screen.dart';
+import 'traceability_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -68,18 +73,18 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Prévisions météo'),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForecastScreen())),
             ),
-            ListTile(
-              leading: const Icon(Icons.sensors),
-              title: const Text('Capteurs IoT'),
-              subtitle: const Text('Stations connectées'),
-              onTap: () => Navigator.pop(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.dashboard),
-              title: const Text('Dashboard web'),
-              subtitle: const Text('admin.arca-gis.local/dashboard'),
-              onTap: () => Navigator.pop(context),
-            ),
+            ListTile(leading: const Icon(Icons.groups), title: const Text('Coopératives'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const CooperativesScreen())); }),
+            ListTile(leading: const Icon(Icons.store), title: const Text('Prix marchés'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const MarketplaceScreen())); }),
+            ListTile(leading: const Icon(Icons.mic), title: const Text('Assistant vocal'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const VoiceAssistantScreen())); }),
+            ListTile(leading: const Icon(Icons.view_in_ar), title: const Text('Réalité augmentée'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const ARScreen())); }),
+            ListTile(leading: const Icon(Icons.verified), title: const Text('Traçabilité'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const TraceabilityScreen())); }),
+            ListTile(leading: const Icon(Icons.sms), title: const Text('SOS par SMS/USSD'),
+              subtitle: const Text('*384*ARCA#'), onTap: () => Navigator.pop(context)),
           ],
         ),
       ),

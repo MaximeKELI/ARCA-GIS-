@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: arca-gis
+  labels:
+    app: arca-gis
+    region: west-africa
