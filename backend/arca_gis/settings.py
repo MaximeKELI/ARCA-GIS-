@@ -35,17 +35,25 @@ INSTALLED_APPS = [
     "climate",
     "incidents",
     "alerts",
+    "core",
+    "chat",
+    "iot",
+    "analytics",
+    "notifications",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.middleware.RateLimitMiddleware",
+    "core.middleware.AuditLogMiddleware",
 ]
 
 ROOT_URLCONF = "arca_gis.urls"
@@ -55,7 +63,7 @@ ASGI_APPLICATION = "arca_gis.asgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "arca_gis" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -74,6 +82,12 @@ DATABASES = {
     )
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+
 AUTH_USER_MODEL = "users.User"
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -83,7 +97,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LANGUAGE_CODE = "fr-fr"
+LANGUAGE_CODE = "fr"
+LANGUAGES = [
+    ("fr", "Français"),
+    ("en", "English"),
+    ("sw", "Kiswahili"),
+]
+LOCALE_PATHS = [BASE_DIR / "locale"]
 TIME_ZONE = "Africa/Abidjan"
 USE_I18N = True
 USE_TZ = True
@@ -109,6 +129,14 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "120/min",
+        "user": "300/min",
+    },
 }
 
 SIMPLE_JWT = {
@@ -119,7 +147,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS",
-    default=["http://localhost:3000", "http://10.0.2.2:8000"],
+    default=["http://localhost:3000", "http://10.0.2.2:8003"],
 )
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
@@ -133,15 +161,21 @@ CHANNEL_LAYERS = {
 }
 
 AI_MODULE_URL = env("AI_MODULE_URL", default="http://localhost:8001")
+OPENWEATHER_API_KEY = env("OPENWEATHER_API_KEY", default="")
+FCM_SERVER_KEY = env("FCM_SERVER_KEY", default="")
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {
-        "console": {"class": "logging.StreamHandler"},
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "INFO"},
 }
