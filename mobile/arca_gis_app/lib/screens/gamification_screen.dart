@@ -70,8 +70,8 @@ class _GamificationScreenState extends State<GamificationScreen> {
                   final entry = e as Map<String, dynamic>;
                   return ListTile(
                     leading: CircleAvatar(child: Text('${i + 1}')),
-                    title: Text(entry['username']?.toString() ?? ''),
-                    trailing: Text('${entry['total_points'] ?? 0} pts'),
+                    title: Text(e['username']?.toString() ?? ''),
+                    trailing: Text('${e['total_points'] ?? 0} pts'),
                   );
                 }),
               ],

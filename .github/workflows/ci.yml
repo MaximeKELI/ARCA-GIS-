@@ -1,0 +1,69 @@
+name: ARCA-GIS CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: arca_user
+          POSTGRES_PASSWORD: arca_secret_2024
+          POSTGRES_DB: arca_gis_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U arca_user -d arca_gis_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt pytest pytest-django
+      - name: Run tests
+        env:
+          DATABASE_URL: postgis://arca_user:arca_secret_2024@localhost:5432/arca_gis_test
+          SECRET_KEY: test-secret-key
+          DEBUG: "False"
+        working-directory: backend
+        run: |
+          python manage.py migrate --noinput
+          pytest tests/ -v
+
+  ai-module:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install & test AI module
+        working-directory: ai_module
+        run: |
+          pip install -r requirements.txt httpx
+          python -c "from main import app; print('AI module OK')"
+
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Analyze Flutter
+        working-directory: mobile/arca_gis_app
+        run: |
+          flutter pub get
+          flutter analyze
