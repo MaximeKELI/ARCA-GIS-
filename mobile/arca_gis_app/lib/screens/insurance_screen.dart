@@ -45,11 +45,11 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                       margin: const EdgeInsets.all(12),
                       child: ListTile(
                         leading: const Icon(Icons.shield, color: AppTheme.primaryGreen),
-                        title: Text(p['crop_type']?.toString() ?? ''),
-                        subtitle: Text('Couverture: ${p['coverage_amount'] ?? 0} ${p['currency'] ?? 'XOF'}'),
+                        title: Text(p['policy_type_display']?.toString() ?? p['policy_type']?.toString() ?? ''),
+                        subtitle: Text('Couverture: ${p['coverage_amount'] ?? 0} XOF'),
                         trailing: Chip(
-                          label: Text(p['status']?.toString() ?? ''),
-                          backgroundColor: p['status'] == 'active' ? Colors.green.shade100 : Colors.grey.shade200,
+                          label: Text(p['is_active'] == true ? 'active' : 'inactive'),
+                          backgroundColor: p['is_active'] == true ? Colors.green.shade100 : Colors.grey.shade200,
                         ),
                       ),
                     );
