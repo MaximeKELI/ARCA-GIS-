@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'config/app_config.dart';
 import 'config/theme.dart';
 import 'providers/auth_provider.dart';
+import 'providers/locale_provider.dart';
 import 'providers/map_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
@@ -21,12 +23,26 @@ class ArcaGisApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MapProvider()),
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
       ],
-      child: MaterialApp(
-        title: AppConfig.appName,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        home: const SplashScreen(),
+      child: Consumer<LocaleProvider>(
+        builder: (context, locale, _) => MaterialApp(
+          title: AppConfig.appName,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          locale: locale.locale,
+          supportedLocales: const [
+            Locale('fr'),
+            Locale('en'),
+            Locale('sw'),
+          ],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: const SplashScreen(),
+        ),
       ),
     );
   }
@@ -80,11 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 24),
             Text(
               AppConfig.appName,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             const SizedBox(height: 8),
             Text(

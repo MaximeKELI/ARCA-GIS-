@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../config/app_config.dart';
 import '../config/theme.dart';
 import '../providers/map_provider.dart';
+import 'chat_screen.dart';
+import 'parcel_draw_screen.dart';
 import '../widgets/sos_button.dart';
 
 class MapScreen extends StatefulWidget {

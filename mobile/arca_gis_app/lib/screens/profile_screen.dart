@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../config/app_config.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
+import '../providers/locale_provider.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
