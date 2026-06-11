@@ -137,4 +137,4 @@ curl -X POST http://localhost:8001/analyze \
 
 ## Licence
 
-Projet open-source — ARCA-GIS © 2024
+Projet open-source — ARCA-GIS © 2026
