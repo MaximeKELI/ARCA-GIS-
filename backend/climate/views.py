@@ -8,7 +8,7 @@ from users.permissions import IsAdmin
 
 from .models import ClimateEvent, WeatherReading, WeatherStation
 from .serializers import ClimateEventSerializer, WeatherReadingSerializer, WeatherStationSerializer
-from .services import request_ai_analysis
+from .services import fetch_forecast, fetch_real_weather, request_ai_analysis
 
 
 class ClimateEventListCreateView(generics.ListCreateAPIView):
@@ -70,6 +70,32 @@ class AIAnalysisView(APIView):
 
         result = request_ai_analysis(float(lat), float(lng), crop_type)
         return Response(result)
+
+
+class WeatherCurrentView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        lat = request.query_params.get("lat")
+        lng = request.query_params.get("lng")
+        if not lat or not lng:
+            return Response({"error": "lat/lng requis"}, status=400)
+        weather = fetch_real_weather(float(lat), float(lng))
+        if not weather:
+            return Response({"error": "Météo indisponible"}, status=503)
+        return Response(weather)
+
+
+class WeatherForecastView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        lat = request.query_params.get("lat")
+        lng = request.query_params.get("lng")
+        days = int(request.query_params.get("days", 7))
+        if not lat or not lng:
+            return Response({"error": "lat/lng requis"}, status=400)
+        return Response({"forecast": fetch_forecast(float(lat), float(lng), days)})
 
 
 class WeatherStationListView(generics.ListAPIView):

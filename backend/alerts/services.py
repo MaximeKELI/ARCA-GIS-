@@ -41,4 +41,11 @@ def broadcast_alert(
         if target_role:
             async_to_sync(channel_layer.group_send)(f"role_{target_role}", payload)
 
+    if target_role:
+        try:
+            from notifications.services import send_push_to_role
+            send_push_to_role(target_role, title, message, data)
+        except Exception:
+            pass
+
     return alert
