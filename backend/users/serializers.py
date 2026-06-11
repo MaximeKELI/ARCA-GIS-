@@ -52,8 +52,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data["password"] != data["password_confirm"]:
             raise serializers.ValidationError({"password": "Les mots de passe ne correspondent pas."})
-        if data.get("role") == User.Role.ADMIN:
-            raise serializers.ValidationError({"role": "Le rôle admin ne peut pas être auto-assigné."})
+        restricted = (User.Role.ADMIN, User.Role.GOVERNMENT)
+        if data.get("role") in restricted:
+            raise serializers.ValidationError({"role": "Ce rôle ne peut pas être auto-assigné."})
         return data
 
     def create(self, validated_data):

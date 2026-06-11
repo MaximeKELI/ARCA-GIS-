@@ -194,5 +194,38 @@ class Command(BaseCommand):
             },
         )
 
+        self.stdout.write("Création coopérative et sols...")
+        from cooperatives.models import Cooperative
+        from marketplace.services import seed_market_prices
+        from soils.models import SoilZone
+
+        coop, _ = Cooperative.objects.get_or_create(
+            name="Coopérative Agricole Bouaké",
+            defaults={
+                "description": "Groupement de producteurs de maïs et riz",
+                "country": "Côte d'Ivoire", "region": "Bouaké",
+                "location": Point(-5.0300, 7.6900, srid=4326),
+                "president": farmer, "total_hectares": 45.0,
+            },
+        )
+        coop.members.add(farmer)
+        coop.member_count = 1
+        coop.save()
+
+        SoilZone.objects.get_or_create(
+            name="Ferralsol Bouaké Nord",
+            defaults={
+                "soil_type": SoilZone.SoilType.FERRALSOL,
+                "geometry": Polygon([
+                    (-5.050, 7.710), (-5.010, 7.710),
+                    (-5.010, 7.670), (-5.050, 7.670), (-5.050, 7.710),
+                ], srid=4326),
+                "ph": 5.8, "organic_matter": 2.1, "texture": "argilo-sableux",
+                "country": "Côte d'Ivoire", "region": "Bouaké",
+            },
+        )
+
+        seed_market_prices()
+
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès!"))
         self.stdout.write("Comptes: admin/admin1234, kouassi/farmer1234, secours/rescue1234")
