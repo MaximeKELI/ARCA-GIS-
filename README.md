@@ -1,141 +1,114 @@
 # ARCA-GIS — Agro-Rescue Climate Africa
 
-Plateforme géomatique africaine intelligente pour la gestion de l'agriculture, des urgences et du climat sur une carte interactive.
+Plateforme géomatique africaine intelligente pour la gestion de l'agriculture, des urgences et du climat.
 
 ## Architecture
 
 ```
 ARCA-GIS/
-├── backend/          # Django + GeoDjango + Channels (API REST + WebSockets)
-├── ai_module/        # FastAPI — Analyse climatique & recommandations agricoles
-├── mobile/           # Flutter (Android/iOS)
+├── backend/          # Django + GeoDjango + Channels
+├── ai_module/        # FastAPI — IA climatique, NDVI, prévisions
+├── mobile/           # Flutter (Android/iOS/Web PWA)
+├── deploy/           # Nginx + Docker production
 └── docker-compose.yml
 ```
 
-### Stack technique
+## Fonctionnalités complètes
 
-| Composant | Technologies |
-|-----------|-------------|
-| **Mobile** | Flutter, flutter_map, Provider, WebSockets |
-| **Backend** | Django 5, GeoDjango, DRF, JWT, Channels, Daphne |
-| **Base de données** | PostgreSQL 16 + PostGIS |
-| **Temps réel** | Redis + Django Channels (WebSockets) |
-| **IA** | FastAPI, scikit-learn, analyse climatique |
+### Mobile (Flutter)
+- Carte interactive OpenStreetMap avec parcelles, climat, SOS
+- **Dessin de parcelles** directement sur la carte
+- **Mode hors-ligne** avec cache et file SOS
+- **Géofencing** — alertes à l'entrée de zones à risque
+- **Suivi GPS secours** en temps réel
+- **Chat incident** agriculteur ↔ secours (WebSocket)
+- **Analytiques** avec graphiques (humidité, NDVI)
+- **Prévisions météo** 7 jours (OpenWeatherMap / NASA)
+- **Multilingue** : Français, English, Kiswahili
+- **PWA** — installable depuis le navigateur
+- Bouton SOS animé + analyse IA
 
-### Rôles utilisateurs
+### Backend (Django)
+- API REST JWT + 10 modules
+- WebSockets : alertes, GPS secours, chat
+- **Météo réelle** : OpenWeatherMap + NASA POWER
+- **Rapports PDF** par parcelle
+- **IoT** : ingestion capteurs Arduino/Raspberry
+- **Géofencing** PostGIS
+- **Analytics** dashboard stats
+- **Notifications push** FCM
+- **Audit logs** + rate limiting
+- **Dashboard admin web** : `/dashboard/`
 
-- **Agriculteur** — Gestion des parcelles, alertes climatiques, SOS
-- **Secours** — Réception des SOS, prise en charge des incidents
-- **Admin** — Gestion globale, diffusion d'alertes
+### Module IA
+- Analyse climatique (sécheresse, inondations, canicules)
+- **NDVI** simulé (santé végétation)
+- **Prévisions agricoles** 14 jours
+- Recommandations par culture africaine
 
 ## Démarrage rapide
 
-### Prérequis
-
-- Docker & Docker Compose
-- Flutter SDK 3.12+ (pour le mobile)
-- Python 3.12+ (développement local)
-
-### 1. Lancer l'infrastructure
-
 ```bash
-# Cloner et configurer
 cp .env.example .env
-
-# Démarrer PostGIS, Redis, Backend et Module IA
 docker compose up -d
 
-# Initialiser la base et les données de démo
-docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py seed_data
+# Migrations
+docker run --rm --network arca-gis_default \
+  -v ./backend:/app -e DATABASE_URL=postgis://arca_user:arca_secret_2024@arca_gis_postgres:5432/arca_gis \
+  arca_gis_backend sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py seed_data"
+
+# Mobile
+cd mobile/arca_gis_app && flutter pub get && flutter run
 ```
 
-### 2. Lancer le backend en local (sans Docker)
+> API : **port 8003** (8000 souvent occupé). Émulateur Android : `10.0.2.2:8003`
 
-```bash
-cd backend
-pip install -r requirements.txt
-
-# PostgreSQL/PostGIS et Redis doivent être actifs
-python manage.py migrate
-python manage.py seed_data
-daphne -b 0.0.0.0 -p 8000 arca_gis.asgi:application
-```
-
-### 3. Lancer le module IA
-
-```bash
-cd ai_module
-pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8001 --reload
-```
-
-### 4. Lancer l'app mobile
-
-```bash
-cd mobile/arca_gis_app
-flutter pub get
-flutter run
-```
-
-> **Note Android Emulator** : L'API pointe vers `10.0.2.2:8003` (localhost de la machine hôte).
-> Le port 8000 est souvent occupé par d'autres services — ARCA-GIS utilise **8003**.
-> Pour un appareil physique, modifiez `lib/config/app_config.dart` avec l'IP de votre machine.
-
-## Comptes de démonstration
+## Comptes démo
 
 | Utilisateur | Mot de passe | Rôle |
 |-------------|-------------|------|
-| `admin` | `admin1234` | Administrateur |
+| `admin` | `admin1234` | Admin |
 | `kouassi` | `farmer1234` | Agriculteur |
 | `secours` | `rescue1234` | Secours |
 
-## API REST
+## API principale
 
-| Endpoint | Méthode | Description |
-|----------|---------|-------------|
-| `/api/auth/token/` | POST | Authentification JWT |
-| `/api/users/register/` | POST | Inscription |
-| `/api/users/profile/` | GET/PATCH | Profil utilisateur |
-| `/api/parcels/` | GET/POST | Parcelles agricoles (GeoJSON) |
-| `/api/parcels/nearby/` | GET | Parcelles à proximité |
-| `/api/climate/events/` | GET | Événements climatiques |
-| `/api/climate/analyze/` | POST | Analyse IA climatique |
-| `/api/incidents/sos/` | POST | Déclencher un SOS |
-| `/api/incidents/sos/active/` | GET | SOS actifs |
-| `/api/alerts/` | GET | Liste des alertes |
+| Endpoint | Description |
+|----------|-------------|
+| `POST /api/incidents/sos/` | Déclencher SOS |
+| `POST /api/climate/analyze/` | Analyse IA |
+| `GET /api/climate/weather/forecast/` | Prévisions 7j |
+| `GET /api/core/reports/parcel/{id}/` | Rapport PDF |
+| `POST /api/core/geofences/check/` | Vérifier géofencing |
+| `POST /api/iot/ingest/` | Données capteur IoT |
+| `GET /api/analytics/dashboard/` | Stats dashboard |
+| `POST /api/notifications/register/` | Token FCM |
+| `/dashboard/` | Dashboard admin web |
 
-### WebSocket
+### WebSockets
 
 ```
-ws://localhost:8000/ws/alerts/?token=<JWT_ACCESS_TOKEN>
+ws://host:8003/ws/alerts/?token=JWT
+ws://host:8003/ws/gps/?token=JWT
+ws://host:8003/ws/chat/{incident_id}/?token=JWT
 ```
 
-## Module IA
-
-Le module IA (`ai_module/`) fournit :
-
-- **Analyse climatique** — Détection sécheresse, inondations, canicules
-- **Santé des cultures** — Évaluation par type de culture (maïs, riz, cacao…)
-- **Recommandations** — Conseils agricoles contextualisés pour l'Afrique
+## IoT — Exemple capteur
 
 ```bash
-# Test direct
-curl -X POST http://localhost:8001/analyze \
+curl -X POST http://localhost:8003/api/iot/ingest/ \
   -H "Content-Type: application/json" \
-  -d '{"lat": 7.69, "lng": -5.03, "crop_type": "maize"}'
+  -d '{"device_id":"IOT-BOUAKE-001","value":42.5,"unit":"%","battery":85}'
 ```
 
-## Fonctionnalités mobile
+## Production
 
-- Carte interactive (OpenStreetMap via flutter_map)
-- Affichage des parcelles agricoles (polygones colorés par santé)
-- Alertes climatiques en temps réel (WebSocket)
-- Bouton SOS animé pour urgences
-- Analyse IA avec recommandations agricoles
-- Authentification JWT sécurisée
-- Interface moderne Material 3
+```bash
+cd deploy && docker compose -f docker-compose.prod.yml up -d
+```
+
+Configurer : `SECRET_KEY`, `DB_PASSWORD`, `OPENWEATHER_API_KEY`, `FCM_SERVER_KEY`
 
 ## Licence
 
-Projet open-source — ARCA-GIS © 2026
+ARCA-GIS © 2024 — Open Source

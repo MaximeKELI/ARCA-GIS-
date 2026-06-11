@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from django.contrib.gis.geos import Point, Polygon
+from django.contrib.gis.geos import Point, Polygon  # Polygon used for geofences
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -157,6 +157,40 @@ class Command(BaseCommand):
                 "humidity": 42.0,
                 "wind_speed": 12.0,
                 "soil_moisture": 38.0,
+            },
+        )
+
+        self.stdout.write("Création des capteurs IoT...")
+        from iot.models import IoTSensor, SensorReading
+        from core.models import GeofenceZone
+
+        sensor, _ = IoTSensor.objects.get_or_create(
+            device_id="IOT-BOUAKE-001",
+            defaults={
+                "name": "Capteur Sol Bouaké",
+                "sensor_type": IoTSensor.SensorType.SOIL_MOISTURE,
+                "location": Point(-5.0320, 7.6920, srid=4326),
+                "battery_level": 87.0,
+                "last_seen": timezone.now(),
+            },
+        )
+        SensorReading.objects.get_or_create(
+            sensor=sensor,
+            recorded_at=timezone.now(),
+            defaults={"value": 38.0, "unit": "%"},
+        )
+
+        self.stdout.write("Création des zones géofencing...")
+        GeofenceZone.objects.get_or_create(
+            name="Zone sécheresse Bouaké",
+            defaults={
+                "zone_type": GeofenceZone.ZoneType.RISK,
+                "geometry": Polygon([
+                    (-5.045, 7.700), (-5.020, 7.700),
+                    (-5.020, 7.675), (-5.045, 7.675), (-5.045, 7.700),
+                ], srid=4326),
+                "description": "Zone à risque sécheresse — irrigation recommandée",
+                "alert_on_enter": True,
             },
         )
 
