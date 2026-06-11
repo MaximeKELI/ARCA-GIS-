@@ -21,4 +21,7 @@ urlpatterns = [
     path("weather/forecast/", WeatherForecastView.as_view()),
     path("stations/", WeatherStationListView.as_view(), name="weather-stations"),
     path("readings/", WeatherReadingListView.as_view(), name="weather-readings"),
+    path("calendar/", CropCalendarListView.as_view()),
+    path("calendar/current/", CurrentSeasonView.as_view()),
+    path("irrigation/advice/", __import__("climate.irrigation_views", fromlist=["IrrigationAdviceView"]).IrrigationAdviceView.as_view()),
 ]
