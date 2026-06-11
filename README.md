@@ -78,7 +78,8 @@ flutter pub get
 flutter run
 ```
 
-> **Note Android Emulator** : L'API pointe vers `10.0.2.2:8000` (localhost de la machine hôte).
+> **Note Android Emulator** : L'API pointe vers `10.0.2.2:8003` (localhost de la machine hôte).
+> Le port 8000 est souvent occupé par d'autres services — ARCA-GIS utilise **8003**.
 > Pour un appareil physique, modifiez `lib/config/app_config.dart` avec l'IP de votre machine.
 
 ## Comptes de démonstration
