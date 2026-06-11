@@ -150,6 +150,18 @@
             ).join('') || '<tr><td colspan="4">Aucun capteur</td></tr>';
         }
 
+        async function exportCSV() {
+            const r = await fetch(API + '/analytics/ngo/export/?format=csv', {
+                headers: { Authorization: 'Bearer ' + token }
+            });
+            if (!r.ok) return;
+            const blob = await r.blob();
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'arca_gis_parcels.csv';
+            a.click();
+        }
+
         if (token) showDashboard();
     </script>
 </body>
