@@ -47,6 +47,13 @@ INSTALLED_APPS = [
     "communications",
     "payments",
     "soils",
+    "subscriptions",
+    "forum",
+    "training",
+    "gamification",
+    "insurance",
+    "partners",
+    "mentorship",
     "drf_spectacular",
 ]
 

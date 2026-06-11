@@ -30,6 +30,13 @@ urlpatterns = [
     path("api/communications/", include("communications.urls")),
     path("api/payments/", include("payments.urls")),
     path("api/soils/", include("soils.urls")),
+    path("api/subscriptions/", include("subscriptions.urls")),
+    path("api/forum/", include("forum.urls")),
+    path("api/training/", include("training.urls")),
+    path("api/gamification/", include("gamification.urls")),
+    path("api/insurance/", include("insurance.urls")),
+    path("api/partners/", include("partners.urls")),
+    path("api/mentorship/", include("mentorship.urls")),
 ]
 
 if settings.DEBUG:
