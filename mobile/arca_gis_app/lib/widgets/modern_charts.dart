@@ -23,6 +23,7 @@ class ModernCharts {
     required IconData icon,
     double? delta,
     List<double>? sparkline,
+    bool isDark = false,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -58,7 +59,7 @@ class ModernCharts {
             ),
         ]),
         const SizedBox(height: 12),
-        Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+        Text(label, style: TextStyle(color: isDark ? Colors.white70 : Colors.grey.shade600, fontSize: 12)),
         const SizedBox(height: 4),
         Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
@@ -104,6 +105,7 @@ class ModernCharts {
     required Color color,
     required String title,
     String valueSuffix = '',
+    bool isDark = false,
   }) {
     final spots = data.asMap().entries.map((e) =>
       FlSpot(e.key.toDouble(), (e.value['value'] as num?)?.toDouble() ?? 0)).toList();
@@ -111,19 +113,22 @@ class ModernCharts {
       height: 220,
       child: LineChart(LineChartData(
         gridData: FlGridData(show: true, drawVerticalLine: false,
-            getDrawingHorizontalLine: (v) => FlLine(color: Colors.grey.withValues(alpha: 0.15), strokeWidth: 1)),
+            getDrawingHorizontalLine: (v) => FlLine(
+              color: (isDark ? Colors.white : Colors.grey).withValues(alpha: 0.12), strokeWidth: 1)),
         titlesData: FlTitlesData(
           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40,
-              getTitlesWidget: (v, _) => Text('${v.toInt()}$valueSuffix', style: const TextStyle(fontSize: 10)))),
+              getTitlesWidget: (v, _) => Text('${v.toInt()}$valueSuffix',
+                  style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54)))),
           bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true,
               getTitlesWidget: (v, meta) {
                 final i = v.toInt();
                 if (i < 0 || i >= data.length) return const SizedBox();
                 return Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Text(data[i]['label']?.toString() ?? '', style: const TextStyle(fontSize: 10)),
+                  child: Text(data[i]['label']?.toString() ?? '',
+                      style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54)),
                 );
               })),
         ),
@@ -141,7 +146,7 @@ class ModernCharts {
             colors: [color.withValues(alpha: 0.35), color.withValues(alpha: 0.02)])),
         )],
       )),
-    ));
+    ), isDark: isDark);
   }
 
   static Widget barChart({
@@ -149,6 +154,7 @@ class ModernCharts {
     required Color color,
     required String title,
     bool horizontal = false,
+    bool isDark = false,
   }) {
     return _chartCard(title, color, SizedBox(
       height: 220,
@@ -156,17 +162,20 @@ class ModernCharts {
         alignment: BarChartAlignment.spaceAround,
         maxY: _maxY(data) * 1.2,
         gridData: FlGridData(show: true, drawVerticalLine: false,
-            getDrawingHorizontalLine: (v) => FlLine(color: Colors.grey.withValues(alpha: 0.15), strokeWidth: 1)),
+            getDrawingHorizontalLine: (v) => FlLine(
+              color: (isDark ? Colors.white : Colors.grey).withValues(alpha: 0.12), strokeWidth: 1)),
         titlesData: FlTitlesData(
           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 36,
-              getTitlesWidget: (v, _) => Text(v.toInt().toString(), style: const TextStyle(fontSize: 10)))),
+              getTitlesWidget: (v, _) => Text(v.toInt().toString(),
+                  style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54)))),
           bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true,
               getTitlesWidget: (v, meta) {
                 final i = v.toInt();
                 if (i < 0 || i >= data.length) return const SizedBox();
-                return Text(data[i]['label']?.toString() ?? '', style: const TextStyle(fontSize: 9));
+                return Text(data[i]['label']?.toString() ?? '',
+                    style: TextStyle(fontSize: 9, color: isDark ? Colors.white70 : Colors.black54));
               })),
         ),
         borderData: FlBorderData(show: false),
