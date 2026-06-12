@@ -362,11 +362,11 @@ class Command(BaseCommand):
             })
 
         self.stdout.write("Création données v6...")
-        from agro_extensions.models import BeeHive, FishPond, SeedBankEntry
+        from agro_extensions.models import AgroforestryPlot, BeeHive, CompostBatch, FishPond, SeedBankEntry
         from economy.models import InputPrice, LiveAuction
         from inclusion.models import VillageWhatsAppGroup
         from iot.v6_models import LoRaDevice, SoilStation
-        from resilience.models import EarlyWarningAlert, RefugeCenter
+        from resilience.models import EarlyWarningAlert, RadioHFStation, RefugeCenter
 
         BeeHive.objects.get_or_create(name="Ruches Nord", owner=farmer, defaults={
             "location": Point(-5.034, 7.694, srid=4326), "honey_production_kg": 12.5,
@@ -376,6 +376,20 @@ class Command(BaseCommand):
         })
         SeedBankEntry.objects.get_or_create(crop_type="maize", variety="Locale Jaune", contributor=farmer, defaults={
             "quantity_kg": 50, "region": "Bouaké", "harvest_year": 2024,
+        })
+        AgroforestryPlot.objects.get_or_create(name="Parcelle Café-Cacao", owner=farmer, defaults={
+            "geometry": Polygon([
+                (-5.036, 7.692), (-5.034, 7.692), (-5.034, 7.690), (-5.036, 7.690), (-5.036, 7.692),
+            ], srid=4326),
+            "tree_species": ["café", "cacao"], "crop_association": "maïs", "tree_count": 120, "carbon_bonus": 3.5,
+        })
+        CompostBatch.objects.get_or_create(name="Compostière Nord", owner=farmer, defaults={
+            "location": Point(-5.033, 7.693, srid=4326),
+            "input_materials": ["feuilles", "fumier"], "volume_m3": 5, "maturity_pct": 75,
+        })
+        RadioHFStation.objects.get_or_create(name="Radio Bouaké HF", defaults={
+            "location": Point(-5.030, 7.690, srid=4326), "frequency": "7.100 MHz",
+            "region": "Bouaké", "is_operational": True,
         })
         RefugeCenter.objects.get_or_create(name="École Primaire Bouaké", defaults={
             "center_type": "school", "location": Point(-5.031, 7.691, srid=4326),
