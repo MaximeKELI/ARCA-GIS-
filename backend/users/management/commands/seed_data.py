@@ -353,5 +353,49 @@ class Command(BaseCommand):
                 "period_end": date(2025, 12, 31),
             })
 
+        self.stdout.write("Création données v6...")
+        from agro_extensions.models import BeeHive, FishPond, SeedBankEntry
+        from economy.models import InputPrice, LiveAuction
+        from inclusion.models import VillageWhatsAppGroup
+        from iot.v6_models import LoRaDevice, SoilStation
+        from resilience.models import EarlyWarningAlert, RefugeCenter
+        from datetime import timedelta
+
+        BeeHive.objects.get_or_create(name="Ruches Nord", owner=farmer, defaults={
+            "location": Point(-5.034, 7.694, srid=4326), "honey_production_kg": 12.5,
+        })
+        FishPond.objects.get_or_create(name="Bassin Tilapia", owner=farmer, defaults={
+            "location": Point(-5.029, 7.681, srid=4326), "stock_count": 500,
+        })
+        SeedBankEntry.objects.get_or_create(crop_type="maize", variety="Locale Jaune", contributor=farmer, defaults={
+            "quantity_kg": 50, "region": "Bouaké", "harvest_year": 2024,
+        })
+        RefugeCenter.objects.get_or_create(name="École Primaire Bouaké", defaults={
+            "center_type": "school", "location": Point(-5.031, 7.691, srid=4326),
+            "region": "Bouaké", "capacity": 300,
+        })
+        EarlyWarningAlert.objects.get_or_create(title="Risque sécheresse Bouaké", defaults={
+            "hazard_type": "drought", "level": "warning", "region": "Bouaké",
+            "description": "Pluviométrie inférieure à la normale sur 30 jours",
+        })
+        VillageWhatsAppGroup.objects.get_or_create(village_name="Village Kouassi", defaults={
+            "region": "Bouaké", "admin_phone": "+2250700000001", "member_count": 45,
+        })
+        LoRaDevice.objects.get_or_create(device_id="LORA-001", defaults={
+            "name": "Capteur sol LoRa", "location": Point(-5.033, 7.693, srid=4326),
+            "device_type": "soil_moisture",
+        })
+        SoilStation.objects.get_or_create(device_id="SOIL-001", defaults={
+            "name": "Station NPK Bouaké", "location": Point(-5.032, 7.692, srid=4326),
+            "ph": 5.8, "nitrogen": 45, "phosphorus": 30, "potassium": 25,
+        })
+        InputPrice.objects.get_or_create(product="NPK 15-15-15", region="Bouaké", defaults={
+            "product_type": "fertilizer", "price_per_unit": 350, "unit": "kg",
+        })
+        LiveAuction.objects.get_or_create(seller=farmer, crop_type="maize", defaults={
+            "quantity_kg": 200, "starting_price": 250,
+            "ends_at": timezone.now() + timedelta(hours=2),
+        })
+
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès!"))
         self.stdout.write("Comptes: admin/admin1234, kouassi/farmer1234, secours/rescue1234")
