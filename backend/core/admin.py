@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.gis.admin import GISModelAdmin
 
 from .models import AuditLog, GeofenceZone, OfflineSyncQueue
+from .bookmark_models import Bookmark
 
 
 @admin.register(GeofenceZone)
@@ -18,3 +19,8 @@ class AuditLogAdmin(admin.ModelAdmin):
 @admin.register(OfflineSyncQueue)
 class OfflineSyncQueueAdmin(admin.ModelAdmin):
     list_display = ["user", "action_type", "synced", "created_at"]
+
+
+@admin.register(Bookmark)
+class BookmarkAdmin(admin.ModelAdmin):
+    list_display = ["user", "resource_type", "resource_id", "label"]
