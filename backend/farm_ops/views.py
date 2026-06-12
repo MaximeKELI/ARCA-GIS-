@@ -67,11 +67,7 @@ class InventoryAlertsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        low = InputInventory.objects.filter(owner=request.user, quantity__lte=models.F("alert_threshold"))
-        from django.db import models
-        low = InputInventory.objects.filter(owner=request.user).extra(
-            where=["quantity <= alert_threshold"]
-        )
+        low = [i for i in InputInventory.objects.filter(owner=request.user) if i.is_low]
         return Response({"low_stock": InputInventorySerializer(low, many=True).data})
 
 
