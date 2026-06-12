@@ -202,7 +202,7 @@ MAP_TILE_CDN = env("MAP_TILE_CDN", default="https://tile.openstreetmap.org/{z}/{
 SPECTACULAR_SETTINGS = {
     "TITLE": "ARCA-GIS API",
     "DESCRIPTION": "Plateforme géomatique africaine — Agriculture, Urgences, Climat",
-    "VERSION": "3.0.0",
+    "VERSION": "5.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
