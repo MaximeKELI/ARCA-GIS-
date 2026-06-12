@@ -107,7 +107,7 @@ class _AgroHubScreenState extends State<AgroHubScreen> with SingleTickerProvider
                   _listTab(_hives, Icons.hive, (h) => [
                     Text(h['name']?.toString() ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),
                     Text('Miel: ${h['honey_production_kg'] ?? 0} kg · Force: ${h['colony_strength'] ?? ''}'),
-                    if (h['swarm_alert'] == true) const Chip(label: Text('Essaim!', backgroundColor: Colors.orange)),
+                    if (h['swarm_alert'] == true) Chip(label: const Text('Essaim!'), backgroundColor: Colors.orange.shade100),
                   ]),
                   _listTab(_ponds, Icons.water, (p) => [
                     Text(p['name']?.toString() ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),

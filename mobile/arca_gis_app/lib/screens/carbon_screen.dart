@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../config/theme.dart';
 import '../services/api_service.dart';
 import '../utils/api_utils.dart';
 import '../widgets/modern_charts.dart';
@@ -35,7 +34,7 @@ class _CarbonScreenState extends State<CarbonScreen> {
     }
   }
 
-  Future<void> _estimate() async {
+  Future<void> _runEstimate() async {
     final area = TextEditingController(text: '2.5');
     final crop = TextEditingController(text: 'maize');
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
