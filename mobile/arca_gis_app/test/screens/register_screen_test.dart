@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -84,12 +86,18 @@ void main() {
     });
 
     testWidgets('soumet le formulaire valide', (tester) async {
+      final pending = Completer<void>();
+      fakeAuth = FakeAuthService(
+        onRegister: () async {
+          await pending.future;
+          throw StateError('non utilisé');
+        },
+      );
       await tester.pumpWidget(buildScreen());
       await fillForm(tester);
 
       await tapRegister(tester);
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
 
       expect(fakeAuth.registerCallCount, 1);
       expect(fakeAuth.lastUsername, 'jean_k');
