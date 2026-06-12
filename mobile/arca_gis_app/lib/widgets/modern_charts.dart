@@ -348,4 +348,77 @@ class ModernCharts {
     if (hex == null || hex.length < 7) return AppTheme.primaryGreen;
     return Color(int.parse(hex.replaceFirst('#', '0xFF')));
   }
+
+  static Widget chartCard({required String title, required Color accent, required Widget child, bool isDark = false}) =>
+      _chartCard(title, accent, child, isDark: isDark);
+
+  static Widget sankeyChart({required String title, required Map<String, dynamic> data, bool isDark = false}) {
+    final nodes = (data['nodes'] as List?)?.cast<String>() ?? [];
+    final links = (data['links'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final total = (data['total_income'] as num?)?.toDouble() ?? links.fold<double>(0, (s, l) => s + ((l['value'] as num?)?.toDouble() ?? 0));
+    return _chartCard(title, AppTheme.primaryGreen, Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (total > 0) Text('Revenus: ${total.toInt()} XOF', style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
+        const SizedBox(height: 12),
+        ...links.map((link) {
+          final target = (link['target'] as int?) ?? 0;
+          final val = (link['value'] as num?)?.toDouble() ?? 0;
+          final label = target < nodes.length ? nodes[target] : '';
+          final pct = total > 0 ? val / total : 0;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(children: [
+              SizedBox(width: 80, child: Text(label, style: TextStyle(fontSize: 11, color: isDark ? Colors.white70 : Colors.black87))),
+              Expanded(child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(value: pct, minHeight: 16, color: palette[link['target'] as int? ?? 0 % palette.length]),
+              )),
+              const SizedBox(width: 8),
+              Text('${val.toInt()}', style: const TextStyle(fontSize: 11)),
+            ]),
+          );
+        }),
+      ],
+    ), isDark: isDark);
+  }
+
+  static Widget seasonCompareChart({required String title, required Map<String, dynamic> data, bool isDark = false}) {
+    final rows = (data['data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+    final crops = (data['crops'] as List?)?.cast<String>() ?? [];
+    if (rows.isEmpty) return chartCard(title: title, accent: AppTheme.accentOrange, child: const Text('Aucune donnée'), isDark: isDark);
+    return _chartCard(title, AppTheme.accentOrange, SizedBox(
+      height: 220,
+      child: BarChart(BarChartData(
+        alignment: BarChartAlignment.spaceAround,
+        maxY: rows.expand((r) => (r['values'] as List?)?.cast<num>() ?? []).fold<double>(0, (m, v) => v.toDouble() > m ? v.toDouble() : m) * 1.2,
+        gridData: FlGridData(show: true, drawVerticalLine: false,
+            getDrawingHorizontalLine: (v) => FlLine(color: (isDark ? Colors.white : Colors.grey).withValues(alpha: 0.12), strokeWidth: 1)),
+        titlesData: FlTitlesData(
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true,
+              getTitlesWidget: (v, _) {
+                final i = v.toInt();
+                if (i < 0 || i >= rows.length) return const SizedBox();
+                return Text('${rows[i]['year']}', style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54));
+              })),
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40,
+              getTitlesWidget: (v, _) => Text(v.toInt().toString(), style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54)))),
+        ),
+        borderData: FlBorderData(show: false),
+        barGroups: List.generate(rows.length, (i) {
+          final vals = (rows[i]['values'] as List?)?.cast<num>() ?? [];
+          return BarChartGroupData(x: i, barsSpace: 4, barRods: List.generate(vals.length, (j) {
+            return BarChartRodData(
+              toY: vals[j].toDouble(),
+              width: 8,
+              color: palette[j % palette.length],
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
+            );
+          }));
+        }),
+      )),
+    ), isDark: isDark);
+  }
 }

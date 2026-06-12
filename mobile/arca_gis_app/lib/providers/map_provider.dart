@@ -22,8 +22,24 @@ class MapProvider extends ChangeNotifier {
   final GPSTrackingService _gps = GPSTrackingService();
   final OfflineTileService _tiles = OfflineTileService();
   bool _offlineTilesReady = false;
-  List<Map<String, dynamic>> _heatmapCells = [];
-  bool _showHeatmap = false;
+  List<Map<String, dynamic>> _choroplethCells = [];
+  bool _showChoropleth = false;
+  String _choroplethMetric = 'moisture';
+
+  List<Map<String, dynamic>> get choroplethCells => _choroplethCells;
+  bool get showChoropleth => _showChoropleth;
+
+  void setChoropleth(List<dynamic> cells, String metric) {
+    _choroplethCells = cells.cast<Map<String, dynamic>>();
+    _choroplethMetric = metric;
+    _showChoropleth = true;
+    notifyListeners();
+  }
+
+  void toggleChoropleth() {
+    _showChoropleth = !_showChoropleth;
+    notifyListeners();
+  }
 
   List<Parcel> _parcels = [];
   List<ClimateEvent> _climateEvents = [];

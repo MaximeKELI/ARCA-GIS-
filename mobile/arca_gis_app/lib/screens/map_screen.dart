@@ -44,6 +44,20 @@ class _MapScreenState extends State<MapScreen> {
                 userAgentPackageName: 'africa.arca.arca_gis_app',
                 tileProvider: OfflineTileProvider(cacheDir: mapProvider.offlineTileCacheDir),
               ),
+              if (mapProvider.showChoropleth && mapProvider.choroplethCells.isNotEmpty)
+                CircleLayer(
+                  circles: mapProvider.choroplethCells.map((c) {
+                    final color = Color(int.parse((c['color']?.toString() ?? '#2E7D32').replaceFirst('#', '0xFF')));
+                    return CircleMarker(
+                      point: LatLng((c['lat'] as num).toDouble(), (c['lng'] as num).toDouble()),
+                      radius: 400,
+                      useRadiusInMeter: true,
+                      color: color.withValues(alpha: 0.45),
+                      borderColor: color,
+                      borderStrokeWidth: 2,
+                    );
+                  }).toList(),
+                ),
               if (mapProvider.showHeatmap && mapProvider.heatmapCells.isNotEmpty)
                 CircleLayer(
                   circles: mapProvider.heatmapCells.map((c) {
