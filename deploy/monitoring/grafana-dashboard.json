@@ -1,9 +1,54 @@
 {
   "title": "ARCA-GIS Overview",
+  "uid": "arca-gis-overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
   "panels": [
-    {"title": "API Requests/min", "type": "graph", "targets": [{"expr": "rate(http_requests_total[5m])"}]},
-    {"title": "Active SOS", "type": "stat", "targets": [{"expr": "arca_active_sos"}]},
-    {"title": "IoT Devices Online", "type": "stat", "targets": [{"expr": "arca_iot_devices_online"}]},
-    {"title": "AI Module Latency", "type": "graph", "targets": [{"expr": "histogram_quantile(0.95, ai_request_duration_seconds)"}]}
+    {
+      "id": 1,
+      "title": "Requêtes HTTP (total)",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "targets": [{"expr": "http_requests_total", "legendFormat": "requests"}]
+    },
+    {
+      "id": 2,
+      "title": "SOS actifs",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "fieldConfig": {"defaults": {"color": {"mode": "thresholds"}, "thresholds": {"steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}}},
+      "targets": [{"expr": "arca_active_sos"}]
+    },
+    {
+      "id": 3,
+      "title": "Parcelles actives",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+      "targets": [{"expr": "arca_parcels_active"}]
+    },
+    {
+      "id": 4,
+      "title": "Capteurs IoT",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+      "targets": [{"expr": "arca_iot_devices_online"}]
+    },
+    {
+      "id": 5,
+      "title": "Base de données",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 4},
+      "fieldConfig": {"defaults": {"mappings": [{"options": {"0": {"text": "DOWN"}}, "type": "value"}, {"options": {"1": {"text": "UP"}}, "type": "value"}]}}},
+      "targets": [{"expr": "arca_db_up"}]
+    },
+    {
+      "id": 6,
+      "title": "Erreurs HTTP 5xx",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 4},
+      "targets": [{"expr": "http_errors_total"}]
+    }
   ]
 }

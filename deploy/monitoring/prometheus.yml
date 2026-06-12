@@ -4,10 +4,10 @@ global:
 scrape_configs:
   - job_name: "arca-gis-backend"
     static_configs:
-      - targets: ["backend:8000"]
+      - targets: ["arca_gis_backend:8000"]
     metrics_path: /metrics
 
   - job_name: "arca-gis-ai"
     static_configs:
-      - targets: ["ai_module:8001"]
+      - targets: ["arca_gis_ai:8001"]
     metrics_path: /health
