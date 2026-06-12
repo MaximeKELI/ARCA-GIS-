@@ -1,8 +1,9 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import '../config/assets.dart';
 import '../config/theme.dart';
 
-/// Logo ARCA-GIS vectoriel (Afrique + feuille + pin GPS).
+/// Logo ARCA-GIS — continent africain entier (image + repli vectoriel).
 class ArcaLogo extends StatelessWidget {
   final double size;
   final bool showText;
@@ -23,11 +24,26 @@ class ArcaLogo extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
+        Container(
           width: size,
           height: size,
-          child: CustomPaint(
-            painter: _ArcaLogoPainter(fg: fg, onDark: onDark),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(size * 0.22),
+            boxShadow: onDark
+                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 12, offset: const Offset(0, 4))]
+                : null,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(size * 0.22),
+            child: Image.asset(
+              AppAssets.logo,
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => CustomPaint(
+                painter: _ArcaLogoPainter(fg: fg, onDark: onDark),
+              ),
+            ),
           ),
         ),
         if (showText) ...[
@@ -83,79 +99,84 @@ class _ArcaLogoPainter extends CustomPainter {
 
     _drawAfrica(canvas, size, fg);
     _drawLeaf(canvas, size, fg);
-    _drawPin(canvas, size, AppTheme.sosRed);
   }
 
   void _drawAfrica(Canvas canvas, Size size, Color color) {
-    final path = Path()
-      ..moveTo(size.width * 0.38, size.height * 0.28)
-      ..quadraticBezierTo(size.width * 0.52, size.height * 0.22, size.width * 0.62, size.height * 0.32)
-      ..quadraticBezierTo(size.width * 0.72, size.height * 0.38, size.width * 0.68, size.height * 0.48)
-      ..quadraticBezierTo(size.width * 0.74, size.height * 0.58, size.width * 0.65, size.height * 0.62)
-      ..quadraticBezierTo(size.width * 0.58, size.height * 0.72, size.width * 0.48, size.height * 0.68)
-      ..quadraticBezierTo(size.width * 0.38, size.height * 0.74, size.width * 0.34, size.height * 0.62)
-      ..quadraticBezierTo(size.width * 0.28, size.height * 0.52, size.width * 0.32, size.height * 0.42)
-      ..close();
-    canvas.drawPath(path, Paint()..color = color.withValues(alpha: 0.85));
-  }
+    final w = size.width;
+    final h = size.height;
+    final paint = Paint()..color = color.withValues(alpha: 0.88);
 
-  void _drawLeaf(Canvas canvas, Size size, Color color) {
-    final leaf = Path()
-      ..moveTo(size.width * 0.52, size.height * 0.44)
-      ..quadraticBezierTo(size.width * 0.58, size.height * 0.36, size.width * 0.54, size.height * 0.52)
-      ..quadraticBezierTo(size.width * 0.46, size.height * 0.56, size.width * 0.52, size.height * 0.44);
-    canvas.drawPath(leaf, Paint()..color = AppTheme.accentOrange.withValues(alpha: 0.9));
-    canvas.drawLine(
-      Offset(size.width * 0.52, size.height * 0.44),
-      Offset(size.width * 0.50, size.height * 0.54),
-      Paint()
-        ..color = color.withValues(alpha: 0.6)
-        ..strokeWidth = size.width * 0.012,
+    // Silhouette simplifiée de tout le continent africain
+    final path = Path()
+      ..moveTo(w * 0.40, h * 0.20)
+      ..lineTo(w * 0.56, h * 0.18)
+      ..quadraticBezierTo(w * 0.66, h * 0.19, w * 0.72, h * 0.24)
+      ..quadraticBezierTo(w * 0.80, h * 0.28, w * 0.78, h * 0.36)
+      ..quadraticBezierTo(w * 0.76, h * 0.48, w * 0.72, h * 0.58)
+      ..quadraticBezierTo(w * 0.66, h * 0.72, w * 0.54, h * 0.80)
+      ..quadraticBezierTo(w * 0.44, h * 0.82, w * 0.36, h * 0.74)
+      ..quadraticBezierTo(w * 0.28, h * 0.64, w * 0.30, h * 0.52)
+      ..quadraticBezierTo(w * 0.32, h * 0.40, w * 0.36, h * 0.30)
+      ..quadraticBezierTo(w * 0.38, h * 0.24, w * 0.40, h * 0.20)
+      ..close();
+    canvas.drawPath(path, paint);
+
+    // Madagascar
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(w * 0.76, h * 0.66), width: w * 0.07, height: h * 0.11),
+      Paint()..color = color.withValues(alpha: 0.75),
     );
   }
 
-  void _drawPin(Canvas canvas, Size size, Color color) {
-    final px = size.width * 0.56;
-    final py = size.height * 0.40;
-    final pinR = size.width * 0.055;
-    canvas.drawCircle(Offset(px, py), pinR, Paint()..color = color);
-    canvas.drawCircle(Offset(px, py), pinR * 0.4, Paint()..color = Colors.white);
-    final tail = Path()
-      ..moveTo(px, py + pinR)
-      ..lineTo(px - pinR * 0.6, py + pinR * 2.2)
-      ..lineTo(px + pinR * 0.6, py + pinR * 2.2)
-      ..close();
-    canvas.drawPath(tail, Paint()..color = color);
+  void _drawLeaf(Canvas canvas, Size size, Color color) {
+    final w = size.width;
+    final h = size.height;
+    final leaf = Path()
+      ..moveTo(w * 0.48, h * 0.46)
+      ..quadraticBezierTo(w * 0.54, h * 0.38, w * 0.50, h * 0.54)
+      ..quadraticBezierTo(w * 0.42, h * 0.58, w * 0.48, h * 0.46);
+    canvas.drawPath(leaf, Paint()..color = AppTheme.accentOrange.withValues(alpha: 0.9));
   }
 
   @override
   bool shouldRepaint(covariant _ArcaLogoPainter old) => old.fg != fg || old.onDark != onDark;
 }
 
-/// En-tête drawer avec logo.
+/// En-tête drawer avec logo et image de fond.
 class ArcaDrawerHeader extends StatelessWidget {
   const ArcaDrawerHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DrawerHeader(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppTheme.primaryDark, AppTheme.primaryGreen],
-        ),
-      ),
+      decoration: const BoxDecoration(color: AppTheme.primaryDark),
       child: Stack(
+        fit: StackFit.expand,
         children: [
+          Image.asset(
+            AppAssets.carouselAgriculture,
+            fit: BoxFit.cover,
+            color: Colors.black.withValues(alpha: 0.55),
+            colorBlendMode: BlendMode.darken,
+            errorBuilder: (_, __, ___) => const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppTheme.primaryDark, AppTheme.primaryGreen],
+                ),
+              ),
+            ),
+          ),
           Positioned(
-            right: -20,
-            top: -10,
+            right: -24,
+            top: -8,
             child: Transform.rotate(
-              angle: math.pi / 8,
+              angle: math.pi / 10,
               child: Opacity(
-                opacity: 0.08,
-                child: ArcaLogo(size: 120, showText: false, onDark: true),
+                opacity: 0.35,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(AppAssets.logo, width: 100, height: 100, fit: BoxFit.cover),
+                ),
               ),
             ),
           ),
