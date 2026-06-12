@@ -7,6 +7,7 @@ import '../config/theme.dart';
 import '../providers/map_provider.dart';
 import 'chat_screen.dart';
 import 'parcel_draw_screen.dart';
+import 'measure_map_screen.dart';
 import '../widgets/sos_button.dart';
 
 class MapScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'africa.arca.arca_gis_app',
+                tileProvider: OfflineTileProvider(cacheDir: mapProvider.offlineTileCacheDir),
               ),
               if (mapProvider.parcels.isNotEmpty)
                 PolygonLayer(
@@ -126,11 +128,26 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 const SizedBox(height: 8),
                 FloatingActionButton.small(
-                  heroTag: 'refresh',
-                  onPressed: () => mapProvider.loadAllData(),
+                  heroTag: 'offline',
+                  onPressed: () async {
+                    await mapProvider.downloadOfflineTiles();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(mapProvider.offlineTilesReady ? 'Tuiles offline téléchargées' : 'Position requise')),
+                      );
+                    }
+                  },
+                  backgroundColor: mapProvider.offlineTilesReady ? AppTheme.primaryGreen : Colors.white,
+                  foregroundColor: mapProvider.offlineTilesReady ? Colors.white : AppTheme.primaryGreen,
+                  child: const Icon(Icons.download),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton.small(
+                  heroTag: 'measure',
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MeasureMapScreen())),
                   backgroundColor: Colors.white,
                   foregroundColor: AppTheme.primaryGreen,
-                  child: const Icon(Icons.refresh),
+                  child: const Icon(Icons.straighten),
                 ),
                 const SizedBox(height: 8),
                 FloatingActionButton.small(

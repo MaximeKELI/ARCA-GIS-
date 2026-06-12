@@ -63,7 +63,7 @@ class MapProvider extends ChangeNotifier {
     return ((1 - log(tan(r) + 1 / cos(r)) / pi) / 2 * pow(2, z)).floor();
   }
 
-  String? get offlineTileCacheDir => _tiles._cacheDirPath;
+  String? get offlineTileCacheDir => _tiles.cacheDirPath;
 
   Future<void> initialize() async {
     _ws.alertStream.listen((alert) {

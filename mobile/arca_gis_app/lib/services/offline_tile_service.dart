@@ -39,6 +39,8 @@ class OfflineTileService {
     return File(path).existsSync() ? path : null;
   }
 
+  String? get cacheDirPath => _cacheDirPath;
+
   Future<void> init() async {
     await cacheDir;
   }
