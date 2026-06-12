@@ -237,3 +237,72 @@ def health_predict(request: HealthPredictRequest):
 @app.post("/retrain")
 def model_retrain(samples: list[dict]):
     return retrain(samples)
+
+
+class RAGRequest(BaseModel):
+    query: str
+    language: str = "fr"
+    context: dict | None = None
+
+
+class PriceForecastRequest(BaseModel):
+    crop_type: str = "maize"
+    days: int = 7
+
+
+class YieldFusionRequest(BaseModel):
+    crop_type: str = "maize"
+    area_hectares: float = 1.0
+    ndvi: float = 0.5
+    soil_moisture: float = 50.0
+    temperature: float = 28.0
+    rainfall_mm: float = 10.0
+
+
+class InputOptimizeRequest(BaseModel):
+    crop_type: str = "maize"
+    area_hectares: float = 1.0
+    soil_quality: str = "medium"
+
+
+class DronePestRequest(BaseModel):
+    image_b64: str | None = None
+    crop_type: str = "maize"
+
+
+class CarbonRequest(BaseModel):
+    area_hectares: float = 1.0
+    crop_type: str = "maize"
+
+
+@app.post("/rag")
+def rag_assistant(request: RAGRequest):
+    return rag_query(request.query, request.language, request.context)
+
+
+@app.post("/price-forecast")
+def price_forecast(request: PriceForecastRequest):
+    return forecast_price(request.crop_type, request.days)
+
+
+@app.post("/yield-fusion")
+def yield_fusion(request: YieldFusionRequest):
+    return fuse_yield(
+        request.crop_type, request.area_hectares, request.ndvi,
+        request.soil_moisture, request.temperature, request.rainfall_mm,
+    )
+
+
+@app.post("/optimize-inputs")
+def optimize_inputs_endpoint(request: InputOptimizeRequest):
+    return optimize_inputs(request.crop_type, request.area_hectares, request.soil_quality)
+
+
+@app.post("/drone-pest")
+def drone_pest(request: DronePestRequest):
+    return analyze_drone_image(request.image_b64, request.crop_type)
+
+
+@app.post("/carbon-estimate")
+def carbon_estimate(request: CarbonRequest):
+    return estimate_carbon(request.area_hectares, request.crop_type)

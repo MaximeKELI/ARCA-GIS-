@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>ARCA-GIS — Portail Développeurs</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #333; }
+        h1 { color: #2E7D32; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; }
+        .endpoint { background: #f9f9f9; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #2E7D32; }
+        a { color: #2E7D32; }
+    </style>
+</head>
+<body>
+    <h1>ARCA-GIS API v5.0 — Portail Développeurs</h1>
+    <p>Documentation interactive : <a href="/api/docs/">Swagger OpenAPI</a></p>
+    <h2>Authentification</h2>
+    <p>JWT via <code>POST /api/auth/token/</code> — Header <code>Authorization: Bearer &lt;token&gt;</code></p>
+    <p>Partenaires ONG : Header <code>X-ARCA-API-Key: arca_xxx</code></p>
+    <h2>Endpoints clés v5</h2>
+    <div class="endpoint"><strong>GET /api/livestock/herds/</strong> — Troupeaux</div>
+    <div class="endpoint"><strong>GET /api/water/points/</strong> — Points d'eau</div>
+    <div class="endpoint"><strong>POST /api/finance/loans/</strong> — Micro-crédit</div>
+    <div class="endpoint"><strong>GET /api/logistics/transporters/</strong> — Transporteurs</div>
+    <div class="endpoint"><strong>GET /api/carbon/estimate/</strong> — Crédits carbone</div>
+    <div class="endpoint"><strong>GET /api/climate/wildfires/</strong> — Feux NASA FIRMS</div>
+    <div class="endpoint"><strong>POST /api/communications/whatsapp/send/</strong> — WhatsApp</div>
+    <div class="endpoint"><strong>GET /api/countries/</strong> — Config multi-pays</div>
+    <h2>SDK Mobile</h2>
+    <p>Base URL : <code>http://localhost:8003/api</code> — Android émulateur : <code>http://10.0.2.2:8003/api</code></p>
+</body>
+</html>

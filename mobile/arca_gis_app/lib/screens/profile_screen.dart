@@ -4,6 +4,7 @@ import '../config/app_config.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
+import '../providers/theme_provider.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -56,6 +57,14 @@ class ProfileScreen extends StatelessWidget {
           _infoTile(Icons.public, 'Pays', user.country),
           if (user.region.isNotEmpty) _infoTile(Icons.location_on, 'Région', user.region),
           const SizedBox(height: 16),
+          Card(
+            child: SwitchListTile(
+              secondary: const Icon(Icons.dark_mode, color: AppTheme.primaryGreen),
+              title: const Text('Mode sombre'),
+              value: context.watch<ThemeProvider>().isDark,
+              onChanged: (_) => context.read<ThemeProvider>().toggle(),
+            ),
+          ),
           Card(
             child: ListTile(
               leading: const Icon(Icons.language, color: AppTheme.primaryGreen),

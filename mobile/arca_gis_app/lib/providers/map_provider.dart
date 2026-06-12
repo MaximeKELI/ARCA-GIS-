@@ -9,6 +9,7 @@ import '../services/geofence_service.dart';
 import '../services/gps_tracking_service.dart';
 import '../services/location_service.dart';
 import '../services/offline_service.dart';
+import '../services/offline_tile_service.dart';
 import '../services/websocket_service.dart';
 
 class MapProvider extends ChangeNotifier {

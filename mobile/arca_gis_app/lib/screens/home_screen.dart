@@ -19,6 +19,9 @@ import 'gamification_screen.dart';
 import 'insurance_screen.dart';
 import 'disease_screen.dart';
 import 'feature_phone_screen.dart';
+import 'mentorship_screen.dart';
+import 'subscriptions_screen.dart';
+import 'livestock_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -104,6 +107,13 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const DiseaseScreen())); }),
             ListTile(leading: const Icon(Icons.phone_android), title: const Text('Mode feature phone'),
               onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const FeaturePhoneScreen())); }),
+            const Divider(),
+            ListTile(leading: const Icon(Icons.people), title: const Text('Mentorat'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const MentorshipScreen())); }),
+            ListTile(leading: const Icon(Icons.card_membership), title: const Text('Abonnements'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SubscriptionsScreen())); }),
+            ListTile(leading: const Icon(Icons.pets), title: const Text('Élevage'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const LivestockScreen())); }),
           ],
         ),
       ),
