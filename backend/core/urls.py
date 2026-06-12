@@ -6,6 +6,7 @@ from .bookmark_views import BookmarkDeleteView, BookmarkListCreateView
 from .search_views import GlobalSearchView
 from .oauth_views import OAuthCallbackView, OAuthProvidersView
 from .gdpr_views import ConsentView, DataDeleteView, DataExportView
+from .health_views import HealthView
 from .views import (
     AuditLogListView,
     GeofenceCheckView,
@@ -32,4 +33,5 @@ urlpatterns = [
     path("backup/", BackupTriggerView.as_view()),
     path("oauth/providers/", OAuthProvidersView.as_view()),
     path("oauth/callback/", OAuthCallbackView.as_view()),
+    path("health/", HealthView.as_view()),
 ]
