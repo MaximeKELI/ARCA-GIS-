@@ -295,11 +295,7 @@ class ModernCharts {
         radarBorderData: BorderSide(color: gridColor),
         gridBorderData: BorderSide(color: gridColor),
         tickBorderData: BorderSide(color: gridColor),
-        getTitle: (i, _) => RadarChartTitle(
-          text: i < labels.length ? labels[i] : '',
-          angle: 0,
-          style: TextStyle(fontSize: 11, color: isDark ? Colors.white70 : Colors.black87),
-        ),
+        getTitle: (i, _) => RadarChartTitle(text: i < labels.length ? labels[i] : '', angle: 0),
         dataSets: [RadarDataSet(
           fillColor: AppTheme.climateBlue.withValues(alpha: 0.25),
           borderColor: AppTheme.climateBlue,
