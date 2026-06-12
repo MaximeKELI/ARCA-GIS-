@@ -373,14 +373,14 @@ class ModernCharts {
           final target = (link['target'] as int?) ?? 0;
           final val = (link['value'] as num?)?.toDouble() ?? 0;
           final label = target < nodes.length ? nodes[target] : '';
-          final pct = total > 0 ? val / total : 0;
+          final pct = total > 0 ? val / total : 0.0;
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(children: [
               SizedBox(width: 80, child: Text(label, style: TextStyle(fontSize: 11, color: isDark ? Colors.white70 : Colors.black87))),
               Expanded(child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(value: pct, minHeight: 16, color: palette[(link['target'] as int? ?? 0) % palette.length]),
+                child: LinearProgressIndicator(value: pct.clamp(0.0, 1.0), minHeight: 16, color: palette[(link['target'] as int? ?? 0) % palette.length]),
               )),
               const SizedBox(width: 8),
               Text('${val.toInt()}', style: const TextStyle(fontSize: 11)),
@@ -395,7 +395,21 @@ class ModernCharts {
     final rows = (data['data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
     final crops = (data['crops'] as List?)?.cast<String>() ?? [];
     if (rows.isEmpty) return chartCard(title: title, accent: AppTheme.accentOrange, child: const Text('Aucune donnée'), isDark: isDark);
-    return _chartCard(title, AppTheme.accentOrange, SizedBox(
+    final crops = (data['crops'] as List?)?.cast<String>() ?? [];
+    return _chartCard(title, AppTheme.accentOrange, Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      if (crops.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Wrap(
+            spacing: 8,
+            children: List.generate(crops.length, (i) => Row(mainAxisSize: MainAxisSize.min, children: [
+              Container(width: 10, height: 10, color: palette[i % palette.length]),
+              const SizedBox(width: 4),
+              Text(crops[i], style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54)),
+            ])),
+          ),
+        ),
+      SizedBox(
       height: 220,
       child: BarChart(BarChartData(
         alignment: BarChartAlignment.spaceAround,

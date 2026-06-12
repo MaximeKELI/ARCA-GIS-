@@ -30,6 +30,7 @@ class MapProvider extends ChangeNotifier {
 
   List<Map<String, dynamic>> get choroplethCells => _choroplethCells;
   bool get showChoropleth => _showChoropleth;
+  String get choroplethMetric => _choroplethMetric;
 
   void setChoropleth(List<dynamic> cells, String metric) {
     _choroplethCells = cells.cast<Map<String, dynamic>>();

@@ -15,6 +15,19 @@ ARCA-GIS/
 └── docker-compose.yml
 ```
 
+## Bloc C v7.5 — Stats avancées
+
+- **Onglet Avancé** dans Analytiques : choroplèthe, Sankey budget, timeline, comparaison saisons
+- **Choroplèthe carte** : humidité ou santé parcelles (toggle FAB bleu)
+- **KPIs animés** : compteurs count-up sur la vue d'ensemble
+- **Filtres dynamiques** : période (6/12/24 mois), métrique humidité/santé
+
+| URL | Description |
+|-----|-------------|
+| `GET /api/analytics/advanced/` | Stats avancées (choroplèthe, Sankey, timeline, saisons) |
+| `GET /api/analytics/advanced/?metric=health` | Choroplèthe santé parcelles |
+| `GET /api/analytics/advanced/?months=24&crop=maize` | Filtres période et culture |
+
 ## Bloc B v7.4 — Agriculture complète
 
 - **Hub agriculture étendue** : apiculture, aquaculture, semencier, agroforesterie, compost + rotation IA
@@ -45,7 +58,7 @@ ARCA-GIS/
 
 ## Statistiques & visualisations v7.2
 
-- **Hub statistiques** (onglet Analytiques) : 4 onglets — Vue d'ensemble, Agriculture, Finance, Climat
+- **Hub statistiques** (onglet Analytiques) : 5 onglets — Vue d'ensemble, Agriculture, Finance, Climat, Avancé
 - **KPIs animés** avec sparklines, tendances % et cartes gradient
 - **Courbes** : humidité sol, NDVI, pluviométrie (gradients + area fill)
 - **Barres** : récoltes mensuelles, revenus vs dépenses groupés
@@ -108,6 +121,7 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | `GET /api/training/quizzes/<id>/` | Quiz formation |
 | `GET /api/training/certificates/<id>/download/` | Certificat PDF |
 | `GET /api/analytics/visual/` | Statistiques visuelles (KPIs, courbes, radar) |
+| `GET /api/analytics/advanced/` | Stats avancées (Sankey, timeline, saisons) |
 | `GET /api/analytics/heatmap/` | Heatmap rendements |
 | `POST /api/core/offline/sync/` | Queue sync offline |
 | `POST /api/communications/ussd/simulate/` | Simulateur USSD |
