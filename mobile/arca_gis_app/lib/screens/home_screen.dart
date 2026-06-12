@@ -32,6 +32,7 @@ import 'inventory_screen.dart';
 import 'budget_screen.dart';
 import 'sync_screen.dart';
 import 'alert_rules_screen.dart';
+import 'coop_hub_screen.dart';
 import 'field_journal_screen.dart';
 import 'quiz_screen.dart';
 import 'role_dashboard_screen.dart';
