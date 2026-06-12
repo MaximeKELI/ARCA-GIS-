@@ -2,8 +2,7 @@ import pytest
 from django.contrib.gis.geos import Polygon
 
 from parcels.models import Parcel
-
-from .conftest import parcel_geojson_payload
+from tests.helpers import parcel_geojson_payload
 
 
 @pytest.mark.django_db
