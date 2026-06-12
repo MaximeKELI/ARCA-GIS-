@@ -15,6 +15,14 @@ ARCA-GIS/
 └── docker-compose.yml
 ```
 
+## Bloc A v7.3 — Quick wins
+
+- **Heatmap rendements** sur la carte (toggle FAB orange)
+- **Calendrier cultural visuel** (semis/récolte par culture, 4 cultures)
+- **Export PDF statistiques** (`GET /api/analytics/visual/export/pdf/`)
+- **Graphiques mode sombre** (cartes, axes, légendes adaptés)
+- **Recherche globale** (`GET /api/core/search/?q=`) — parcelles, tâches, coop, cours, forum
+
 ## Statistiques & visualisations v7.2
 
 - **Hub statistiques** (onglet Analytiques) : 4 onglets — Vue d'ensemble, Agriculture, Finance, Climat
