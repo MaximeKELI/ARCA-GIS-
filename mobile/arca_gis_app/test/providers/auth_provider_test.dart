@@ -1,29 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:arca_gis_app/models/user.dart';
 import 'package:arca_gis_app/providers/auth_provider.dart';
-import 'package:arca_gis_app/services/auth_service.dart';
 
-class _FakeAuthService extends AuthService {
-  _FakeAuthService({required this.onRegister, required this.onLogin});
-
-  final Future<User> Function() onRegister;
-  final Future<User> Function() onLogin;
-
-  @override
-  Future<User> register({
-    required String username,
-    required String email,
-    required String password,
-    required String firstName,
-    required String lastName,
-    String role = 'farmer',
-    String country = "Côte d'Ivoire",
-  }) =>
-      onRegister();
-
-  @override
-  Future<User> login(String username, String password) => onLogin();
-}
+import '../fakes/fake_auth_service.dart';
 
 User _sampleUser() => User(
       id: 1,
@@ -38,7 +17,7 @@ User _sampleUser() => User(
 void main() {
   test('register met à jour user en cas de succès', () async {
     final provider = AuthProvider(
-      authService: _FakeAuthService(
+      authService: FakeAuthService(
         onRegister: () async => _sampleUser(),
         onLogin: () async => _sampleUser(),
       ),
@@ -59,10 +38,7 @@ void main() {
 
   test('register expose un message d erreur lisible', () async {
     final provider = AuthProvider(
-      authService: _FakeAuthService(
-        onRegister: () async => throw Exception('Email invalide'),
-        onLogin: () async => _sampleUser(),
-      ),
+      authService: FakeAuthService(registerError: Exception('Email invalide')),
     );
 
     final ok = await provider.register(
