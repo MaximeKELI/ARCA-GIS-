@@ -233,15 +233,17 @@ class ModernCharts {
           ]);
         }),
       )),
-    ));
+    ), isDark: isDark);
   }
 
   static Widget donutChart({
     required List<Map<String, dynamic>> data,
     required String title,
+    bool isDark = false,
   }) {
     final total = data.fold<double>(0, (s, d) => s + ((d['value'] as num?)?.toDouble() ?? 0));
-    if (total == 0) return _chartCard(title, AppTheme.primaryGreen, const Center(child: Text('Aucune donnée')));
+    if (total == 0) return _chartCard(title, AppTheme.primaryGreen, const Center(child: Text('Aucune donnée')), isDark: isDark);
+    final legendStyle = TextStyle(fontSize: 11, color: isDark ? Colors.white70 : Colors.black87);
     return _chartCard(title, AppTheme.primaryGreen, SizedBox(
       height: 220,
       child: Row(children: [
@@ -268,7 +270,7 @@ class ModernCharts {
               child: Row(children: [
                 Container(width: 10, height: 10, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
                 const SizedBox(width: 6),
-                Expanded(child: Text(e.value['name']?.toString() ?? '', style: const TextStyle(fontSize: 11), overflow: TextOverflow.ellipsis)),
+                Expanded(child: Text(e.value['name']?.toString() ?? '', style: legendStyle, overflow: TextOverflow.ellipsis)),
               ]),
             );
           }).toList(),
