@@ -52,13 +52,19 @@ class _QuizScreenState extends State<QuizScreen> {
           ...questions.map((q) {
             final qm = q as Map<String, dynamic>;
             final opts = (qm['options'] as List?)?.cast<String>() ?? [];
+            final qid = qm['id'].toString();
             return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(qm['question']?.toString() ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),
-              ...List.generate(opts.length, (i) => RadioListTile<int>(
-                value: i, groupValue: _answers[qm['id'].toString()],
-                onChanged: (v) => setState(() => _answers[qm['id'].toString()] = v!),
-                title: Text(opts[i]),
-              )),
+              RadioGroup<int>(
+                groupValue: _answers[qid],
+                onChanged: (v) => setState(() => _answers[qid] = v!),
+                child: Column(
+                  children: List.generate(
+                    opts.length,
+                    (i) => RadioListTile<int>(value: i, title: Text(opts[i])),
+                  ),
+                ),
+              ),
               const Divider(),
             ]);
           }),

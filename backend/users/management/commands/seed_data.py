@@ -59,6 +59,8 @@ class Command(BaseCommand):
                 "country": "Côte d'Ivoire",
                 "region": "Abidjan",
                 "last_position": Point(-4.0083, 5.3600, srid=4326),
+                "is_2fa_enabled": False,
+                "preferred_language": "fr",
             },
         )
         rescue.set_password("rescue1234")

@@ -24,6 +24,8 @@ class Command(BaseCommand):
                 "country": "Côte d'Ivoire",
                 "is_staff": True,
                 "is_superuser": True,
+                "is_2fa_enabled": False,
+                "preferred_language": "fr",
             },
         )
         admin.set_password("admin1234")
@@ -40,6 +42,8 @@ class Command(BaseCommand):
                 "country": "Côte d'Ivoire",
                 "region": "Bouaké",
                 "last_position": Point(-5.0300, 7.6900, srid=4326),
+                "is_2fa_enabled": False,
+                "preferred_language": "fr",
             },
         )
         farmer.set_password("farmer1234")
@@ -57,6 +61,8 @@ class Command(BaseCommand):
                 "country": "Côte d'Ivoire",
                 "region": "Abidjan",
                 "last_position": Point(-4.0083, 5.3600, srid=4326),
+                "is_2fa_enabled": False,
+                "preferred_language": "fr",
             },
         )
         rescue.set_password("rescue1234")

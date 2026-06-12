@@ -40,7 +40,7 @@ class ArcaLogo extends StatelessWidget {
               width: size,
               height: size,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => CustomPaint(
+              errorBuilder: (context, error, stackTrace) => CustomPaint(
                 painter: _ArcaLogoPainter(fg: fg, onDark: onDark),
               ),
             ),
@@ -158,7 +158,7 @@ class ArcaDrawerHeader extends StatelessWidget {
             fit: BoxFit.cover,
             color: Colors.black.withValues(alpha: 0.55),
             colorBlendMode: BlendMode.darken,
-            errorBuilder: (_, __, ___) => const DecoratedBox(
+            errorBuilder: (context, error, stackTrace) => const DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [AppTheme.primaryDark, AppTheme.primaryGreen],

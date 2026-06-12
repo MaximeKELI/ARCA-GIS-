@@ -36,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final auth = context.read<AuthProvider>();
+    final security = context.read<SecurityProvider>();
     final success = await auth.register(
       username: _usernameController.text.trim(),
       email: _emailController.text.trim(),
@@ -45,8 +46,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       role: _role,
     );
 
-    if (success && mounted) {
-      await context.read<SecurityProvider>().load(lockOnStart: false);
+    if (!mounted) return;
+    if (success) {
+      await security.load(lockOnStart: false);
+      if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
         (_) => false,

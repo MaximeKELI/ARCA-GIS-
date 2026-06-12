@@ -107,7 +107,7 @@ class AuthService {
         final lines = <String>[];
         body.forEach((key, value) {
           if (value is List) {
-            lines.add('${ _fieldLabel(key)} : ${value.join(', ')}');
+            lines.add('${_fieldLabel(key)} : ${value.join(', ')}');
           } else {
             lines.add('${_fieldLabel(key)} : $value');
           }

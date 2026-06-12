@@ -222,7 +222,7 @@ class _SlideCard extends StatelessWidget {
             Image.asset(
               slide.imageAsset,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => DecoratedBox(
+              errorBuilder: (context, error, stackTrace) => DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: slide.gradient),
                 ),

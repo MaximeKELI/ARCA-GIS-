@@ -21,7 +21,7 @@ class AnimatedCount extends StatelessWidget {
       tween: Tween(begin: 0, end: value.toDouble()),
       duration: duration,
       curve: Curves.easeOutCubic,
-      builder: (_, v, __) => Text(
+      builder: (context, v, child) => Text(
         '${v == v.roundToDouble() ? v.toInt() : v.toStringAsFixed(1)}$suffix',
         style: style,
       ),
