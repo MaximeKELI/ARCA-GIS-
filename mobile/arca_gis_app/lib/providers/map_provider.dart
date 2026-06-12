@@ -49,12 +49,21 @@ class MapProvider extends ChangeNotifier {
   Future<void> downloadOfflineTiles({int zoom = 13}) async {
     final pos = _userPosition;
     if (pos == null) return;
-    final x = (pos.longitude + 180) ~/ 1;
-    final y = (pos.latitude + 90) ~/ 1;
+    await _tiles.init();
+    final x = _lon2tile(pos.longitude, zoom);
+    final y = _lat2tile(pos.latitude, zoom);
     await _tiles.downloadRegion(zoom: zoom, xMin: x - 1, xMax: x + 1, yMin: y - 1, yMax: y + 1);
     _offlineTilesReady = true;
     notifyListeners();
   }
+
+  int _lon2tile(double lon, int z) => ((lon + 180) / 360 * pow(2, z)).floor();
+  int _lat2tile(double lat, int z) {
+    final r = lat * pi / 180;
+    return ((1 - log(tan(r) + 1 / cos(r)) / pi) / 2 * pow(2, z)).floor();
+  }
+
+  String? get offlineTileCacheDir => _tiles._cacheDirPath;
 
   Future<void> initialize() async {
     _ws.alertStream.listen((alert) {
