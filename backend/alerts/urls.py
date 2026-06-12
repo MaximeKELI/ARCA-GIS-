@@ -13,4 +13,7 @@ urlpatterns = [
     path("<int:pk>/", AlertDetailView.as_view(), name="alert-detail"),
     path("<int:pk>/read/", MarkAlertReadView.as_view(), name="alert-read"),
     path("<int:pk>/approve/", ApproveAlertView.as_view()),
+    path("rules/", AlertRuleListCreateView.as_view()),
+    path("rules/evaluate/", EvaluateRulesView.as_view()),
+    path("preferences/", NotificationPrefView.as_view()),
 ]

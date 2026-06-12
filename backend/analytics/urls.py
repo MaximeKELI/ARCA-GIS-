@@ -18,4 +18,8 @@ urlpatterns = [
     path("ngo/stats/", NGOStatsView.as_view()),
     path("ngo/export/", NGOExportView.as_view()),
     path("heatmap/", YieldHeatmapView.as_view()),
+    path("role-dashboard/", RoleDashboardRouterView.as_view()),
+    path("dashboard/farmer/", FarmerDashboardView.as_view()),
+    path("dashboard/rescue/", RescueDashboardView.as_view()),
+    path("dashboard/admin/", AdminDashboardView.as_view()),
 ]
