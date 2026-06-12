@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "economy",
     "resilience",
     "inclusion",
+    "farm_ops",
     "drf_spectacular",
 ]
 
