@@ -114,6 +114,10 @@ def test_stats_pdf_export(client, farmer):
     resp = client.get("/api/analytics/visual/export/pdf/")
     assert resp.status_code == 200
     assert "application/pdf" in resp["Content-Type"]
+
+
+@pytest.mark.django_db
+def test_offline_sync(client, farmer):
     client.force_authenticate(user=farmer)
     resp = client.post("/api/core/offline/sync/", {
         "action_type": "harvest", "payload": {"crop_type": "maize", "quantity_kg": 100},

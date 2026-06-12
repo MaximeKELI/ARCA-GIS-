@@ -98,6 +98,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.search),
+              title: const Text('Recherche globale'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const GlobalSearchScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_month),
+              title: const Text('Calendrier cultural'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const CulturalCalendarScreen()));
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.wb_sunny),
               title: const Text('Prévisions météo'),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ForecastScreen())),
