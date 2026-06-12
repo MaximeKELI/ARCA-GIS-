@@ -1,9 +1,11 @@
 import uuid
 
+from django.http import HttpResponse
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .certificate_service import generate_certificate_pdf
 from .quiz_models import Quiz, QuizAttempt, QuizQuestion, TrainingCertificate
 
 
@@ -44,3 +46,17 @@ class QuizSubmitView(APIView):
                 defaults={"certificate_id": cert_id},
             )
         return Response({"score": score, "passed": passed, "certificate_id": cert_id})
+
+
+class CertificateDownloadView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, cert_id):
+        try:
+            cert = TrainingCertificate.objects.get(certificate_id=cert_id, user=request.user)
+        except TrainingCertificate.DoesNotExist:
+            return Response({"error": "Certificat introuvable"}, status=404)
+        pdf = generate_certificate_pdf(request.user, cert.course, cert.certificate_id)
+        response = HttpResponse(pdf, content_type="application/pdf")
+        response["Content-Disposition"] = f'attachment; filename="{cert_id}.pdf"'
+        return response
