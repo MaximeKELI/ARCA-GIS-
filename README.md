@@ -1,4 +1,4 @@
-# ARCA-GIS v7.3 — Agro-Rescue Climate Africa
+# ARCA-GIS v7.4 — Agro-Rescue Climate Africa
 
 Plateforme géomatique africaine complète pour l'agriculture, les urgences et le climat.
 
@@ -14,6 +14,26 @@ ARCA-GIS/
 ├── e2e/              # Tests Playwright
 └── docker-compose.yml
 ```
+
+## Bloc B v7.4 — Agriculture complète
+
+- **Hub agriculture étendue** : apiculture, aquaculture, semencier, agroforesterie, compost + rotation IA
+- **Résilience** : refuges, alertes EWS, sécheresse 90j, simulation inondation, radio HF
+- **Crédits carbone** : liste crédits + estimateur CO₂
+
+| URL | Description |
+|-----|-------------|
+| `GET /api/agro/beekeeping/hives/` | Ruches |
+| `GET /api/agro/aquaculture/ponds/` | Bassins piscicoles |
+| `GET /api/agro/seedbank/` | Banque de semences |
+| `GET /api/agro/agroforestry/plots/` | Parcelles agroforestières |
+| `GET /api/agro/compost/` | Compost |
+| `POST /api/agro/rotation-plan/` | Plan rotation 3 ans |
+| `GET /api/resilience/refuges/` | Centres refuge |
+| `GET /api/resilience/drought-ews/` | Alerte sécheresse 90j |
+| `POST /api/resilience/flood-simulate/` | Simulation inondation |
+| `GET /api/carbon/credits/` | Crédits carbone |
+| `POST /api/carbon/estimate/` | Estimation CO₂ |
 
 ## Bloc A v7.3 — Quick wins
 
