@@ -63,7 +63,7 @@ class ModernCharts {
         Text(label, style: TextStyle(color: isDark ? Colors.white70 : Colors.grey.shade600, fontSize: 12)),
         const SizedBox(height: 4),
         Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+          _animatedKpiValue(value, color),
           if (unit.isNotEmpty) ...[
             const SizedBox(width: 4),
             Padding(

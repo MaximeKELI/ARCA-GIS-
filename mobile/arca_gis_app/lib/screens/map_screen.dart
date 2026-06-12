@@ -166,6 +166,14 @@ class _MapScreenState extends State<MapScreen> {
                 ),
                 const SizedBox(height: 8),
                 FloatingActionButton.small(
+                  heroTag: 'choropleth',
+                  onPressed: () => mapProvider.toggleChoropleth(),
+                  backgroundColor: mapProvider.showChoropleth ? AppTheme.climateBlue : Colors.white,
+                  foregroundColor: mapProvider.showChoropleth ? Colors.white : AppTheme.climateBlue,
+                  child: const Icon(Icons.layers),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton.small(
                   heroTag: 'offline',
                   onPressed: () async {
                     await mapProvider.downloadOfflineTiles();

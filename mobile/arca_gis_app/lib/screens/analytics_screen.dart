@@ -5,6 +5,7 @@ import '../config/theme.dart';
 import '../services/api_service.dart';
 import '../utils/api_utils.dart';
 import '../widgets/modern_charts.dart';
+import '../widgets/advanced_stats_panel.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
