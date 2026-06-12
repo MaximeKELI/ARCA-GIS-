@@ -1,0 +1,16 @@
+# Fastlane — builds App Store / Play Store
+default_platform(:android)
+
+platform :android do
+  desc "Build Android release APK"
+  lane :release do
+    gradle(task: "assembleRelease", project_dir: "../../mobile/arca_gis_app/android")
+  end
+end
+
+platform :ios do
+  desc "Build iOS archive"
+  lane :release do
+    build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+  end
+end

@@ -67,7 +67,7 @@ class NDVIRequest(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "arca-gis-ai", "version": "5.0.0"}
+    return {"status": "ok", "service": "arca-gis-ai", "version": "6.0.0"}
 
 
 @app.post("/analyze")
@@ -313,3 +313,89 @@ def drone_pest(request: DronePestRequest):
 @app.post("/carbon-estimate")
 def carbon_estimate(request: CarbonRequest):
     return estimate_carbon(request.area_hectares, request.crop_type)
+
+
+class RotationRequest(BaseModel):
+    parcel_id: int = 1
+    current_crop: str = "maize"
+    soil_quality: str = "medium"
+
+
+class DroughtRequest(BaseModel):
+    region: str = "Bouaké"
+    days: int = 90
+
+
+class LLMRequest(BaseModel):
+    prompt: str
+    language: str = "fr"
+
+
+class VoiceTranslateRequest(BaseModel):
+    text: str
+    target_language: str = "bm"
+
+
+class WhisperRequest(BaseModel):
+    audio_b64: str | None = None
+    language: str = "fr"
+
+
+class AgentRequest(BaseModel):
+    lat: float
+    lng: float
+    crop_type: str = "maize"
+    soil_moisture: float = 50.0
+
+
+class LandUseRequest(BaseModel):
+    lat: float
+    lng: float
+    ndvi_history: list[float] | None = None
+
+
+class Twin3DRequest(BaseModel):
+    lat: float
+    lng: float
+    crop_type: str = "maize"
+    area_hectares: float = 1.0
+
+
+@app.post("/crop-rotation")
+def crop_rotation(request: RotationRequest):
+    return plan_rotation(request.parcel_id, request.current_crop, request.soil_quality)
+
+
+@app.post("/drought-forecast")
+def drought_forecast(request: DroughtRequest):
+    return forecast_drought(request.region, request.days)
+
+
+@app.post("/llm-local")
+def llm_local_endpoint(request: LLMRequest):
+    return local_llm(request.prompt, request.language)
+
+
+@app.post("/voice-translate")
+def voice_translate(request: VoiceTranslateRequest):
+    return translate_voice(request.text, request.target_language)
+
+
+@app.post("/whisper")
+def whisper_transcribe(request: WhisperRequest):
+    return transcribe_audio(request.audio_b64, request.language)
+
+
+@app.post("/autonomous-agent")
+def autonomous_agent(request: AgentRequest):
+    return plan_autonomous(request.lat, request.lng, request.crop_type, request.soil_moisture)
+
+
+@app.post("/land-use-change")
+def land_use_change(request: LandUseRequest):
+    return detect_land_use_change(request.lat, request.lng, request.ndvi_history)
+
+
+@app.post("/twin-3d")
+def twin_3d(request: Twin3DRequest):
+    return generate_3d_twin(request.lat, request.lng, request.crop_type, request.area_hectares)

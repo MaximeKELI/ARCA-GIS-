@@ -22,6 +22,10 @@ import 'feature_phone_screen.dart';
 import 'mentorship_screen.dart';
 import 'subscriptions_screen.dart';
 import 'livestock_screen.dart';
+import 'water_screen.dart';
+import 'auction_screen.dart';
+import 'pictogram_screen.dart';
+import 'disaster_mode_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

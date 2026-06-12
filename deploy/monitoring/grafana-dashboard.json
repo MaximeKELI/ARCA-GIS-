@@ -1,0 +1,9 @@
+{
+  "title": "ARCA-GIS Overview",
+  "panels": [
+    {"title": "API Requests/min", "type": "graph", "targets": [{"expr": "rate(http_requests_total[5m])"}]},
+    {"title": "Active SOS", "type": "stat", "targets": [{"expr": "arca_active_sos"}]},
+    {"title": "IoT Devices Online", "type": "stat", "targets": [{"expr": "arca_iot_devices_online"}]},
+    {"title": "AI Module Latency", "type": "graph", "targets": [{"expr": "histogram_quantile(0.95, ai_request_duration_seconds)"}]}
+  ]
+}

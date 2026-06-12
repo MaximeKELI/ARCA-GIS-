@@ -1,0 +1,29 @@
+services:
+  backend_blue:
+    build: ../backend
+    container_name: arca_backend_blue
+    environment:
+      - DATABASE_URL=postgis://arca_user:arca_secret_2024@db:5432/arca_gis
+      - DEPLOY_COLOR=blue
+    ports:
+      - "8003:8000"
+    profiles: ["blue"]
+
+  backend_green:
+    build: ../backend
+    container_name: arca_backend_green
+    environment:
+      - DATABASE_URL=postgis://arca_user:arca_secret_2024@db:5432/arca_gis
+      - DEPLOY_COLOR=green
+    ports:
+      - "8004:8000"
+    profiles: ["green"]
+
+  nginx_lb:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx-blue-green.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend_blue
