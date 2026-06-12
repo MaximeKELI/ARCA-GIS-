@@ -7,6 +7,7 @@ import '../config/theme.dart';
 import '../providers/map_provider.dart';
 import 'chat_screen.dart';
 import 'parcel_draw_screen.dart';
+import '../services/offline_tile_provider.dart';
 import 'measure_map_screen.dart';
 import '../widgets/sos_button.dart';
 
@@ -148,6 +149,14 @@ class _MapScreenState extends State<MapScreen> {
                   backgroundColor: Colors.white,
                   foregroundColor: AppTheme.primaryGreen,
                   child: const Icon(Icons.straighten),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton.small(
+                  heroTag: 'refresh',
+                  onPressed: () => mapProvider.loadAllData(),
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppTheme.primaryGreen,
+                  child: const Icon(Icons.refresh),
                 ),
                 const SizedBox(height: 8),
                 FloatingActionButton.small(
