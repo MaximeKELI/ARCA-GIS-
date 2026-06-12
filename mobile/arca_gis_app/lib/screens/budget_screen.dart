@@ -9,7 +9,7 @@ class BudgetScreen extends StatefulWidget {
   State<BudgetScreenState> createState() => BudgetScreenState();
 }
 
-class BudgetScreenState extends State<BudgetScreen> {
+class _BudgetScreenState extends State<BudgetScreen> {
   final _api = ApiService();
   Map<String, dynamic> _summary = {};
   Map<String, dynamic>? _loanResult;

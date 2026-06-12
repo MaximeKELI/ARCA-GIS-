@@ -85,3 +85,12 @@ def test_parcel_csv_export(client, farmer):
     resp = client.get("/api/parcels/export/csv/")
     assert resp.status_code == 200
     assert "text/csv" in resp["Content-Type"]
+
+
+@pytest.mark.django_db
+def test_offline_sync(client, farmer):
+    client.force_authenticate(user=farmer)
+    resp = client.post("/api/core/offline/sync/", {
+        "action_type": "harvest", "payload": {"crop_type": "maize", "quantity_kg": 100},
+    }, format="json")
+    assert resp.status_code in (200, 201)

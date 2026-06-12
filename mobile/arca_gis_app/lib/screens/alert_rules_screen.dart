@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
+import '../services/api_service.dart';
 import '../utils/api_utils.dart';
 
 class AlertRulesScreen extends StatefulWidget {
