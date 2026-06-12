@@ -40,3 +40,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/images/arca_logo.png
+    - assets/images/carousel_agriculture.png
+    - assets/images/carousel_sos.png
+    - assets/images/carousel_climate.png
+    - assets/images/carousel_coop.png
