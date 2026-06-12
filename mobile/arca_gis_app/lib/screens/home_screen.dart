@@ -45,6 +45,7 @@ import 'cultural_calendar_screen.dart';
 import 'global_search_screen.dart';
 import 'measure_map_screen.dart';
 import 'ai_terrain_screen.dart';
+import 'ussd_simulator_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
