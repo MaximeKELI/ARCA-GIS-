@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
+import 'animated_count.dart';
 
 class ModernCharts {
   static List<Color> get palette => [
