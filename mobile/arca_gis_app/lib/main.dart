@@ -10,7 +10,6 @@ import 'providers/security_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
-import 'screens/lock_screen.dart';
 import 'widgets/security_gate.dart';
 
 void main() {
@@ -83,18 +82,6 @@ class _SplashScreenState extends State<SplashScreen> {
     if (isLoggedIn) {
       await security.load(lockOnStart: true);
       if (!mounted) return;
-      if (security.isLocked) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => LockScreen(
-              onUnlocked: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
-              ),
-            ),
-          ),
-        );
-        return;
-      }
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
       );

@@ -49,7 +49,7 @@ jobs:
         run: |
           test -f deploy/monitoring/prometheus.yml
           test -f deploy/monitoring/grafana-dashboard.json
-          python -c "import yaml; yaml.safe_load(open('deploy/monitoring/prometheus.yml'))" 2>/dev/null || true
+          test -f deploy/monitoring/docker-compose.monitoring.yml
 
   ai-module:
     runs-on: ubuntu-latest
