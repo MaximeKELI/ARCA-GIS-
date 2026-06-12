@@ -101,9 +101,9 @@ void main() {
       await tester.pumpWidget(buildScreen());
       await fillForm(tester);
 
-      await tester.tap(find.text('S\'inscrire'));
+      await tapRegister(tester);
       await tester.pump();
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.text('Utilisateur déjà pris'), findsOneWidget);
     });
