@@ -44,6 +44,21 @@ class _MapScreenState extends State<MapScreen> {
                 userAgentPackageName: 'africa.arca.arca_gis_app',
                 tileProvider: OfflineTileProvider(cacheDir: mapProvider.offlineTileCacheDir),
               ),
+              if (mapProvider.showHeatmap && mapProvider.heatmapCells.isNotEmpty)
+                CircleLayer(
+                  circles: mapProvider.heatmapCells.map((c) {
+                    final intensity = (c['intensity'] as num?)?.toDouble() ?? 0.5;
+                    final color = Color.lerp(Colors.red, AppTheme.primaryGreen, intensity)!;
+                    return CircleMarker(
+                      point: LatLng((c['lat'] as num).toDouble(), (c['lng'] as num).toDouble()),
+                      radius: 500,
+                      useRadiusInMeter: true,
+                      color: color.withValues(alpha: 0.35),
+                      borderColor: color,
+                      borderStrokeWidth: 1.5,
+                    );
+                  }).toList(),
+                ),
               if (mapProvider.parcels.isNotEmpty)
                 PolygonLayer(
                   polygons: mapProvider.parcels
@@ -126,6 +141,14 @@ class _MapScreenState extends State<MapScreen> {
                   backgroundColor: Colors.white,
                   foregroundColor: AppTheme.primaryGreen,
                   child: const Icon(Icons.gps_fixed),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton.small(
+                  heroTag: 'heatmap',
+                  onPressed: () => mapProvider.toggleHeatmap(),
+                  backgroundColor: mapProvider.showHeatmap ? AppTheme.accentOrange : Colors.white,
+                  foregroundColor: mapProvider.showHeatmap ? Colors.white : AppTheme.accentOrange,
+                  child: const Icon(Icons.blur_on),
                 ),
                 const SizedBox(height: 8),
                 FloatingActionButton.small(
