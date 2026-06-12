@@ -24,9 +24,11 @@ class _AlertRulesScreenState extends State<AlertRulesScreen> {
 
   Future<void> _evaluate() async {
     final r = await _api.post('/alerts/rules/evaluate/', {});
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${(r as Map)['count'] ?? 0} règle(s) déclenchée(s)')),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${(r as Map)['count'] ?? 0} règle(s) déclenchée(s)')),
+      );
+    }
   }
 
   @override
