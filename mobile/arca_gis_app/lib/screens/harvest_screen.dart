@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../services/api_service.dart';
 import '../utils/api_utils.dart';
+import '../widgets/modern_charts.dart';
 
 class HarvestScreen extends StatefulWidget {
   const HarvestScreen({super.key});
@@ -13,6 +14,7 @@ class _HarvestScreenState extends State<HarvestScreen> {
   final _api = ApiService();
   List<dynamic> _harvests = [];
   Map<String, dynamic> _stats = {};
+  Map<String, dynamic> _visual = {};
 
   @override
   void initState() { super.initState(); _load(); }
@@ -21,9 +23,11 @@ class _HarvestScreenState extends State<HarvestScreen> {
     try {
       final h = await _api.get('/farm/harvests/');
       final s = await _api.get('/farm/harvests/stats/');
+      final v = await _api.get('/analytics/visual/');
       setState(() {
         _harvests = parseApiList(h);
         _stats = parseApiMap(s);
+        _visual = parseApiMap(v);
       });
     } catch (_) {}
   }
@@ -52,26 +56,49 @@ class _HarvestScreenState extends State<HarvestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final series = (_visual['series'] as Map<String, dynamic>?) ?? {};
+    final byCrop = (_stats['by_crop'] as Map<String, dynamic>?) ?? {};
+    final cropDist = byCrop.entries.map((e) => {'name': e.key, 'value': e.value}).toList();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Carnet de récolte'), backgroundColor: AppTheme.primaryGreen),
       floatingActionButton: FloatingActionButton(onPressed: _add, child: const Icon(Icons.add)),
-      body: Column(children: [
-        if (_stats.isNotEmpty) Card(margin: const EdgeInsets.all(12), child: Padding(
+      body: RefreshIndicator(
+        onRefresh: _load,
+        child: ListView(
           padding: const EdgeInsets.all(16),
-          child: Text('Total: ${_stats['total_kg'] ?? 0} kg', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        )),
-        Expanded(child: ListView.builder(
-          itemCount: _harvests.length,
-          itemBuilder: (_, i) {
-            final h = _harvests[i] as Map<String, dynamic>;
-            return ListTile(
-              leading: const Icon(Icons.agriculture),
-              title: Text('${h['quantity_kg']} kg — ${h['crop_type']}'),
-              subtitle: Text('${h['parcel_name'] ?? ''} · ${h['harvest_date']}'),
-            );
-          },
-        )),
-      ]),
+          children: [
+            Row(children: [
+              Expanded(child: ModernCharts.kpiCard(
+                label: 'Total récolté', value: '${_stats['total_kg'] ?? 0}',
+                unit: 'kg', color: AppTheme.accentOrange, icon: Icons.grass,
+              )),
+              const SizedBox(width: 12),
+              Expanded(child: ModernCharts.kpiCard(
+                label: 'Entrées', value: '${_harvests.length}',
+                unit: 'records', color: AppTheme.primaryGreen, icon: Icons.list_alt,
+              )),
+            ]),
+            const SizedBox(height: 8),
+            if (cropDist.isNotEmpty)
+              ModernCharts.donutChart(title: 'Récoltes par culture', data: cropDist),
+            ModernCharts.barChart(
+              title: 'Récoltes mensuelles',
+              data: (series['harvest_monthly'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+              color: AppTheme.accentOrange,
+            ),
+            const Text('Historique', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            ..._harvests.map((h) {
+              final item = h as Map<String, dynamic>;
+              return ListTile(
+                leading: const Icon(Icons.agriculture),
+                title: Text('${item['quantity_kg']} kg — ${item['crop_type']}'),
+                subtitle: Text('${item['parcel_name'] ?? ''} · ${item['harvest_date']}'),
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
 }
