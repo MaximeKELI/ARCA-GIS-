@@ -26,6 +26,13 @@ import 'water_screen.dart';
 import 'auction_screen.dart';
 import 'pictogram_screen.dart';
 import 'disaster_mode_screen.dart';
+import 'harvest_screen.dart';
+import 'tasks_screen.dart';
+import 'inventory_screen.dart';
+import 'budget_screen.dart';
+import 'sync_screen.dart';
+import 'alert_rules_screen.dart';
+import 'coop_hub_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -127,6 +134,21 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const PictogramScreen())); }),
             ListTile(leading: const Icon(Icons.emergency), title: const Text('Mode catastrophe'),
               onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const DisasterModeScreen())); }),
+            const Divider(),
+            ListTile(leading: const Icon(Icons.agriculture), title: const Text('Carnet récolte'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const HarvestScreen())); }),
+            ListTile(leading: const Icon(Icons.task_alt), title: const Text('Tâches agricoles'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const TasksScreen())); }),
+            ListTile(leading: const Icon(Icons.inventory), title: const Text('Stock intrants'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const InventoryScreen())); }),
+            ListTile(leading: const Icon(Icons.account_balance_wallet), title: const Text('Budget'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const BudgetScreen())); }),
+            ListTile(leading: const Icon(Icons.rule), title: const Text('Règles alertes'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const AlertRulesScreen())); }),
+            ListTile(leading: const Icon(Icons.sync), title: const Text('Sync offline'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const SyncScreen())); }),
+            ListTile(leading: const Icon(Icons.how_to_vote), title: const Text('Votes coop'),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (_) => const CoopHubScreen())); }),
           ],
         ),
       ),

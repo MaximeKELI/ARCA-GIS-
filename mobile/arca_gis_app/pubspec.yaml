@@ -1,7 +1,7 @@
 name: arca_gis_app
 description: "ARCA-GIS — Plateforme géomatique africaine pour l'agriculture, les urgences et le climat."
 publish_to: 'none'
-version: 6.0.0+6
+version: 7.0.0+7
 
 environment:
   sdk: ^3.12.1
