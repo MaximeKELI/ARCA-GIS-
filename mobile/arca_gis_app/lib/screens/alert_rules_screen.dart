@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
-import '../services/api_service.dart';
+import '../utils/api_utils.dart';
 
 class AlertRulesScreen extends StatefulWidget {
   const AlertRulesScreen({super.key});
@@ -18,7 +18,7 @@ class _AlertRulesScreenState extends State<AlertRulesScreen> {
   Future<void> _load() async {
     try {
       final data = await _api.get('/alerts/rules/');
-      setState(() => _rules = data is List ? data : []);
+      setState(() => _rules = parseApiList(data));
     } catch (_) {}
   }
 

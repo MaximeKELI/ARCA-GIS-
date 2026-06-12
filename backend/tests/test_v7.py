@@ -52,9 +52,36 @@ def test_ussd_simulator(client):
 
 
 @pytest.mark.django_db
-def test_offline_sync(client, farmer):
+def test_activity_feed(client, farmer):
     client.force_authenticate(user=farmer)
-    resp = client.post("/api/core/offline/sync/", {
-        "action_type": "harvest", "payload": {"crop_type": "maize", "quantity_kg": 100},
+    resp = client.get("/api/core/activity/")
+    assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+def test_bookmarks(client, farmer):
+    client.force_authenticate(user=farmer)
+    resp = client.post("/api/core/bookmarks/", {
+        "resource_type": "parcel", "resource_id": 1, "label": "Test",
     }, format="json")
     assert resp.status_code in (200, 201)
+    resp = client.get("/api/core/bookmarks/")
+    assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+def test_coop_members(client, farmer):
+    from cooperatives.models import Cooperative
+    coop = Cooperative.objects.create(name="Test Coop", country="CI", region="Bouaké")
+    coop.members.add(farmer)
+    client.force_authenticate(user=farmer)
+    resp = client.get(f"/api/cooperatives/{coop.id}/members/")
+    assert resp.status_code == 200
+
+
+@pytest.mark.django_db
+def test_parcel_csv_export(client, farmer):
+    client.force_authenticate(user=farmer)
+    resp = client.get("/api/parcels/export/csv/")
+    assert resp.status_code == 200
+    assert "text/csv" in resp["Content-Type"]
