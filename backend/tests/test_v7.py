@@ -99,7 +99,21 @@ def test_visual_stats(client, farmer):
 
 
 @pytest.mark.django_db
-def test_offline_sync(client, farmer):
+def test_global_search(client, farmer):
+    from parcels.models import Parcel
+    Parcel.objects.create(owner=farmer, name="Champ Test Search", crop_type="maize")
+    client.force_authenticate(user=farmer)
+    resp = client.get("/api/core/search/?q=Champ")
+    assert resp.status_code == 200
+    assert resp.data["count"] >= 1
+
+
+@pytest.mark.django_db
+def test_stats_pdf_export(client, farmer):
+    client.force_authenticate(user=farmer)
+    resp = client.get("/api/analytics/visual/export/pdf/")
+    assert resp.status_code == 200
+    assert "application/pdf" in resp["Content-Type"]
     client.force_authenticate(user=farmer)
     resp = client.post("/api/core/offline/sync/", {
         "action_type": "harvest", "payload": {"crop_type": "maize", "quantity_kg": 100},

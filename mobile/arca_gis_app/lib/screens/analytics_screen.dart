@@ -239,7 +239,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
     );
   }
 
-  Widget _climateTab() {
+  Widget _climateTab(bool isDark) {
     final series = _map('series');
     final summary = _map('summary');
     return ListView(
@@ -255,12 +255,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
           title: 'Pluviométrie mensuelle (mm)',
           data: (series['rainfall'] as List?)?.cast<Map<String, dynamic>>() ?? [],
           color: AppTheme.climateBlue,
+          isDark: isDark,
         ),
         ModernCharts.gradientLineChart(
           title: 'Tendance humidité',
           data: (series['moisture_trend'] as List?)?.cast<Map<String, dynamic>>() ?? [],
           color: const Color(0xFF00838F),
           valueSuffix: '%',
+          isDark: isDark,
         ),
       ],
     );

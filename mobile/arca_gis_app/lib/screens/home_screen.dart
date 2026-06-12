@@ -38,6 +38,8 @@ import 'quiz_screen.dart';
 import 'role_dashboard_screen.dart';
 import 'activity_feed_screen.dart';
 import 'notifications_screen.dart';
+import 'cultural_calendar_screen.dart';
+import 'global_search_screen.dart';
 import 'measure_map_screen.dart';
 import 'ussd_simulator_screen.dart';
 
