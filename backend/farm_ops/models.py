@@ -18,7 +18,7 @@ class CropSeason(models.Model):
 
 
 class HarvestJournal(models.Model):
-    parcel = models.ForeignKey("parcels.Parcel", on_delete=models.CASCADE, related_name="harvests")
+    parcel = models.ForeignKey("parcels.Parcel", on_delete=models.CASCADE, related_name="farm_harvests")
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     crop_type = models.CharField(max_length=50)
     quantity_kg = models.FloatField()
