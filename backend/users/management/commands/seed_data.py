@@ -24,6 +24,8 @@ class Command(BaseCommand):
                 "country": "Côte d'Ivoire",
                 "is_staff": True,
                 "is_superuser": True,
+                "is_2fa_enabled": False,
+                "preferred_language": "fr",
             },
         )
         admin.set_password("admin1234")

@@ -1,6 +1,29 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.gis.db import models as gis_models
 from django.db import models
+
+
+class UserManager(BaseUserManager):
+    def _create_user(self, username, email, password, **extra_fields):
+        if not username:
+            raise ValueError("Le nom d'utilisateur est obligatoire.")
+        email = self.normalize_email(email)
+        extra_fields.setdefault("is_2fa_enabled", False)
+        extra_fields.setdefault("preferred_language", "fr")
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(username, email, password, **extra_fields)
+
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self._create_user(username, email, password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -22,9 +45,11 @@ class User(AbstractUser):
     last_position = gis_models.PointField(srid=4326, null=True, blank=True)
     is_available = models.BooleanField(default=True)
     totp_secret = models.CharField(max_length=32, blank=True)
-    is_2fa_enabled = models.BooleanField(default=False)
+    is_2fa_enabled = models.BooleanField(default=False, db_default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = UserManager()
 
     class Meta:
         ordering = ["-created_at"]
