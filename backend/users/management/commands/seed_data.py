@@ -490,11 +490,12 @@ class Command(BaseCommand):
                     defaults={"health_status": p.health_status, "soil_moisture": p.soil_moisture - m * 2,
                               "ndvi_score": 0.72 - m * 0.03, "rainfall_mm": 50 + m * 10},
                 )
-        for m, kg in enumerate([200, 350, 420, 180, 500, 300]):
-            HarvestJournal.objects.get_or_create(
-                parcel=first_parcel, owner=farmer, crop_type="maize",
-                harvest_date=date(2024, m + 3, 15), defaults={"quantity_kg": kg},
-            ) if first_parcel else None
+        if first_parcel:
+            for m, kg in enumerate([200, 350, 420, 180, 500, 300]):
+                HarvestJournal.objects.get_or_create(
+                    parcel=first_parcel, owner=farmer, crop_type="maize",
+                    harvest_date=date(2024, m + 3, 15), defaults={"quantity_kg": kg},
+                )
 
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès!"))
         self.stdout.write("Comptes: admin/admin1234, kouassi/farmer1234, secours/rescue1234")

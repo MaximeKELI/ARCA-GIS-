@@ -51,7 +51,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryGreen))
           : NestedScrollView(
-              headerSliverBuilder: (_, __) => [
+              headerSliverBuilder: (context, _) => [
                 SliverAppBar(
                   expandedHeight: 180,
                   pinned: true,
