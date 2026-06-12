@@ -222,6 +222,8 @@ class _MapScreenState extends State<MapScreen> {
             _legendItem(Icons.grass, 'Parcelles', AppTheme.primaryGreen),
             _legendItem(Icons.cloud, 'Climat', AppTheme.climateBlue),
             _legendItem(Icons.emergency, 'SOS', AppTheme.sosRed),
+            if (context.watch<MapProvider>().showHeatmap)
+              _legendItem(Icons.blur_on, 'Heatmap', AppTheme.accentOrange),
           ],
         ),
       ),
