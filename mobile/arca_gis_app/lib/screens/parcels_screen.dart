@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/map_provider.dart';
-import '../widgets/parcel_card.dart';
+import 'parcel_qr_screen.dart';
+import 'parcel_compare_screen.dart';
 
 class ParcelsScreen extends StatelessWidget {
   const ParcelsScreen({super.key});
@@ -58,6 +59,25 @@ class ParcelsScreen extends StatelessWidget {
             Text('Santé: ${parcel.healthStatusDisplay}'),
             Text('Humidité sol: ${parcel.soilMoisture.toStringAsFixed(0)}%'),
             const SizedBox(height: 16),
+            Row(children: [
+              Expanded(child: OutlinedButton.icon(
+                onPressed: () { Navigator.pop(ctx); Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => ParcelQrScreen(parcelId: parcel.id))); },
+                icon: const Icon(Icons.qr_code), label: const Text('QR'),
+              )),
+              const SizedBox(width: 8),
+              Expanded(child: OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  final others = context.read<MapProvider>().parcels.where((p) => p.id != parcel.id).take(1);
+                  if (others.isEmpty) return;
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => ParcelCompareScreen(
+                    parcelIds: [parcel.id, others.first.id])));
+                },
+                icon: const Icon(Icons.compare), label: const Text('Comparer'),
+              )),
+            ]),
+            const SizedBox(height: 8),
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.pop(ctx);
