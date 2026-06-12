@@ -3,7 +3,9 @@ import '../models/user.dart';
 import '../services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final AuthService _authService = AuthService();
+  AuthProvider({AuthService? authService}) : _authService = authService ?? AuthService();
+
+  final AuthService _authService;
   User? _user;
   bool _isLoading = false;
   String? _error;
