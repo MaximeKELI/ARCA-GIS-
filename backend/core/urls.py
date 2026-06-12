@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .backup_views import BackupTriggerView
+from .oauth_views import OAuthCallbackView, OAuthProvidersView
 from .gdpr_views import ConsentView, DataDeleteView, DataExportView
 from .views import (
     AuditLogListView,
@@ -22,4 +23,6 @@ urlpatterns = [
     path("gdpr/export/", DataExportView.as_view()),
     path("gdpr/delete/", DataDeleteView.as_view()),
     path("backup/", BackupTriggerView.as_view()),
+    path("oauth/providers/", OAuthProvidersView.as_view()),
+    path("oauth/callback/", OAuthCallbackView.as_view()),
 ]

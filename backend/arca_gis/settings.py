@@ -61,6 +61,10 @@ INSTALLED_APPS = [
     "geodata",
     "countries",
     "carbon",
+    "agro_extensions",
+    "economy",
+    "resilience",
+    "inclusion",
     "drf_spectacular",
 ]
 
@@ -74,6 +78,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.multitenant.TenantMiddleware",
     "core.middleware.RateLimitMiddleware",
     "core.middleware.AuditLogMiddleware",
 ]
