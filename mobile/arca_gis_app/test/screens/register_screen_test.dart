@@ -20,18 +20,23 @@ void main() {
   });
 
   Widget buildScreen() {
-    return MaterialApp(
-      theme: AppTheme.lightTheme,
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (_) => AuthProvider(authService: fakeAuth),
-          ),
-          ChangeNotifierProvider(create: (_) => SecurityProvider()),
-        ],
-        child: const RegisterScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(authService: fakeAuth),
+        ),
+        ChangeNotifierProvider(create: (_) => SecurityProvider()),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: const RegisterScreen(),
       ),
     );
+  }
+
+  Future<void> tapRegister(WidgetTester tester) async {
+    await tester.ensureVisible(find.text('S\'inscrire'));
+    await tester.tap(find.text('S\'inscrire'));
   }
 
   Future<void> fillForm(
@@ -60,7 +65,7 @@ void main() {
       await tester.pumpWidget(buildScreen());
       await fillForm(tester, password: 'testpass123', passwordConfirm: 'autre1234');
 
-      await tester.tap(find.text('S\'inscrire'));
+      await tapRegister(tester);
       await tester.pump();
 
       expect(find.text('Les mots de passe ne correspondent pas'), findsOneWidget);
@@ -71,7 +76,7 @@ void main() {
       await tester.pumpWidget(buildScreen());
       await fillForm(tester, password: 'court', passwordConfirm: 'court');
 
-      await tester.tap(find.text('S\'inscrire'));
+      await tapRegister(tester);
       await tester.pump();
 
       expect(find.text('Min. 8 caractères'), findsOneWidget);
@@ -82,9 +87,9 @@ void main() {
       await tester.pumpWidget(buildScreen());
       await fillForm(tester);
 
-      await tester.tap(find.text('S\'inscrire'));
+      await tapRegister(tester);
       await tester.pump();
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(fakeAuth.registerCallCount, 1);
       expect(fakeAuth.lastUsername, 'jean_k');
