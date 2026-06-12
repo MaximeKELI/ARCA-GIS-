@@ -54,6 +54,13 @@ INSTALLED_APPS = [
     "insurance",
     "partners",
     "mentorship",
+    "livestock",
+    "water_resources",
+    "finance",
+    "logistics",
+    "geodata",
+    "countries",
+    "carbon",
     "drf_spectacular",
 ]
 
@@ -177,7 +184,12 @@ CHANNEL_LAYERS = {
 
 AI_MODULE_URL = env("AI_MODULE_URL", default="http://localhost:8001")
 OPENWEATHER_API_KEY = env("OPENWEATHER_API_KEY", default="")
+NASA_FIRMS_API_KEY = env("NASA_FIRMS_API_KEY", default="")
 FCM_SERVER_KEY = env("FCM_SERVER_KEY", default="")
+AWS_S3_BACKUP_BUCKET = env("AWS_S3_BACKUP_BUCKET", default="")
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID", default="")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY", default="")
+TWILIO_WHATSAPP_NUMBER = env("TWILIO_WHATSAPP_NUMBER", default="whatsapp:+14155238886")
 AFRICAS_TALKING_API_KEY = env("AFRICAS_TALKING_API_KEY", default="")
 AFRICAS_TALKING_USERNAME = env("AFRICAS_TALKING_USERNAME", default="")
 TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default="")

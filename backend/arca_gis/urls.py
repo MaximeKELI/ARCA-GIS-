@@ -37,6 +37,14 @@ urlpatterns = [
     path("api/insurance/", include("insurance.urls")),
     path("api/partners/", include("partners.urls")),
     path("api/mentorship/", include("mentorship.urls")),
+    path("api/livestock/", include("livestock.urls")),
+    path("api/water/", include("water_resources.urls")),
+    path("api/finance/", include("finance.urls")),
+    path("api/logistics/", include("logistics.urls")),
+    path("api/geodata/", include("geodata.urls")),
+    path("api/countries/", include("countries.urls")),
+    path("api/carbon/", include("carbon.urls")),
+    path("developers/", TemplateView.as_view(template_name="developers/index.html"), name="developers"),
 ]
 
 if settings.DEBUG:

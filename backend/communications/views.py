@@ -51,6 +51,17 @@ class VoiceCallView(APIView):
         return Response(initiate_voice_call(phone, message))
 
 
+class WhatsAppSendView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        phone = request.data.get("phone", request.user.phone)
+        message = request.data.get("message", "")
+        if not phone or not message:
+            return Response({"error": "phone et message requis"}, status=400)
+        return Response(send_whatsapp(phone, message))
+
+
 class RadioBroadcastView(APIView):
     permission_classes = [IsAdmin]
 
