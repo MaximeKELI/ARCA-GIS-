@@ -87,15 +87,15 @@ class VisualStatsView(APIView):
         # ── Distributions ──
         crop_dist = [{"name": _crop_label(k), "value": v} for k, v in
                      parcels.values("crop_type").annotate(c=Count("id")).values_list("crop_type", "c")]
-        health_dist = [{"name": _health_label(k), "value": v} for k, v in
-                       parcels.values("health_status").annotate(c=Count("id")).values_list("health_status", "c")]
+        health_raw = list(parcels.values("health_status").annotate(c=Count("id")).values_list("health_status", "c"))
+        health_dist = [{"name": _health_label(k), "value": v} for k, v in health_raw]
         task_dist = [{"name": _task_label(k), "value": v} for k, v in
                      tasks.values("status").annotate(c=Count("id")).values_list("status", "c")]
         budget_cats = [{"name": b["category"], "value": float(b["total"])} for b in
                        budgets.filter(entry_type="expense").values("category").annotate(total=Sum("amount")).order_by("-total")[:6]]
 
         # ── Radar farm health ──
-        health_score = _health_score(health_dist)
+        health_score = _health_score(health_raw)
         stock_score = max(0, 1 - low_stock / max(inventory.count(), 1))
         task_score = 1 - pending_tasks / max(tasks.count(), 1) if tasks.count() else 1
         radar = {
@@ -207,10 +207,10 @@ def _rainfall_series(now):
     return [{"label": month_abbr[m], "value": round(monthly.get(m, 0), 1)} for m in range(1, 13)]
 
 
-def _health_score(health_dist):
+def _health_score(raw_pairs):
     weights = {"good": 1.0, "moderate": 0.6, "poor": 0.3, "critical": 0.1}
-    total = sum(d["value"] for d in health_dist) or 1
-    return sum(weights.get(d["name"].lower(), 0.5) * d["value"] for d in health_dist) / total
+    total = sum(v for _, v in raw_pairs) or 1
+    return sum(weights.get(k, 0.5) * v for k, v in raw_pairs) / total
 
 
 def _crop_label(v):
