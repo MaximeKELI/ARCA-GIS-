@@ -210,7 +210,7 @@ MS_OAUTH_CLIENT_ID = env("MS_OAUTH_CLIENT_ID", default="")
 SPECTACULAR_SETTINGS = {
     "TITLE": "ARCA-GIS API",
     "DESCRIPTION": "Plateforme géomatique africaine — Agriculture, Urgences, Climat",
-    "VERSION": "7.4.0",
+    "VERSION": "7.5.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
