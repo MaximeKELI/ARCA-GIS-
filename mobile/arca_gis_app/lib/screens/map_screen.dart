@@ -212,7 +212,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Widget _buildLegend() {
+  Widget _buildLegend(bool showHeatmap) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -222,7 +222,7 @@ class _MapScreenState extends State<MapScreen> {
             _legendItem(Icons.grass, 'Parcelles', AppTheme.primaryGreen),
             _legendItem(Icons.cloud, 'Climat', AppTheme.climateBlue),
             _legendItem(Icons.emergency, 'SOS', AppTheme.sosRed),
-            if (context.watch<MapProvider>().showHeatmap)
+            if (showHeatmap)
               _legendItem(Icons.blur_on, 'Heatmap', AppTheme.accentOrange),
           ],
         ),

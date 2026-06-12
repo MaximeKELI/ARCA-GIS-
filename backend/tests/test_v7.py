@@ -100,8 +100,12 @@ def test_visual_stats(client, farmer):
 
 @pytest.mark.django_db
 def test_global_search(client, farmer):
+    from django.contrib.gis.geos import Polygon
     from parcels.models import Parcel
-    Parcel.objects.create(owner=farmer, name="Champ Test Search", crop_type="maize")
+    Parcel.objects.create(
+        owner=farmer, name="Champ Test Search", crop_type="maize",
+        geometry=Polygon([(0, 0), (0, 1), (1, 1), (1, 0), (0, 0)], srid=4326),
+    )
     client.force_authenticate(user=farmer)
     resp = client.get("/api/core/search/?q=Champ")
     assert resp.status_code == 200
