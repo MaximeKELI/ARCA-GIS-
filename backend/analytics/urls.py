@@ -3,6 +3,7 @@ from django.urls import path
 from .role_dashboards import AdminDashboardView, FarmerDashboardView, RescueDashboardView, RoleDashboardRouterView
 from .heatmap_views import YieldHeatmapView
 from .ngo_views import NGOExportView, NGOStatsView
+from .advanced_stats_views import AdvancedStatsView
 from .pdf_views import VisualStatsPDFView
 from .stats_views import VisualStatsView
 from .views import (
