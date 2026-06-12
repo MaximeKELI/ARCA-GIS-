@@ -15,6 +15,18 @@ ARCA-GIS/
 └── docker-compose.yml
 ```
 
+## Statistiques & visualisations v7.2
+
+- **Hub statistiques** (onglet Analytiques) : 4 onglets — Vue d'ensemble, Agriculture, Finance, Climat
+- **KPIs animés** avec sparklines, tendances % et cartes gradient
+- **Courbes** : humidité sol, NDVI, pluviométrie (gradients + area fill)
+- **Barres** : récoltes mensuelles, revenus vs dépenses groupés
+- **Donuts** : cultures, santé parcelles, tâches, dépenses
+- **Radar** : score santé fermière (5 axes)
+- **Prix marché** intégrés dans l'onglet Finance
+
+Endpoint : `GET /api/analytics/visual/`
+
 ## Fonctionnalités v7.0 — Opérations autonomes
 
 ### Gestion fermière (100 % interne)
