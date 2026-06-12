@@ -5,12 +5,15 @@ import 'package:http/http.dart' as http;
 /// Télécharge et met en cache les tuiles cartographiques pour usage hors-ligne.
 class OfflineTileService {
   static const _tileBase = 'https://tile.openstreetmap.org';
+  String? _cacheDirPath;
 
   Future<String> get cacheDir async {
+    if (_cacheDirPath != null) return _cacheDirPath!;
     final dir = await getApplicationDocumentsDirectory();
     final tiles = Directory('${dir.path}/tiles');
     if (!await tiles.exists()) await tiles.create(recursive: true);
-    return tiles.path;
+    _cacheDirPath = tiles.path;
+    return _cacheDirPath!;
   }
 
   Future<void> downloadRegion({required int zoom, required int xMin, required int xMax,
@@ -31,6 +34,12 @@ class OfflineTileService {
   }
 
   String? localTilePath(int z, int x, int y) {
-    return null; // Utilisé par TileProvider personnalisé si besoin
+    if (_cacheDirPath == null) return null;
+    final path = '$_cacheDirPath/$z/$x/$y.png';
+    return File(path).existsSync() ? path : null;
+  }
+
+  Future<void> init() async {
+    await cacheDir;
   }
 }
