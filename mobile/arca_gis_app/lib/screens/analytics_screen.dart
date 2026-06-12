@@ -23,7 +23,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 4, vsync: this);
+    _tabs = TabController(length: 5, vsync: this);
     _load();
   }
 

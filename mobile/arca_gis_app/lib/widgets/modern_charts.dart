@@ -80,6 +80,13 @@ class ModernCharts {
     );
   }
 
+  static Widget _animatedKpiValue(String value, Color color) {
+    final style = TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color);
+    final numVal = num.tryParse(value);
+    if (numVal != null) return AnimatedCount(value: numVal, style: style);
+    return Text(value, style: style);
+  }
+
   static Widget sparklineChart(List<double> data, Color color) {
     if (data.isEmpty) return const SizedBox();
     final maxV = data.reduce(max);
@@ -373,7 +380,7 @@ class ModernCharts {
               SizedBox(width: 80, child: Text(label, style: TextStyle(fontSize: 11, color: isDark ? Colors.white70 : Colors.black87))),
               Expanded(child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(value: pct, minHeight: 16, color: palette[link['target'] as int? ?? 0 % palette.length]),
+                child: LinearProgressIndicator(value: pct, minHeight: 16, color: palette[(link['target'] as int? ?? 0) % palette.length]),
               )),
               const SizedBox(width: 8),
               Text('${val.toInt()}', style: const TextStyle(fontSize: 11)),
