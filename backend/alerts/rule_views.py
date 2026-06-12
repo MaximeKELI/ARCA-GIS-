@@ -66,7 +66,13 @@ class EvaluateRulesView(APIView):
                 for i in InputInventory.objects.filter(owner=request.user):
                     if i.quantity <= rule.threshold:
                         triggered.append({"rule": rule.name, "product": i.product_name})
+                        broadcast_alert("crop", f"Règle: {rule.name}",
+                                        f"Stock bas: {i.product_name} ({i.quantity} {i.unit})",
+                                        "medium", {"product": i.product_name}, target_user=request.user)
             elif rule.metric == "task_overdue":
                 for t in FarmTask.objects.filter(owner=request.user, status="pending", due_date__lt=timezone.now().date()):
                     triggered.append({"rule": rule.name, "task": t.title})
+                    broadcast_alert("crop", f"Règle: {rule.name}",
+                                    f"Tâche en retard: {t.title}", "medium",
+                                    {"task_id": t.id}, target_user=request.user)
         return Response({"triggered": triggered, "count": len(triggered)})
