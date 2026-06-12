@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import '../config/theme.dart';
 import '../services/api_service.dart';
 import '../utils/api_utils.dart';
@@ -40,6 +42,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
     }
   }
 
+  Future<void> _exportPdf() async {
+    try {
+      final bytes = await _api.downloadBytes('/analytics/visual/export/pdf/');
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/arca_gis_stats.pdf');
+      await file.writeAsBytes(bytes);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('PDF exporté: ${file.path}')),
+        );
+      }
+    } catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur export: $e')));
+    }
+  }
+
   List<Map<String, dynamic>> _list(dynamic key) =>
       (_data[key] as List?)?.cast<Map<String, dynamic>>() ?? [];
 
@@ -47,6 +65,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryGreen))
@@ -55,6 +74,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
                 SliverAppBar(
                   expandedHeight: 180,
                   pinned: true,
+                  actions: [
+                    IconButton(icon: const Icon(Icons.picture_as_pdf), onPressed: _exportPdf, tooltip: 'Export PDF'),
+                  ],
                   flexibleSpace: FlexibleSpaceBar(
                     title: const Text('Statistiques', style: TextStyle(fontWeight: FontWeight.bold)),
                     background: Container(
@@ -99,10 +121,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
                 child: TabBarView(
                   controller: _tabs,
                   children: [
-                    _overviewTab(),
-                    _agricultureTab(),
-                    _financeTab(),
-                    _climateTab(),
+                    _overviewTab(isDark),
+                    _agricultureTab(isDark),
+                    _financeTab(isDark),
+                    _climateTab(isDark),
                   ],
                 ),
               ),
@@ -115,7 +137,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
     decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: opacity)),
   );
 
-  Widget _overviewTab() {
+  Widget _overviewTab(bool isDark) {
     final kpis = _list('kpis');
     final radar = _map('radar');
     return ListView(
@@ -138,6 +160,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
             sparkline: k['key'] == 'moisture'
                 ? (_map('sparklines')['moisture'] as List?)?.cast<num>().map((e) => e.toDouble()).toList()
                 : null,
+            isDark: isDark,
           )).toList(),
         ),
         const SizedBox(height: 8),
@@ -146,20 +169,23 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
             title: 'Score santé fermière',
             labels: (radar['labels'] as List?)?.cast<String>() ?? [],
             values: (radar['values'] as List?)?.cast<num>().map((e) => e.toDouble()).toList() ?? [],
+            isDark: isDark,
           ),
         ModernCharts.donutChart(
           title: 'Répartition cultures',
           data: (_map('distributions')['crop_types'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+          isDark: isDark,
         ),
         ModernCharts.donutChart(
           title: 'État sanitaire parcelles',
           data: (_map('distributions')['health_status'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+          isDark: isDark,
         ),
       ],
     );
   }
 
-  Widget _agricultureTab() {
+  Widget _agricultureTab(bool isDark) {
     final series = _map('series');
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -169,26 +195,30 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
           data: (series['moisture_trend'] as List?)?.cast<Map<String, dynamic>>() ?? [],
           color: AppTheme.climateBlue,
           valueSuffix: '%',
+          isDark: isDark,
         ),
         ModernCharts.gradientLineChart(
           title: 'Indice NDVI',
           data: (series['ndvi_trend'] as List?)?.cast<Map<String, dynamic>>() ?? [],
           color: AppTheme.primaryGreen,
+          isDark: isDark,
         ),
         ModernCharts.barChart(
           title: 'Récoltes mensuelles (kg)',
           data: (series['harvest_monthly'] as List?)?.cast<Map<String, dynamic>>() ?? [],
           color: AppTheme.accentOrange,
+          isDark: isDark,
         ),
         ModernCharts.donutChart(
           title: 'Statut des tâches',
           data: (_map('distributions')['task_status'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+          isDark: isDark,
         ),
       ],
     );
   }
 
-  Widget _financeTab() {
+  Widget _financeTab(bool isDark) {
     final series = _map('series');
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -197,10 +227,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
           title: 'Revenus vs Dépenses (6 mois)',
           income: (series['budget_income'] as List?)?.cast<Map<String, dynamic>>() ?? [],
           expense: (series['budget_expense'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+          isDark: isDark,
         ),
         ModernCharts.donutChart(
           title: 'Dépenses par catégorie',
           data: (_map('distributions')['budget_categories'] as List?)?.cast<Map<String, dynamic>>() ?? [],
+          isDark: isDark,
         ),
         _marketPricesCard(),
       ],
