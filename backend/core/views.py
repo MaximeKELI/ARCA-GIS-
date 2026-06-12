@@ -94,8 +94,8 @@ class OfflineSyncProcessView(APIView):
         for item in items:
             if process_offline_item(item):
                 count += 1
-            item.synced = True
-            item.save()
+                item.synced = True
+                item.save()
         return Response({"synced": count})
 
 
