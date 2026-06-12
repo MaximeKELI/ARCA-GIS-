@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .backup_views import BackupTriggerView
+from .activity_views import ActivityFeedView
+from .bookmark_views import BookmarkDeleteView, BookmarkListCreateView
 from .oauth_views import OAuthCallbackView, OAuthProvidersView
 from .gdpr_views import ConsentView, DataDeleteView, DataExportView
 from .views import (
