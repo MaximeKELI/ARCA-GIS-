@@ -46,8 +46,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     if (success && mounted) {
+      await context.read<SecurityProvider>().load(lockOnStart: false);
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
         (_) => false,
       );
     } else if (mounted && auth.error != null) {
