@@ -35,3 +35,6 @@ class PointEvent(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+
+from .challenge_models import SeasonalChallenge  # noqa: E402, F401

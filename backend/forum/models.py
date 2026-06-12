@@ -37,3 +37,6 @@ class ForumComment(models.Model):
 
     class Meta:
         ordering = ["created_at"]
+
+
+from .poll_models import ForumPoll  # noqa: E402, F401

@@ -71,3 +71,6 @@ class Incident(models.Model):
             self.is_sos = True
             self.priority = self.Priority.CRITICAL
         super().save(*args, **kwargs)
+
+
+from .ops_models import InterventionLog, RescueVolunteer  # noqa: E402, F401

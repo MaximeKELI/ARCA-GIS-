@@ -77,18 +77,9 @@ class OfflineSyncView(generics.ListCreateAPIView):
         return OfflineSyncQueue.objects.filter(user=self.request.user, synced=False)
 
     def perform_create(self, serializer):
+        from .sync_handlers import process_offline_item
         item = serializer.save()
-        if item.action_type == "sos":
-            from incidents.models import Incident
-            data = item.payload
-            Incident.objects.create(
-                reporter=item.user,
-                incident_type=Incident.IncidentType.SOS,
-                title="SOS (sync hors-ligne)",
-                description=data.get("description", "SOS synchronisé"),
-                location=Point(data["lng"], data["lat"], srid=4326),
-                is_sos=True,
-            )
+        if process_offline_item(item):
             item.synced = True
             item.save()
 
@@ -99,21 +90,12 @@ class OfflineSyncProcessView(APIView):
     def post(self, request):
         items = OfflineSyncQueue.objects.filter(user=request.user, synced=False)
         count = 0
+        from .sync_handlers import process_offline_item
         for item in items:
-            if item.action_type == "sos":
-                from incidents.models import Incident
-                data = item.payload
-                Incident.objects.create(
-                    reporter=item.user,
-                    incident_type=Incident.IncidentType.SOS,
-                    title="SOS (sync hors-ligne)",
-                    description=data.get("description", ""),
-                    location=Point(data["lng"], data["lat"], srid=4326),
-                    is_sos=True,
-                )
+            if process_offline_item(item):
+                count += 1
             item.synced = True
             item.save()
-            count += 1
         return Response({"synced": count})
 
 
