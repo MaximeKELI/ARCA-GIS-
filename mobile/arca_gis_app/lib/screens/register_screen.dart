@@ -20,6 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _passwordConfirmController = TextEditingController();
   String _role = 'farmer';
 
   @override
@@ -29,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _passwordController.dispose();
+    _passwordConfirmController.dispose();
     super.dispose();
   }
 
@@ -103,6 +105,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: const InputDecoration(labelText: 'Mot de passe', prefixIcon: Icon(Icons.lock)),
                 obscureText: true,
                 validator: (v) => v == null || v.length < 8 ? 'Min. 8 caractères' : null,
+                onChanged: (_) => _formKey.currentState?.validate(),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _passwordConfirmController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirmer le mot de passe',
+                  prefixIcon: Icon(Icons.lock_outline),
+                ),
+                obscureText: true,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Requis';
+                  if (v != _passwordController.text) {
+                    return 'Les mots de passe ne correspondent pas';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
