@@ -1,4 +1,4 @@
-# ARCA-GIS v4.0 — Agro-Rescue Climate Africa
+# ARCA-GIS v5.0 — Agro-Rescue Climate Africa
 
 Plateforme géomatique africaine complète pour l'agriculture, les urgences et le climat.
 
@@ -6,39 +6,64 @@ Plateforme géomatique africaine complète pour l'agriculture, les urgences et l
 
 ```
 ARCA-GIS/
-├── backend/          # Django + GeoDjango (23 apps, 100+ endpoints)
-├── ai_module/        # FastAPI v4 (diagnostic photo, irrigation, ML persisté)
-├── mobile/           # Flutter v4 (forum, formation, gamification, diagnostic)
+├── backend/          # Django + GeoDjango (30 apps, 130+ endpoints)
+├── ai_module/        # FastAPI v5 (RAG, prix ML, rendement fusion, drone)
+├── mobile/           # Flutter v5 (mentorat, abonnements, dark mode, élevage)
 ├── iot/firmware/     # ESP32 capteurs sol
-├── deploy/           # Nginx, Docker prod, Kubernetes
+├── deploy/           # Nginx, Docker prod, K8s, Prometheus
 └── docker-compose.yml
 ```
 
-## Fonctionnalités v4.0
+## Fonctionnalités v5.0
 
-### Nouveautés principales
-- **Abonnements freemium** — plans gratuit, agriculteur, coopérative
-- **Forum communautaire** — échanges par région
-- **Formation vidéo** — cours agricoles avec progression
-- **Gamification** — badges, points, classement
-- **Assurance paramétrique** — polices sécheresse/inondation
-- **API partenaires** — clés `X-ARCA-API-Key` pour ONG/gouvernement
-- **Mentorat** — sessions agriculteur expérimenté / débutant
-- **Marketplace B2B** — annonces de vente de récoltes
-- **Calendrier cultural** — semis/récoltes par région
-- **Diagnostic maladies** — analyse photo IA
-- **Irrigation intelligente** — conseils basés humidité sol
-- **IoT étendu** — bouées fluviales, pièges à insectes
-- **Appels vocaux SOS** — Twilio Voice
-- **GDPR** — export/suppression données personnelles
-- **Dashboard ONG** — stats régionales + export CSV
-- **Tuiles offline** — cache cartographique Flutter
-- **Mode feature phone** — interface ultra-légère
-- **CI/CD** — GitHub Actions (backend, IA, Flutter)
-- **Backup S3** — sauvegarde planifiée
+### Intégrations réelles
+- **OpenWeatherMap** + NASA POWER (fallback météo)
+- **NASA FIRMS** — détection feux de brousse
+- **FCM push** — notifications mobiles
+- **WhatsApp Business** — alertes via Twilio
+- **Backup S3** — sauvegarde automatique (boto3)
+- **Factures PDF** — génération ReportLab
 
-### Héritage v1-v3
-SMS/USSD, 2FA, NDVI Sentinel, jumeau numérique, blockchain, drones, paiements mobile, chat, GPS secours, géofencing, coopératives, OpenAPI/Swagger.
+### Nouveaux modules métier
+- **Élevage** — troupeaux, alertes vétérinaires
+- **Gestion de l'eau** — puits, barrages, quotas, conflits
+- **Micro-crédit** — prêts agricoles saisonniers
+- **Logistique** — transporteurs, devis expédition
+- **Cartographie participative** — points communautaires OSM
+- **Couches WMS** — données géographiques externes
+- **Multi-pays** — CI, SN, ML, KE configurables
+- **Crédits carbone** — estimation CO₂ par parcelle
+- **Contrats B2B** — acheteurs exportateurs
+- **Prévision prix** — ML marchés agricoles
+- **Calendrier phytosanitaire** — traitements par semaine
+- **Météo communautaire** — rapports agriculteurs
+- **Dispatch secours** — assignation agent le plus proche
+- **Checklists évacuation** — inondation, sécheresse, feu
+- **Heatmap rendement** — visualisation régionale
+
+### IA v5
+- **Agent RAG** — conseils agronomiques conversationnels
+- **Prévision prix** — tendances marchés
+- **Rendement fusion** — NDVI + météo + sol
+- **Optimisation intrants** — engrais, semences
+- **Analyse drone** — ravageurs par zone
+- **Estimation carbone** — crédits par culture
+
+### Mobile v5
+- Écrans **mentorat**, **abonnements**, **élevage**
+- **Mode sombre**
+- **Tuiles offline** téléchargeables
+- **App KaiOS** (`web/kaios.html`)
+- **EXIF géoloc** — position depuis photo
+
+### Infrastructure
+- **Portail développeurs** — `/developers/`
+- **Prometheus** — monitoring
+- **Tests v5** — pytest étendu
+- **CI/CD** — GitHub Actions
+
+### Héritage v1-v4
+SMS/USSD, 2FA, NDVI, jumeau numérique, blockchain, drones, forum, gamification, assurance, GDPR, etc.
 
 ## Démarrage
 
@@ -46,12 +71,9 @@ SMS/USSD, 2FA, NDVI Sentinel, jumeau numérique, blockchain, drones, paiements m
 cp .env.example .env
 docker compose up -d
 
-# Migrations
-docker run --rm --network arca-gis_default -v ./backend:/app \
-  -e DATABASE_URL=postgis://arca_user:arca_secret_2024@arca_gis_postgres:5432/arca_gis \
+docker exec -e DATABASE_URL=postgis://arca_user:arca_secret_2024@arca_gis_postgres:5432/arca_gis \
   arca_gis_backend sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py seed_data"
 
-# Mobile
 cd mobile/arca_gis_app && flutter pub get && flutter run
 ```
 
@@ -60,17 +82,18 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | URL | Description |
 |-----|-------------|
 | `http://localhost:8003/api/docs/` | Swagger OpenAPI |
-| `http://localhost:8003/dashboard/` | Dashboard admin |
-| `GET /api/analytics/ngo/stats/` | Stats ONG/gouvernement |
-| `GET /api/analytics/ngo/export/?format=csv` | Export parcelles CSV |
-| `POST /api/communications/voice/call/` | Appel vocal SOS |
-| `GET /api/marketplace/listings/` | Annonces B2B |
-| `GET /api/climate/calendar/` | Calendrier cultural |
-| `POST /api/climate/irrigation/advice/` | Conseil irrigation |
-| `GET /api/gamification/leaderboard/` | Classement |
-| `GET /api/core/gdpr/export/` | Export données RGPD |
-| `POST /api/iot/buoys/ingest/` | Données bouée fluviale |
-| `POST /api/iot/pest-traps/ingest/` | Données piège insectes |
+| `http://localhost:8003/developers/` | Portail développeurs |
+| `GET /api/livestock/herds/` | Troupeaux |
+| `GET /api/water/points/` | Points d'eau |
+| `POST /api/finance/loans/` | Micro-crédit |
+| `GET /api/logistics/transporters/` | Transporteurs |
+| `POST /api/carbon/estimate/` | Crédits carbone |
+| `GET /api/climate/wildfires/` | Feux NASA FIRMS |
+| `POST /api/communications/whatsapp/send/` | WhatsApp |
+| `POST /api/notifications/send/` | Push FCM |
+| `GET /api/marketplace/price-forecast/` | Prévision prix |
+| `GET /api/analytics/heatmap/` | Heatmap rendement |
+| `POST /api/incidents/<id>/dispatch/` | Dispatch secours |
 
 ## Comptes démo
 
@@ -80,18 +103,11 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | kouassi | farmer1234 | Agriculteur |
 | secours | rescue1234 | Secours |
 
-## Tests & CI
+## Tests
 
 ```bash
 cd backend && pytest tests/ -v
 cd mobile/arca_gis_app && flutter analyze
-```
-
-## Production
-
-```bash
-cd deploy && docker compose -f docker-compose.prod.yml up -d
-kubectl apply -f k8s/
 ```
 
 ARCA-GIS © 2024 — Open Source
