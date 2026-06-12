@@ -17,6 +17,7 @@ urlpatterns = [
     path("dashboard/", DashboardStatsView.as_view()),
     path("visual/", VisualStatsView.as_view()),
     path("visual/export/pdf/", VisualStatsPDFView.as_view()),
+    path("advanced/", AdvancedStatsView.as_view()),
     path("crop-history/", CropHistoryListView.as_view()),
     path("crop-history/record/", RecordCropHistoryView.as_view()),
     path("snapshots/", AnalyticsSnapshotListView.as_view()),
