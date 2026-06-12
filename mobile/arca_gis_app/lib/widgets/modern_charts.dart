@@ -395,7 +395,6 @@ class ModernCharts {
     final rows = (data['data'] as List?)?.cast<Map<String, dynamic>>() ?? [];
     final crops = (data['crops'] as List?)?.cast<String>() ?? [];
     if (rows.isEmpty) return chartCard(title: title, accent: AppTheme.accentOrange, child: const Text('Aucune donnée'), isDark: isDark);
-    final crops = (data['crops'] as List?)?.cast<String>() ?? [];
     return _chartCard(title, AppTheme.accentOrange, Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (crops.isNotEmpty)
         Padding(
@@ -441,6 +440,7 @@ class ModernCharts {
           }));
         }),
       )),
-    ), isDark: isDark);
+      ),
+    ]), isDark: isDark);
   }
 }

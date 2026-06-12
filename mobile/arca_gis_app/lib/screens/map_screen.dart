@@ -247,7 +247,7 @@ class _MapScreenState extends State<MapScreen> {
             if (showHeatmap)
               _legendItem(Icons.blur_on, 'Heatmap', AppTheme.accentOrange),
             if (showChoropleth)
-              _legendItem(Icons.layers, 'Choroplèthe', AppTheme.climateBlue),
+              _legendItem(Icons.layers, mapProvider.choroplethMetric == 'health' ? 'Santé' : 'Humidité', AppTheme.climateBlue),
           ],
         ),
       ),
