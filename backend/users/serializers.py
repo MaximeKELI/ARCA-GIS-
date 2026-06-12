@@ -60,7 +60,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop("password_confirm")
         password = validated_data.pop("password")
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
+        return User.objects.create_user(
+            password=password,
+            is_2fa_enabled=False,
+            preferred_language="fr",
+            **validated_data,
+        )

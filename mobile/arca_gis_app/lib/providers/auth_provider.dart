@@ -39,7 +39,7 @@ class AuthProvider extends ChangeNotifier {
       _user = await _authService.login(username, password);
       return true;
     } catch (e) {
-      _error = e.toString();
+      _error = e.toString().replaceFirst('Exception: ', '');
       return false;
     } finally {
       _isLoading = false;
@@ -69,7 +69,7 @@ class AuthProvider extends ChangeNotifier {
       );
       return true;
     } catch (e) {
-      _error = e.toString();
+      _error = e.toString().replaceFirst('Exception: ', '');
       return false;
     } finally {
       _isLoading = false;
