@@ -88,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.info_outline, color: AppTheme.primaryGreen),
                   title: const Text('À propos'),
-                  subtitle: Text('${AppConfig.appName} v1.0.0\n${AppConfig.appSubtitle}'),
+                  subtitle: Text('${AppConfig.appName} v5.0.0\n${AppConfig.appSubtitle}'),
                 ),
               ],
             ),

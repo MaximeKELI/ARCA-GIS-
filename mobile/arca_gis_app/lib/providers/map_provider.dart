@@ -19,6 +19,8 @@ class MapProvider extends ChangeNotifier {
   final OfflineService _offline = OfflineService();
   final GeofenceService _geofence = GeofenceService();
   final GPSTrackingService _gps = GPSTrackingService();
+  final OfflineTileService _tiles = OfflineTileService();
+  bool _offlineTilesReady = false;
 
   List<Parcel> _parcels = [];
   List<ClimateEvent> _climateEvents = [];
