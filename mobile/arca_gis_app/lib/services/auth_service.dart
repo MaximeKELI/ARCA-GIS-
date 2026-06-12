@@ -5,7 +5,12 @@ import '../config/app_config.dart';
 import '../models/user.dart';
 
 class AuthService {
-  static const _storage = FlutterSecureStorage();
+  AuthService({http.Client? client, FlutterSecureStorage? storage})
+      : _client = client ?? http.Client(),
+        _storage = storage ?? const FlutterSecureStorage();
+
+  final http.Client _client;
+  final FlutterSecureStorage _storage;
   static const _accessKey = 'access_token';
   static const _refreshKey = 'refresh_token';
 
@@ -18,7 +23,7 @@ class AuthService {
 
   Future<User> login(String username, String password) async {
     try {
-      final response = await http.post(
+      final response = await _client.post(
         Uri.parse('${AppConfig.apiBaseUrl}/auth/token/'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'username': username, 'password': password}),
@@ -48,7 +53,7 @@ class AuthService {
     String country = "Côte d'Ivoire",
   }) async {
     try {
-      final response = await http.post(
+      final response = await _client.post(
         Uri.parse('${AppConfig.apiBaseUrl}/users/register/'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
@@ -75,7 +80,7 @@ class AuthService {
 
   Future<User> getProfile() async {
     final token = await getAccessToken();
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse('${AppConfig.apiBaseUrl}/users/profile/'),
       headers: {
         'Content-Type': 'application/json',
