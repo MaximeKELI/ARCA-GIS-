@@ -394,5 +394,79 @@ class Command(BaseCommand):
             "ends_at": timezone.now() + timedelta(hours=2),
         })
 
+        self.stdout.write("Création données v7...")
+        from alerts.rule_models import AlertRule
+        from cooperatives.v7_models import CooperativeVote, EquipmentReservation
+        from farm_ops.models import BudgetEntry, CropSeason, FarmTask, FieldJournal, HarvestJournal, InputInventory
+        from forum.poll_models import ForumPoll
+        from gamification.challenge_models import SeasonalChallenge
+        from incidents.ops_models import RescueVolunteer
+        from training.quiz_models import Quiz, QuizQuestion
+
+        first_parcel = Parcel.objects.filter(owner=farmer).first()
+        if first_parcel:
+            CropSeason.objects.get_or_create(parcel=first_parcel, year=2025, crop_type="maize", defaults={
+                "planting_date": date(2025, 4, 15), "status": "active",
+            })
+            HarvestJournal.objects.get_or_create(
+                parcel=first_parcel, owner=farmer, crop_type="maize",
+                harvest_date=date(2024, 8, 20), defaults={"quantity_kg": 850, "quality_grade": "A"},
+            )
+            FieldJournal.objects.get_or_create(
+                author=farmer, entry_date=date.today(),
+                defaults={"parcel": first_parcel, "observation": "Pousse régulière, pas de ravageurs visibles.",
+                          "weather_note": "Ensoleillé", "rainfall_mm": 0},
+            )
+
+        InputInventory.objects.get_or_create(owner=farmer, product_name="NPK 15-15-15", defaults={
+            "product_type": "fertilizer", "quantity": 25, "unit": "kg", "alert_threshold": 30,
+        })
+        InputInventory.objects.get_or_create(owner=farmer, product_name="Semences maïs", defaults={
+            "product_type": "seed", "quantity": 8, "unit": "kg", "alert_threshold": 10,
+        })
+        FarmTask.objects.get_or_create(owner=farmer, title="Traitement herbicide", defaults={
+            "parcel": first_parcel, "due_date": date.today() + timedelta(days=3),
+            "crop_type": "maize", "source": "calendar",
+        })
+        BudgetEntry.objects.get_or_create(owner=farmer, category="Vente maïs", entry_date=date(2024, 9, 1), defaults={
+            "entry_type": "income", "amount": 200000, "description": "Récolte maïs",
+        })
+        BudgetEntry.objects.get_or_create(owner=farmer, category="Engrais", entry_date=date(2025, 4, 10), defaults={
+            "entry_type": "expense", "amount": 45000,
+        })
+        AlertRule.objects.get_or_create(owner=farmer, name="Stock bas engrais", defaults={
+            "metric": "inventory", "operator": "lt", "threshold": 30,
+        })
+        AlertRule.objects.get_or_create(owner=farmer, name="Humidité sol faible", defaults={
+            "metric": "soil_moisture", "operator": "lt", "threshold": 30,
+        })
+        CooperativeVote.objects.get_or_create(cooperative=coop, title="Achat tracteur communautaire", defaults={
+            "description": "Vote pour l'acquisition d'un tracteur partagé",
+            "created_by": farmer, "ends_at": timezone.now() + timedelta(days=7),
+        })
+        EquipmentReservation.objects.get_or_create(
+            cooperative=coop, equipment_name="Pulvérisateur", reserved_by=farmer,
+            start_date=date.today() + timedelta(days=2),
+            end_date=date.today() + timedelta(days=4),
+        )
+        course = Course.objects.filter(title="Irrigation efficace").first()
+        if course:
+            quiz, _ = Quiz.objects.get_or_create(course=course, title="Quiz irrigation", defaults={"pass_score": 70})
+            QuizQuestion.objects.get_or_create(quiz=quiz, question="Quelle est la meilleure heure pour arroser ?", defaults={
+                "options": ["Midi", "Tôt le matin", "Minuit"], "correct_index": 1,
+            })
+        ForumPoll.objects.get_or_create(author=farmer, question="Semis maïs : avril ou mai ?", defaults={
+            "options": ["Avril", "Mai", "Juin"], "votes": {"Avril": 3, "Mai": 5},
+            "ends_at": timezone.now() + timedelta(days=5),
+        })
+        SeasonalChallenge.objects.get_or_create(title="Récolte record", defaults={
+            "description": "Enregistrer 3 récoltes cette saison",
+            "action": "harvest_log", "target_count": 3, "points_reward": 100,
+            "region": "Bouaké", "starts_at": date.today(), "ends_at": date.today() + timedelta(days=90),
+        })
+        RescueVolunteer.objects.get_or_create(user=rescue, defaults={
+            "skills": ["secours", "navigation"], "vehicle_type": "4x4", "region": "Abidjan",
+        })
+
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès!"))
         self.stdout.write("Comptes: admin/admin1234, kouassi/farmer1234, secours/rescue1234")
