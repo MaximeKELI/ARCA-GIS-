@@ -67,7 +67,8 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | `GET /api/cooperatives/votes/` | Votes coop |
 | `GET /api/training/quizzes/<id>/` | Quiz formation |
 | `GET /api/training/certificates/<id>/download/` | Certificat PDF |
-| `GET /api/analytics/role-dashboard/` | Dashboard par rôle |
+| `GET /api/analytics/visual/` | Statistiques visuelles (KPIs, courbes, radar) |
+| `GET /api/analytics/heatmap/` | Heatmap rendements |
 | `POST /api/core/offline/sync/` | Queue sync offline |
 | `POST /api/communications/ussd/simulate/` | Simulateur USSD |
 | `GET /api/core/activity/` | Fil d'activité |

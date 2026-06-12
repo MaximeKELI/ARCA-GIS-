@@ -468,5 +468,33 @@ class Command(BaseCommand):
             "skills": ["secours", "navigation"], "vehicle_type": "4x4", "region": "Abidjan",
         })
 
+        self.stdout.write("Création données statistiques...")
+        from analytics.models import CropHistory
+        from climate.models import WeatherReading, WeatherStation
+
+        station, _ = WeatherStation.objects.get_or_create(name="Station Bouaké", defaults={
+            "location": Point(-5.030, 7.690, srid=4326), "country": "Côte d'Ivoire", "region": "Bouaké",
+        })
+        for m in range(6):
+            dt = timezone.now() - timedelta(days=30 * m)
+            WeatherReading.objects.get_or_create(
+                station=station, recorded_at=dt.replace(day=15),
+                defaults={"temperature": 28 + m, "rainfall_mm": [120, 80, 45, 15, 5, 90][m],
+                          "humidity": 65 - m * 2, "soil_moisture": 55 + m * 3},
+            )
+        for p in Parcel.objects.filter(owner=farmer)[:3]:
+            for m in range(6):
+                dt = timezone.now() - timedelta(days=30 * m)
+                CropHistory.objects.get_or_create(
+                    parcel=p, recorded_at=dt.replace(day=10),
+                    defaults={"health_status": p.health_status, "soil_moisture": p.soil_moisture - m * 2,
+                              "ndvi_score": 0.72 - m * 0.03, "rainfall_mm": 50 + m * 10},
+                )
+        for m, kg in enumerate([200, 350, 420, 180, 500, 300]):
+            HarvestJournal.objects.get_or_create(
+                parcel=first_parcel, owner=farmer, crop_type="maize",
+                harvest_date=date(2024, m + 3, 15), defaults={"quantity_kg": kg},
+            ) if first_parcel else None
+
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès!"))
         self.stdout.write("Comptes: admin/admin1234, kouassi/farmer1234, secours/rescue1234")
