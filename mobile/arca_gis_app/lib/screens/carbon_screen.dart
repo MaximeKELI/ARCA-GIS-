@@ -66,7 +66,7 @@ class _CarbonScreenState extends State<CarbonScreen> {
       appBar: AppBar(
         title: const Text('Crédits carbone'),
         backgroundColor: const Color(0xFF2E7D32),
-        actions: [IconButton(icon: const Icon(Icons.calculate), onPressed: _estimate)],
+        actions: [IconButton(icon: const Icon(Icons.calculate), onPressed: _runEstimate)],
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
