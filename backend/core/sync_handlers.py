@@ -20,11 +20,14 @@ def process_offline_item(item) -> bool:
         return True
 
     if item.action_type == "harvest":
+        parcel_id = data.get("parcel_id") or Parcel.objects.filter(owner=user).values_list("pk", flat=True).first()
+        if not parcel_id:
+            return False
         HarvestJournal.objects.create(
-            owner=user, parcel_id=data["parcel_id"],
+            owner=user, parcel_id=parcel_id,
             crop_type=data.get("crop_type", "maize"),
             quantity_kg=data["quantity_kg"],
-            harvest_date=data["harvest_date"],
+            harvest_date=data.get("harvest_date", timezone.now().date()),
         )
         return True
 
