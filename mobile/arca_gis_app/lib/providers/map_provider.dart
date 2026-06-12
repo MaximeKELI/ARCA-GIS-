@@ -25,6 +25,8 @@ class MapProvider extends ChangeNotifier {
   List<Map<String, dynamic>> _choroplethCells = [];
   bool _showChoropleth = false;
   String _choroplethMetric = 'moisture';
+  List<Map<String, dynamic>> _heatmapCells = [];
+  bool _showHeatmap = false;
 
   List<Map<String, dynamic>> get choroplethCells => _choroplethCells;
   bool get showChoropleth => _showChoropleth;
