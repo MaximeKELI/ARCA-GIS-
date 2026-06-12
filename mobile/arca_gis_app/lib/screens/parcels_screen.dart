@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/map_provider.dart';
+import '../widgets/parcel_card.dart';
 import 'parcel_qr_screen.dart';
 import 'parcel_compare_screen.dart';
 

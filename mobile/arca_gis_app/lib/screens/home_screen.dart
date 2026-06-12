@@ -39,6 +39,7 @@ import 'role_dashboard_screen.dart';
 import 'activity_feed_screen.dart';
 import 'notifications_screen.dart';
 import 'measure_map_screen.dart';
+import 'ussd_simulator_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

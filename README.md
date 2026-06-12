@@ -70,7 +70,11 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | `GET /api/analytics/role-dashboard/` | Dashboard par rôle |
 | `POST /api/core/offline/sync/` | Queue sync offline |
 | `POST /api/communications/ussd/simulate/` | Simulateur USSD |
-| `GET /api/parcels/export/geojson/` | Export GeoJSON |
+| `GET /api/core/activity/` | Fil d'activité |
+| `GET /api/core/bookmarks/` | Favoris |
+| `GET /api/parcels/export/csv/` | Export CSV parcelles |
+| `GET /api/parcels/<id>/history/` | Historique modifications |
+| `GET /api/cooperatives/<id>/members/` | Annuaire membres |
 | `GET /api/parcels/<id>/qr/` | QR parcelle |
 
 ## Comptes démo
