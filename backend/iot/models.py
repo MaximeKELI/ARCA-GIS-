@@ -59,3 +59,6 @@ class PestTrap(models.Model):
     last_image = models.ImageField(upload_to="pest_traps/", blank=True)
     ai_diagnosis = models.JSONField(default=dict, blank=True)
     is_active = models.BooleanField(default=True)
+
+
+from .v6_models import LivestockCollar, LoRaDevice, RainGauge, SoilStation  # noqa: E402, F401
