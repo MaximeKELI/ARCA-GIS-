@@ -2,6 +2,7 @@ from calendar import month_abbr
 from collections import defaultdict
 from datetime import timedelta
 
+from django.db import models
 from django.db.models import Avg, Count, Sum
 from django.utils import timezone
 from rest_framework import permissions
@@ -41,7 +42,9 @@ class AdvancedStatsView(APIView):
             harvests = harvests.filter(parcel_id=parcel_id)
 
         budgets = BudgetEntry.objects.filter(owner=user, entry_date__gte=since.date())
-        alerts = Alert.objects.filter(created_at__gte=since)
+        alerts = Alert.objects.filter(created_at__gte=since).filter(
+            models.Q(target_user=user) | models.Q(target_user__isnull=True, is_broadcast=True)
+        )
 
         return Response({
             "filters": {"months": months, "crop": crop_filter, "parcel": parcel_id, "metric": metric},
