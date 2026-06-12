@@ -9,7 +9,8 @@ import 'chat_screen.dart';
 import 'parcel_draw_screen.dart';
 import '../services/offline_tile_provider.dart';
 import 'measure_map_screen.dart';
-import '../widgets/sos_button.dart';
+import '../widgets/arca_logo.dart';
+import '../widgets/feature_carousel.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -21,6 +22,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final MapController _mapController = MapController();
   bool _sosLoading = false;
+  bool _showCarousel = true;
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +142,17 @@ class _MapScreenState extends State<MapScreen> {
             right: 12,
             child: _buildLegend(mapProvider.showHeatmap, mapProvider.showChoropleth, mapProvider.choroplethMetric),
           ),
+          if (_showCarousel)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 56,
+              left: 0,
+              right: 0,
+              child: FeatureCarousel(
+                height: 128,
+                compact: true,
+                onDismiss: () => setState(() => _showCarousel = false),
+              ),
+            ),
           Positioned(
             bottom: 100,
             right: 16,

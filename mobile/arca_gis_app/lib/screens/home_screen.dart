@@ -45,7 +45,7 @@ import 'cultural_calendar_screen.dart';
 import 'global_search_screen.dart';
 import 'measure_map_screen.dart';
 import 'ai_terrain_screen.dart';
-import 'ussd_simulator_screen.dart';
+import '../widgets/arca_logo.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -88,19 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: Drawer(
         child: ListView(
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: AppTheme.primaryGreen),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(Icons.map, color: Colors.white, size: 40),
-                  SizedBox(height: 8),
-                  Text('ARCA-GIS', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('Agro-Rescue Climate Africa', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                ],
-              ),
-            ),
+            const ArcaDrawerHeader(),
             ListTile(
               leading: const Icon(Icons.search),
               title: const Text('Recherche globale'),

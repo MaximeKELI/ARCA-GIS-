@@ -4,6 +4,8 @@ import '../config/app_config.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
 import '../providers/security_provider.dart';
+import '../widgets/arca_logo.dart';
+import '../widgets/feature_carousel.dart';
 import '../widgets/security_gate.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
@@ -64,31 +66,11 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 48),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryGreen.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.map, size: 64, color: AppTheme.primaryGreen),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  AppConfig.appName,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryGreen,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  AppConfig.appSubtitle,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 32),
+                const ArcaLogo(size: 88),
+                const SizedBox(height: 20),
+                const FeatureCarousel(height: 130, compact: true),
+                const SizedBox(height: 28),
                 TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(

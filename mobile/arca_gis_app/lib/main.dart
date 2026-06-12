@@ -11,6 +11,7 @@ import 'providers/theme_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'widgets/security_gate.dart';
+import 'widgets/arca_logo.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -100,25 +101,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.map, size: 80, color: Colors.white),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              AppConfig.appName,
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              AppConfig.appSubtitle,
-              style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.8)),
-            ),
-            const SizedBox(height: 48),
+            const ArcaLogo(size: 100, onDark: true),
+            const SizedBox(height: 32),
             const CircularProgressIndicator(color: Colors.white),
           ],
         ),
