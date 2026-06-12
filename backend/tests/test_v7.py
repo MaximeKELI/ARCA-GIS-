@@ -88,9 +88,11 @@ def test_parcel_csv_export(client, farmer):
 
 
 @pytest.mark.django_db
-def test_offline_sync(client, farmer):
+def test_visual_stats(client, farmer):
     client.force_authenticate(user=farmer)
-    resp = client.post("/api/core/offline/sync/", {
-        "action_type": "harvest", "payload": {"crop_type": "maize", "quantity_kg": 100},
-    }, format="json")
-    assert resp.status_code in (200, 201)
+    resp = client.get("/api/analytics/visual/")
+    assert resp.status_code == 200
+    assert "kpis" in resp.data
+    assert "series" in resp.data
+    assert "radar" in resp.data
+    assert len(resp.data["kpis"]) >= 4

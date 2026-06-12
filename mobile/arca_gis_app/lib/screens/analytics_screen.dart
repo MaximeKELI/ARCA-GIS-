@@ -149,11 +149,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
           ),
         ModernCharts.donutChart(
           title: 'Répartition cultures',
-          data: _map('distributions')['crop_types'] as List<Map<String, dynamic>>? ?? [],
+          data: (_map('distributions')['crop_types'] as List?)?.cast<Map<String, dynamic>>() ?? [],
         ),
         ModernCharts.donutChart(
           title: 'État sanitaire parcelles',
-          data: _map('distributions')['health_status'] as List<Map<String, dynamic>>? ?? [],
+          data: (_map('distributions')['health_status'] as List?)?.cast<Map<String, dynamic>>() ?? [],
         ),
       ],
     );
@@ -182,7 +182,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
         ),
         ModernCharts.donutChart(
           title: 'Statut des tâches',
-          data: _map('distributions')['task_status'] as List<Map<String, dynamic>>? ?? [],
+          data: (_map('distributions')['task_status'] as List?)?.cast<Map<String, dynamic>>() ?? [],
         ),
       ],
     );
