@@ -52,3 +52,6 @@ class Parcel(models.Model):
         if self.geometry and not self.area_hectares:
             self.area_hectares = round(self.geometry.area * 111320 * 111320 / 10000, 2)
         super().save(*args, **kwargs)
+
+
+from .history_models import ParcelChangeLog  # noqa: E402, F401

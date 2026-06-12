@@ -23,3 +23,6 @@ class Cooperative(models.Model):
 
     def __str__(self):
         return self.name
+
+
+from .v7_models import CooperativeVote, EquipmentReservation, VoteBallot  # noqa: E402, F401

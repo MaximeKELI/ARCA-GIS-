@@ -30,3 +30,6 @@ class CourseProgress(models.Model):
 
     class Meta:
         unique_together = ["user", "course"]
+
+
+from .quiz_models import Quiz, QuizAttempt, QuizQuestion, TrainingCertificate  # noqa: E402, F401
