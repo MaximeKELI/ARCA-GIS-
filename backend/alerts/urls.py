@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .rule_views import AlertRuleListCreateView, EvaluateRulesView, NotificationPrefView
 from .views import (
     AlertDetailView, AlertListView, ApproveAlertView,
     BroadcastAlertView, MarkAlertReadView, PendingApprovalListView,

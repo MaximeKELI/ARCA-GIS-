@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .role_dashboards import AdminDashboardView, FarmerDashboardView, RescueDashboardView, RoleDashboardRouterView
 from .heatmap_views import YieldHeatmapView
 from .ngo_views import NGOExportView, NGOStatsView
 from .views import (
