@@ -1,4 +1,4 @@
-# ARCA-GIS v7.6 — Agro-Rescue Climate Africa
+# ARCA-GIS v7.7 — Agro-Rescue Climate Africa
 
 Plateforme géomatique africaine complète pour l'agriculture, les urgences et le climat.
 
@@ -13,6 +13,29 @@ ARCA-GIS/
 ├── deploy/           # Blue/green, Grafana, Fastlane, Prometheus
 ├── e2e/              # Tests Playwright
 └── docker-compose.yml
+```
+
+## Bloc E v7.7 — Production & PWA
+
+- **CI/CD GitHub Actions** : tests backend complets, analyse Flutter, build PWA web
+- **Monitoring Grafana** : Prometheus + dashboard ARCA-GIS (SOS, parcelles, IoT, DB)
+- **PWA web** : manifest, service worker offline, page hors-ligne
+- **Sécurité mobile** : déverrouillage biométrique + code PIN (Profil)
+
+| URL / Service | Description |
+|---------------|-------------|
+| `GET /api/core/health/` | Health check (DB, version) |
+| `GET /metrics` | Métriques Prometheus |
+| Grafana `:3000` | Dashboard monitoring (admin / arca_admin) |
+| Prometheus `:9090` | Scraping métriques |
+
+```bash
+# Monitoring (après docker compose up)
+docker network create arca_gis_default 2>/dev/null || true
+docker compose -f deploy/monitoring/docker-compose.monitoring.yml up -d
+
+# PWA web
+cd mobile/arca_gis_app && flutter build web && python3 -m http.server 8080 -d build/web
 ```
 
 ## Bloc D v7.6 — IA terrain
@@ -147,7 +170,8 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | `GET /api/parcels/export/csv/` | Export CSV parcelles |
 | `GET /api/parcels/<id>/history/` | Historique modifications |
 | `GET /api/cooperatives/<id>/members/` | Annuaire membres |
-| `GET /api/parcels/<id>/qr/` | QR parcelle |
+| `GET /api/core/health/` | Health check API |
+| `GET /metrics` | Métriques Prometheus |
 
 ## Comptes démo
 

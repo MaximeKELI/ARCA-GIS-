@@ -30,17 +30,26 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: |
-          pip install -r backend/requirements.txt pytest pytest-django
-      - name: Run tests
+        run: pip install -r backend/requirements.txt pytest pytest-django
+      - name: Run migrations
         env:
           DATABASE_URL: postgis://arca_user:arca_secret_2024@localhost:5432/arca_gis_test
           SECRET_KEY: test-secret-key
           DEBUG: "False"
         working-directory: backend
+        run: python manage.py migrate --noinput
+      - name: Run all tests
+        env:
+          DATABASE_URL: postgis://arca_user:arca_secret_2024@localhost:5432/arca_gis_test
+          SECRET_KEY: test-secret-key
+          DEBUG: "False"
+        working-directory: backend
+        run: pytest tests/ -v --tb=short
+      - name: Validate monitoring config
         run: |
-          python manage.py migrate --noinput
-          pytest tests/ -v
+          test -f deploy/monitoring/prometheus.yml
+          test -f deploy/monitoring/grafana-dashboard.json
+          python -c "import yaml; yaml.safe_load(open('deploy/monitoring/prometheus.yml'))" 2>/dev/null || true
 
   ai-module:
     runs-on: ubuntu-latest
@@ -67,3 +76,12 @@ jobs:
         run: |
           flutter pub get
           flutter analyze
+      - name: Build PWA (web)
+        working-directory: mobile/arca_gis_app
+        run: flutter build web --release
+      - name: Verify PWA assets
+        working-directory: mobile/arca_gis_app
+        run: |
+          test -f web/manifest.json
+          test -f web/sw.js
+          test -f build/web/manifest.json
