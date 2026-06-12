@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 
 from django.contrib.gis.geos import Point, Polygon  # Polygon used for geofences
 from django.core.management.base import BaseCommand
@@ -359,7 +359,6 @@ class Command(BaseCommand):
         from inclusion.models import VillageWhatsAppGroup
         from iot.v6_models import LoRaDevice, SoilStation
         from resilience.models import EarlyWarningAlert, RefugeCenter
-        from datetime import timedelta
 
         BeeHive.objects.get_or_create(name="Ruches Nord", owner=farmer, defaults={
             "location": Point(-5.034, 7.694, srid=4326), "honey_production_kg": 12.5,

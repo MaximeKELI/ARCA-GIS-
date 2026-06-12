@@ -57,7 +57,8 @@ class _DisasterModeScreenState extends State<DisasterModeScreen> {
             ElevatedButton.icon(
               onPressed: () async {
                 await _db.queueSOS({'type': 'flood', 'ts': DateTime.now().toIso8601String()});
-                if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('SOS enregistré offline')));
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('SOS enregistré offline')));
               },
               icon: const Icon(Icons.warning),
               label: const Text('SOS OFFLINE'),
