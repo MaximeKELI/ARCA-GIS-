@@ -74,6 +74,17 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Fix linker errors with flutter_secure_storage + Flutter snap on Ubuntu 24.04
+# (libsecret needs system GLib 2.80+, snap ships an older GLib).
+pkg_check_modules(SYSTEM_GLIB REQUIRED IMPORTED_TARGET glib-2.0)
+pkg_check_modules(SYSTEM_GIO REQUIRED IMPORTED_TARGET gio-2.0)
+pkg_check_modules(SYSTEM_LIBSECRET REQUIRED IMPORTED_TARGET libsecret-1)
+target_link_libraries(${BINARY_NAME} PRIVATE
+  PkgConfig::SYSTEM_GLIB
+  PkgConfig::SYSTEM_GIO
+  PkgConfig::SYSTEM_LIBSECRET
+)
+
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
