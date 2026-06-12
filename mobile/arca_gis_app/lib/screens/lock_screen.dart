@@ -28,6 +28,7 @@ class _LockScreenState extends State<LockScreen> {
   Future<void> _initBio() async {
     _bioAvailable = await _bio.isAvailable();
     if (!mounted) return;
+    setState(() {});
     final sec = context.read<SecurityProvider>();
     if (sec.biometricEnabled && _bioAvailable) {
       _tryBiometric();
