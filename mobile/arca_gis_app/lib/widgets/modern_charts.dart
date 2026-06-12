@@ -190,13 +190,14 @@ class ModernCharts {
           )]);
         }).toList(),
       )),
-    ));
+    ), isDark: isDark);
   }
 
   static Widget groupedBarChart({
     required List<Map<String, dynamic>> income,
     required List<Map<String, dynamic>> expense,
     required String title,
+    bool isDark = false,
   }) {
     return _chartCard(title, AppTheme.primaryGreen, SizedBox(
       height: 240,
@@ -204,17 +205,20 @@ class ModernCharts {
         alignment: BarChartAlignment.spaceAround,
         maxY: max(_maxY(income), _maxY(expense)) * 1.3,
         gridData: FlGridData(show: true, drawVerticalLine: false,
-            getDrawingHorizontalLine: (v) => FlLine(color: Colors.grey.withValues(alpha: 0.15), strokeWidth: 1)),
+            getDrawingHorizontalLine: (v) => FlLine(
+              color: (isDark ? Colors.white : Colors.grey).withValues(alpha: 0.12), strokeWidth: 1)),
         titlesData: FlTitlesData(
           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 48,
-              getTitlesWidget: (v, _) => Text('${(v / 1000).toInt()}k', style: const TextStyle(fontSize: 10)))),
+              getTitlesWidget: (v, _) => Text('${(v / 1000).toInt()}k',
+                  style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54)))),
           bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true,
               getTitlesWidget: (v, meta) {
                 final i = v.toInt();
                 if (i < 0 || i >= income.length) return const SizedBox();
-                return Text(income[i]['label']?.toString() ?? '', style: const TextStyle(fontSize: 10));
+                return Text(income[i]['label']?.toString() ?? '',
+                    style: TextStyle(fontSize: 10, color: isDark ? Colors.white70 : Colors.black54));
               })),
         ),
         borderData: FlBorderData(show: false),
