@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../config/theme.dart';
+import '../config/app_config.dart';
 import 'arca_logo.dart';
 
 class CarouselSlide {

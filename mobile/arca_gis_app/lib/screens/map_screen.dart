@@ -9,8 +9,8 @@ import 'chat_screen.dart';
 import 'parcel_draw_screen.dart';
 import '../services/offline_tile_provider.dart';
 import 'measure_map_screen.dart';
-import '../widgets/arca_logo.dart';
 import '../widgets/feature_carousel.dart';
+import '../widgets/sos_button.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
