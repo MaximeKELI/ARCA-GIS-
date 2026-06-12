@@ -3,6 +3,7 @@ from django.urls import path
 from .backup_views import BackupTriggerView
 from .activity_views import ActivityFeedView
 from .bookmark_views import BookmarkDeleteView, BookmarkListCreateView
+from .search_views import GlobalSearchView
 from .oauth_views import OAuthCallbackView, OAuthProvidersView
 from .gdpr_views import ConsentView, DataDeleteView, DataExportView
 from .views import (
@@ -23,6 +24,7 @@ urlpatterns = [
     path("activity/", ActivityFeedView.as_view()),
     path("bookmarks/", BookmarkListCreateView.as_view()),
     path("bookmarks/<int:pk>/", BookmarkDeleteView.as_view()),
+    path("search/", GlobalSearchView.as_view()),
     path("audit/", AuditLogListView.as_view()),
     path("gdpr/consent/", ConsentView.as_view()),
     path("gdpr/export/", DataExportView.as_view()),

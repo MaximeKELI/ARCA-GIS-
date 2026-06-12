@@ -255,6 +255,16 @@ class Command(BaseCommand):
             "treatments": ["herbicide J+15", "engrais NPK J+30"],
             "tips": "Semis après premières pluies.",
         })
+        for crop, name, plant, harvest in [
+            ("rice", "Riz", ("05-01", "06-15"), ("10-01", "11-30")),
+            ("cassava", "Manioc", ("03-01", "04-30"), ("12-01", "01-31")),
+            ("cocoa", "Cacao", ("06-01", "07-31"), ("09-01", "10-31")),
+        ]:
+            CropCalendar.objects.get_or_create(crop_type=crop, region="Bouaké", defaults={
+                "crop_name": name, "planting_start": plant[0], "planting_end": plant[1],
+                "harvest_start": harvest[0], "harvest_end": harvest[1],
+                "treatments": [], "tips": f"Calendrier cultural {name} — région Bouaké",
+            })
 
         cat, _ = ForumCategory.objects.get_or_create(slug="bouake", defaults={
             "name": "Bouaké", "region": "Bouaké", "description": "Échanges locaux",

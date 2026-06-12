@@ -22,6 +22,8 @@ class MapProvider extends ChangeNotifier {
   final GPSTrackingService _gps = GPSTrackingService();
   final OfflineTileService _tiles = OfflineTileService();
   bool _offlineTilesReady = false;
+  List<Map<String, dynamic>> _heatmapCells = [];
+  bool _showHeatmap = false;
 
   List<Parcel> _parcels = [];
   List<ClimateEvent> _climateEvents = [];
@@ -45,6 +47,21 @@ class MapProvider extends ChangeNotifier {
   String? get error => _error;
   Map<String, dynamic>? get aiAnalysis => _aiAnalysis;
   bool get offlineTilesReady => _offlineTilesReady;
+  List<Map<String, dynamic>> get heatmapCells => _heatmapCells;
+  bool get showHeatmap => _showHeatmap;
+
+  void toggleHeatmap() {
+    _showHeatmap = !_showHeatmap;
+    notifyListeners();
+  }
+
+  Future<void> loadHeatmap() async {
+    try {
+      final data = await _api.get('/analytics/heatmap/');
+      _heatmapCells = (data['cells'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      notifyListeners();
+    } catch (_) {}
+  }
 
   Future<void> downloadOfflineTiles({int zoom = 13}) async {
     final pos = _userPosition;
@@ -113,6 +130,7 @@ class MapProvider extends ChangeNotifier {
           _loadClimateEvents(),
           _loadIncidents(),
           _loadAlerts(),
+          loadHeatmap(),
         ]);
         await _syncPendingSOS();
       }

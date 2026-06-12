@@ -40,6 +40,17 @@ class ApiService {
     return _handleResponse(response);
   }
 
+  Future<List<int>> downloadBytes(String endpoint) async {
+    final response = await http.get(
+      Uri.parse('${AppConfig.apiBaseUrl}$endpoint'),
+      headers: await _headers(),
+    );
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return response.bodyBytes;
+    }
+    throw ApiException('Erreur ${response.statusCode}', response.statusCode);
+  }
+
   dynamic _handleResponse(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) return {};
