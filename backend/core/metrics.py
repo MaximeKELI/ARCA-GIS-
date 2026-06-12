@@ -27,7 +27,9 @@ def render_metrics():
     except Exception:
         db_ok = 0
 
-    active_sos = Incident.objects.filter(status="active", incident_type="sos").count()
+    active_sos = Incident.objects.filter(is_sos=True).exclude(
+        status__in=["resolved", "cancelled"]
+    ).count()
     parcels = Parcel.objects.filter(is_active=True).count()
     iot_online = IoTSensor.objects.filter(is_active=True).count()
 

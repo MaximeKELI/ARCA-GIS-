@@ -6,6 +6,8 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from core.health_views import MetricsView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("dashboard/", TemplateView.as_view(template_name="dashboard/index.html"), name="dashboard"),
@@ -13,6 +15,7 @@ urlpatterns = [
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("api/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("metrics", MetricsView.as_view(), name="metrics"),
     path("api/users/", include("users.urls")),
     path("api/parcels/", include("parcels.urls")),
     path("api/climate/", include("climate.urls")),

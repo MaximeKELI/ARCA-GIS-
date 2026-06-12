@@ -83,6 +83,7 @@ MIDDLEWARE = [
     "core.multitenant.TenantMiddleware",
     "core.middleware.RateLimitMiddleware",
     "core.middleware.AuditLogMiddleware",
+    "core.metrics_middleware.MetricsMiddleware",
 ]
 
 ROOT_URLCONF = "arca_gis.urls"
@@ -211,7 +212,7 @@ MS_OAUTH_CLIENT_ID = env("MS_OAUTH_CLIENT_ID", default="")
 SPECTACULAR_SETTINGS = {
     "TITLE": "ARCA-GIS API",
     "DESCRIPTION": "Plateforme géomatique africaine — Agriculture, Urgences, Climat",
-    "VERSION": "7.6.0",
+    "VERSION": "7.7.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
