@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .contracts_views import BuyerContractListCreateView, PriceForecastView
 from .listings_views import ListingListCreateView, MyListingsView
 from .views import MarketPriceListView, MarketSeedView
 

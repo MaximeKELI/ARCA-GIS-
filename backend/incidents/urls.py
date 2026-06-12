@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .dispatch_views import DispatchNearestRescueView, EvacuationChecklistView
 from .views import (
     ActiveSOSListView,
     AssignIncidentView,
