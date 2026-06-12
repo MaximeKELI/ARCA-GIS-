@@ -49,6 +49,7 @@ urlpatterns = [
     path("api/resilience/", include("resilience.urls")),
     path("api/inclusion/", include("inclusion.urls")),
     path("api/farm/", include("farm_ops.urls")),
+    path("api/ai/", include("ai_advisor.urls")),
     path("developers/", TemplateView.as_view(template_name="developers/index.html"), name="developers"),
 ]
 

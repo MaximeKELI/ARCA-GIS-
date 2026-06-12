@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "resilience",
     "inclusion",
     "farm_ops",
+    "ai_advisor",
     "drf_spectacular",
 ]
 
@@ -210,7 +211,7 @@ MS_OAUTH_CLIENT_ID = env("MS_OAUTH_CLIENT_ID", default="")
 SPECTACULAR_SETTINGS = {
     "TITLE": "ARCA-GIS API",
     "DESCRIPTION": "Plateforme géomatique africaine — Agriculture, Urgences, Climat",
-    "VERSION": "7.5.0",
+    "VERSION": "7.6.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
 

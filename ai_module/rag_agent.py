@@ -13,6 +13,17 @@ KNOWLEDGE = {
 def rag_query(query: str, language: str = "fr", context: dict | None = None) -> dict:
     q = query.lower()
     matches = []
+    if context and context.get("parcels"):
+        for p in context["parcels"][:2]:
+            moisture = p.get("moisture") or 0
+            tip = "Irrigation recommandée." if moisture < 40 else "Humidité correcte."
+            matches.append({
+                "topic": p.get("name", "parcelle"),
+                "answer": (
+                    f"{p.get('name')} — culture {p.get('crop')}, "
+                    f"santé {p.get('health')}, humidité {moisture}%. {tip}"
+                ),
+            })
     for key, answer in KNOWLEDGE.items():
         if any(word in q for word in key.split()):
             matches.append({"topic": key, "answer": answer})
