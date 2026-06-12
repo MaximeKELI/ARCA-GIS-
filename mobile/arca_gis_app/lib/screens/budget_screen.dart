@@ -6,7 +6,7 @@ import '../utils/api_utils.dart';
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
   @override
-  State<BudgetScreenState> createState() => BudgetScreenState();
+  State<BudgetScreen> createState() => _BudgetScreenState();
 }
 
 class _BudgetScreenState extends State<BudgetScreen> {
