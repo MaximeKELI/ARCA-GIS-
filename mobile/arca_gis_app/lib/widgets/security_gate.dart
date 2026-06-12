@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/security_provider.dart';
-import 'lock_screen.dart';
+import '../screens/lock_screen.dart';
 
 /// Verrouille l'app au retour arrière-plan si sécurité activée.
 class SecurityGate extends StatefulWidget {

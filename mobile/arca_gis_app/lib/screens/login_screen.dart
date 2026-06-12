@@ -38,7 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (success && mounted) {
+      if (!mounted) return;
       await context.read<SecurityProvider>().load(lockOnStart: false);
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
       );
