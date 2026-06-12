@@ -1,4 +1,4 @@
-# ARCA-GIS v7.5 — Agro-Rescue Climate Africa
+# ARCA-GIS v7.6 — Agro-Rescue Climate Africa
 
 Plateforme géomatique africaine complète pour l'agriculture, les urgences et le climat.
 
@@ -14,6 +14,20 @@ ARCA-GIS/
 ├── e2e/              # Tests Playwright
 └── docker-compose.yml
 ```
+
+## Bloc D v7.6 — IA terrain
+
+- **Conseiller contextuel** : chat IA avec données parcelles (humidité, santé, culture)
+- **Diagnostic photo** : détection maladies via `/api/ai/disease/` (caméra ou galerie)
+- **Planificateur hebdomadaire** : actions IA + tâches en attente par parcelle
+- **Journal vocal** : transcription → enregistrement journal de champ
+
+| URL | Description |
+|-----|-------------|
+| `POST /api/ai/chat/` | Conseiller agricole (query + parcel_id optionnel) |
+| `POST /api/ai/disease/` | Diagnostic maladie (image_b64 + crop_type) |
+| `GET /api/ai/planner/` | Plan hebdomadaire IA + tâches |
+| `POST /api/ai/voice-journal/` | Transcription vocale → journal de champ |
 
 ## Bloc C v7.5 — Stats avancées
 
@@ -122,6 +136,9 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 | `GET /api/training/certificates/<id>/download/` | Certificat PDF |
 | `GET /api/analytics/visual/` | Statistiques visuelles (KPIs, courbes, radar) |
 | `GET /api/analytics/advanced/` | Stats avancées (Sankey, timeline, saisons) |
+| `POST /api/ai/chat/` | Conseiller agricole IA contextuel |
+| `POST /api/ai/disease/` | Diagnostic maladie par photo |
+| `GET /api/ai/planner/` | Planificateur hebdomadaire |
 | `GET /api/analytics/heatmap/` | Heatmap rendements |
 | `POST /api/core/offline/sync/` | Queue sync offline |
 | `POST /api/communications/ussd/simulate/` | Simulateur USSD |
