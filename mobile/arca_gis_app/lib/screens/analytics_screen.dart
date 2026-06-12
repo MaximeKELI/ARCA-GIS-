@@ -200,7 +200,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> with SingleTickerProv
         ),
         ModernCharts.donutChart(
           title: 'Dépenses par catégorie',
-          data: _map('distributions')['budget_categories'] as List<Map<String, dynamic>>? ?? [],
+          data: (_map('distributions')['budget_categories'] as List?)?.cast<Map<String, dynamic>>() ?? [],
         ),
         _marketPricesCard(),
       ],

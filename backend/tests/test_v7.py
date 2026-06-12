@@ -96,3 +96,12 @@ def test_visual_stats(client, farmer):
     assert "series" in resp.data
     assert "radar" in resp.data
     assert len(resp.data["kpis"]) >= 4
+
+
+@pytest.mark.django_db
+def test_offline_sync(client, farmer):
+    client.force_authenticate(user=farmer)
+    resp = client.post("/api/core/offline/sync/", {
+        "action_type": "harvest", "payload": {"crop_type": "maize", "quantity_kg": 100},
+    }, format="json")
+    assert resp.status_code in (200, 201)
