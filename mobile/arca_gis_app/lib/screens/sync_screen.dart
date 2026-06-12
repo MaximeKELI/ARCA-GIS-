@@ -19,7 +19,7 @@ class _SyncScreenState extends State<SyncScreen> {
   void initState() { super.initState(); _refresh(); }
 
   Future<void> _refresh() async {
-    final pending = await _db.pendingSOS();
+    final pending = await _db.pendingActions();
     setState(() => _pending = pending);
   }
 
@@ -28,11 +28,12 @@ class _SyncScreenState extends State<SyncScreen> {
     try {
       for (final item in _pending) {
         await _api.post('/core/offline/sync/', {
-          'action_type': 'sos', 'payload': item,
+          'action_type': item['action_type'], 'payload': item['payload'],
         });
       }
       await _api.post('/core/offline/process/', {});
       setState(() => _status = 'Sync terminée');
+      await _db.clearPending();
       await _refresh();
     } catch (e) {
       setState(() => _status = 'Erreur: $e');
