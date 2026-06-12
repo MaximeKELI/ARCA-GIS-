@@ -57,8 +57,8 @@ class _AdvancedStatsPanelState extends State<AdvancedStatsPanel> {
           _filters(),
           const SizedBox(height: 12),
           if (choropleth.isNotEmpty) ...[
-            ModernCharts._chartCardPublic('Choroplèthe parcelles ($_metric)', AppTheme.primaryGreen,
-              _choroplethGrid(choropleth), isDark: isDark),
+            ModernCharts.chartCard(title: 'Choroplèthe ($_metric)', accent: AppTheme.primaryGreen,
+              child: _choroplethGrid(choropleth), isDark: isDark),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton.icon(
@@ -88,8 +88,8 @@ class _AdvancedStatsPanelState extends State<AdvancedStatsPanel> {
               values: (coopRadar['values'] as List?)?.cast<num>().map((e) => e.toDouble()).toList() ?? [],
               isDark: isDark,
             ),
-          ModernCharts._chartCardPublic('Timeline parcelle', AppTheme.climateBlue,
-              _timeline(timeline), isDark: isDark),
+          ModernCharts.chartCard(title: 'Timeline activité', accent: AppTheme.climateBlue,
+            child: _timeline(timeline), isDark: isDark),
         ],
       ),
     );
@@ -98,7 +98,7 @@ class _AdvancedStatsPanelState extends State<AdvancedStatsPanel> {
   Widget _filters() {
     return Row(children: [
       Expanded(child: DropdownButtonFormField<int>(
-        value: _months,
+        initialValue: _months,
         decoration: const InputDecoration(labelText: 'Période', isDense: true),
         items: const [
           DropdownMenuItem(value: 6, child: Text('6 mois')),
@@ -109,7 +109,7 @@ class _AdvancedStatsPanelState extends State<AdvancedStatsPanel> {
       )),
       const SizedBox(width: 12),
       Expanded(child: DropdownButtonFormField<String>(
-        value: _metric,
+        initialValue: _metric,
         decoration: const InputDecoration(labelText: 'Métrique', isDense: true),
         items: const [
           DropdownMenuItem(value: 'moisture', child: Text('Humidité')),
