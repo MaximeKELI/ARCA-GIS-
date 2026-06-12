@@ -124,7 +124,7 @@ class _MapScreenState extends State<MapScreen> {
             top: MediaQuery.of(context).padding.top + 8,
             left: 12,
             right: 12,
-            child: _buildLegend(),
+            child: _buildLegend(mapProvider.showHeatmap),
           ),
           Positioned(
             bottom: 100,
