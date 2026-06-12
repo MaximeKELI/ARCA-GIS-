@@ -305,5 +305,53 @@ class Command(BaseCommand):
             "parcel": Parcel.objects.first(),
         })
 
+        self.stdout.write("Création données v5...")
+        from carbon.models import CarbonCredit
+        from climate.phytosanitary_models import PhytosanitaryTreatment
+        from countries.models import CountryConfig
+        from finance.models import MicroLoan
+        from geodata.models import CommunityMapPoint, WMSLayer
+        from livestock.models import Herd
+        from logistics.models import Transporter
+        from marketplace.contracts_models import BuyerContract
+        from water_resources.models import WaterPoint
+
+        for code, name, currency in [("CI", "Côte d'Ivoire", "XOF"), ("SN", "Sénégal", "XOF"), ("KE", "Kenya", "KES")]:
+            CountryConfig.objects.get_or_create(code=code, defaults={"name": name, "currency": currency})
+
+        Herd.objects.get_or_create(name="Bovins Bouaké", owner=farmer, defaults={
+            "animal_type": "cattle", "count": 25, "location": Point(-5.032, 7.692, srid=4326),
+        })
+        WaterPoint.objects.get_or_create(name="Puits Centre Bouaké", defaults={
+            "point_type": "well", "region": "Bouaké",
+            "location": Point(-5.030, 7.690, srid=4326), "capacity_m3": 500,
+        })
+        Transporter.objects.get_or_create(name="Transport Agricole CI", defaults={
+            "phone": "+2250700000099", "region": "Bouaké", "capacity_kg": 10000,
+        })
+        MicroLoan.objects.get_or_create(borrower=farmer, crop_type="maize", defaults={
+            "amount": 150000, "purpose": "Achat semences", "status": "approved",
+        })
+        CommunityMapPoint.objects.get_or_create(name="Marché Bouaké", contributor=farmer, defaults={
+            "category": "market", "location": Point(-5.028, 7.688, srid=4326), "verified": True,
+        })
+        WMSLayer.objects.get_or_create(name="FAO Soils Africa", defaults={
+            "source_url": "https://www.fao.org/geoserver/wms",
+            "layer_name": "fao:soils", "country": "Côte d'Ivoire",
+        })
+        PhytosanitaryTreatment.objects.get_or_create(crop_type="maize", week_number=3, defaults={
+            "treatment_name": "Traitement préventif ravageurs",
+            "product": "Bacillus thuringiensis", "dosage": "1L/ha",
+        })
+        BuyerContract.objects.get_or_create(buyer=admin, crop_type="maize", defaults={
+            "quantity_kg": 5000, "max_price_per_kg": 300, "region": "Bouaké",
+        })
+        if first_parcel:
+            from datetime import date
+            CarbonCredit.objects.get_or_create(parcel=first_parcel, owner=farmer, defaults={
+                "co2_tons_sequestered": 5.0, "period_start": date(2025, 1, 1),
+                "period_end": date(2025, 12, 31),
+            })
+
         self.stdout.write(self.style.SUCCESS("Données de démonstration créées avec succès!"))
         self.stdout.write("Comptes: admin/admin1234, kouassi/farmer1234, secours/rescue1234")
