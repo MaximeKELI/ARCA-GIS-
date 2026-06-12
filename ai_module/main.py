@@ -21,7 +21,7 @@ from yield_predictor import predict_yield
 app = FastAPI(
     title="ARCA-GIS AI Module",
     description="Analyse climatique, NDVI et recommandations agricoles pour l'Afrique",
-    version="4.0.0",
+    version="5.0.0",
 )
 
 
