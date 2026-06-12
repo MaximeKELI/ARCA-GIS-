@@ -12,7 +12,14 @@ from forecast_engine import generate_forecast
 from ndvi_analyzer import compute_ndvi
 from parcel_detector import detect_parcels
 from sentinel_ndvi import compute_enhanced_ndvi
+from autonomous_agent import plan_autonomous
 from carbon_estimator import estimate_carbon
+from crop_rotation import plan_rotation
+from drought_90d import forecast_drought
+from land_use import detect_land_use_change
+from llm_local import local_llm
+from twin_3d import generate_3d_twin
+from whisper_offline import transcribe_audio, translate_voice
 from disease_detector import detect_from_image, detect_from_pest_count
 from drone_pest import analyze_drone_image
 from input_optimizer import optimize_inputs

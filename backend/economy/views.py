@@ -71,6 +71,10 @@ class GroupPurchaseListCreateView(generics.ListCreateAPIView):
         } for g in self.get_queryset()])
 
     def create(self, request, *args, **kwargs):
+        from datetime import timedelta
+        deadline = request.data.get("deadline")
+        if not deadline:
+            deadline = (timezone.now() + timedelta(days=30)).date()
         g = GroupPurchase.objects.create(
             organizer=request.user,
             product=request.data.get("product"),
@@ -78,7 +82,7 @@ class GroupPurchaseListCreateView(generics.ListCreateAPIView):
             target_quantity_kg=request.data.get("target_quantity_kg", 1000),
             unit_price=request.data.get("unit_price", 500),
             region=request.data.get("region", request.user.region),
-            deadline=request.data.get("deadline"),
+            deadline=deadline,
         )
         return Response({"id": g.id}, status=201)
 
