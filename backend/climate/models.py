@@ -96,3 +96,7 @@ class CropCalendar(models.Model):
     class Meta:
         ordering = ["crop_type", "region"]
         unique_together = ["crop_type", "region"]
+
+
+from .phytosanitary_models import PhytosanitaryTreatment  # noqa: E402, F401
+from .community_models import CommunityWeatherReport  # noqa: E402, F401

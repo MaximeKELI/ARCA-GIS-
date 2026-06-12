@@ -41,3 +41,6 @@ class CropListing(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+
+from .contracts_models import BuyerContract  # noqa: E402, F401

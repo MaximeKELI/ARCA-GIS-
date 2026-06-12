@@ -2,6 +2,7 @@ from django.urls import path
 
 from .calendar_views import CropCalendarListView, CurrentSeasonView
 from .irrigation_views import IrrigationAdviceView
+from .v5_views import CommunityWeatherView, PhytosanitaryCalendarView, WildfireFIRMSView
 from .views import (
     AIAnalysisView,
     ClimateEventDetailView,
@@ -25,4 +26,7 @@ urlpatterns = [
     path("calendar/", CropCalendarListView.as_view()),
     path("calendar/current/", CurrentSeasonView.as_view()),
     path("irrigation/advice/", IrrigationAdviceView.as_view()),
+    path("phytosanitary/", PhytosanitaryCalendarView.as_view()),
+    path("community-weather/", CommunityWeatherView.as_view()),
+    path("wildfires/", WildfireFIRMSView.as_view()),
 ]
