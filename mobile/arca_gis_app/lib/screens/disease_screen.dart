@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../config/theme.dart';
 import '../services/api_service.dart';
+import '../utils/api_utils.dart';
 
 class DiseaseScreen extends StatefulWidget {
   const DiseaseScreen({super.key});
@@ -19,23 +20,16 @@ class _DiseaseScreenState extends State<DiseaseScreen> {
   String _crop = 'maize';
 
   Future<void> _pickAndAnalyze() async {
-    final image = await _picker.pickImage(source: ImageSource.camera, maxWidth: 800);
+    final image = await _picker.pickImage(source: ImageSource.camera, maxWidth: 1024, imageQuality: 85);
     if (image == null) return;
     setState(() { _analyzing = true; _result = null; });
     try {
       final bytes = await image.readAsBytes();
-      final b64 = base64Encode(bytes);
-      final data = await _api.post('/climate/analyze/', {'lat': 7.69, 'lng': -5.03, 'crop_type': _crop});
-      setState(() {
-        _result = {
-          'diagnosis': {'name': data['crop_health'] ?? 'Analyse en cours'},
-          'confidence': data['confidence'] ?? 0.75,
-          'treatment': (data['recommendations'] as List?)?.first ?? 'Consulter un agronome',
-          'image_analyzed': true,
-        };
+      final data = await _api.post('/ai/disease/', {
+        'image_b64': base64Encode(bytes),
+        'crop_type': _crop,
       });
-      // ignore: unused_local_variable
-      final _ = b64;
+      setState(() => _result = parseApiMap(data));
     } catch (e) {
       setState(() => _result = {'error': e.toString()});
     } finally {
@@ -81,9 +75,14 @@ class _DiseaseScreenState extends State<DiseaseScreen> {
                       children: [
                         Text('Diagnostic: ${_result!['diagnosis']?['name'] ?? ''}',
                             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text('Confiance: ${((_result!['confidence'] as num) * 100).toInt()}%'),
+                        Text('Confiance: ${(((_result!['confidence'] as num?) ?? 0) * 100).toInt()}%'),
                         const SizedBox(height: 8),
                         Text('Traitement: ${_result!['treatment']}'),
+                        if (_result!['prevention'] != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text('Prévention: ${_result!['prevention']}', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
+                          ),
                       ],
                     ),
                   ),
