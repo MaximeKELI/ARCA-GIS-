@@ -277,7 +277,6 @@ class Command(BaseCommand):
         profile, _ = UserProfile.objects.get_or_create(user=farmer)
         award_points(farmer, "login")
 
-        from datetime import date
         first_parcel = Parcel.objects.first()
         if first_parcel:
             InsurancePolicy.objects.get_or_create(
