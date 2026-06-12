@@ -184,9 +184,25 @@ cd mobile/arca_gis_app && flutter pub get && flutter run
 ## Tests
 
 ```bash
-cd backend && pytest tests/ -v
-cd mobile/arca_gis_app && flutter analyze
-pip install playwright pytest && pytest e2e/ -v  # nécessite backend sur :8003
+# Backend (Docker — recommandé)
+chmod +x scripts/*.sh
+./scripts/rebuild-backend.sh   # rebuild propre + migrations
+./scripts/test-backend.sh      # auth, parcelles, inscription
+
+# Backend (CI / local avec PostGIS)
+cd backend && pytest tests/test_auth.py tests/test_parcels.py tests/test_registration.py -v
+
+# Flutter
+./scripts/test-flutter.sh
+
+# E2E Playwright (backend sur :8003)
+pip install playwright pytest && pytest e2e/ -v
 ```
+
+### Dépannage Docker
+
+- **Port 8003 occupé** : `docker stop arca_gis_api` puis `docker compose up -d backend`
+- **`drf_spectacular` manquant** : `./scripts/rebuild-backend.sh` (réinstalle les deps au démarrage)
+- **Conflit `arca_gis_db`** : `docker compose down` puis relancer (les `container_name` fixes ont été retirés)
 
 ARCA-GIS © 2024 — Open Source
