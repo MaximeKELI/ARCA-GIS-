@@ -15,4 +15,6 @@ urlpatterns = [
     path("sos/active/", ActiveSOSListView.as_view(), name="incident-sos-active"),
     path("<int:pk>/", IncidentDetailView.as_view(), name="incident-detail"),
     path("<int:pk>/assign/", AssignIncidentView.as_view(), name="incident-assign"),
+    path("<int:pk>/dispatch/", DispatchNearestRescueView.as_view()),
+    path("evacuation-checklist/", EvacuationChecklistView.as_view()),
 ]

@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .heatmap_views import YieldHeatmapView
 from .ngo_views import NGOExportView, NGOStatsView
 from .views import (
     AnalyticsSnapshotListView,
@@ -15,4 +16,5 @@ urlpatterns = [
     path("snapshots/", AnalyticsSnapshotListView.as_view()),
     path("ngo/stats/", NGOStatsView.as_view()),
     path("ngo/export/", NGOExportView.as_view()),
+    path("heatmap/", YieldHeatmapView.as_view()),
 ]

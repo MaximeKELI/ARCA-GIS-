@@ -9,4 +9,6 @@ urlpatterns = [
     path("seed/", MarketSeedView.as_view()),
     path("listings/", ListingListCreateView.as_view()),
     path("listings/mine/", MyListingsView.as_view()),
+    path("contracts/", BuyerContractListCreateView.as_view()),
+    path("price-forecast/", PriceForecastView.as_view()),
 ]
