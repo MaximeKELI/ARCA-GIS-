@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../config/app_config.dart';
 import '../config/theme.dart';
 import '../providers/auth_provider.dart';
+import '../providers/security_provider.dart';
+import '../widgets/security_gate.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
 
@@ -36,8 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (success && mounted) {
+      await context.read<SecurityProvider>().load(lockOnStart: false);
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
       );
     } else if (mounted && auth.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(

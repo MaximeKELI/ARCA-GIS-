@@ -9,8 +9,50 @@ import '../providers/locale_provider.dart';
 import '../providers/theme_provider.dart';
 import 'login_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool _bioAvailable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    BiometricService().isAvailable().then((v) {
+      if (mounted) setState(() => _bioAvailable = v);
+    });
+  }
+
+  Future<void> _setPinDialog(BuildContext context) async {
+    final controller = TextEditingController();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Code PIN (4 chiffres)'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          maxLength: 4,
+          obscureText: true,
+          decoration: const InputDecoration(hintText: '••••'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Annuler')),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Enregistrer')),
+        ],
+      ),
+    );
+    if (ok == true && controller.text.length == 4 && context.mounted) {
+      await context.read<SecurityProvider>().setPin(controller.text);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('PIN activé')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,10 +129,37 @@ class ProfileScreen extends StatelessWidget {
           Card(
             child: Column(
               children: [
+                if (_bioAvailable)
+                  SwitchListTile(
+                    secondary: const Icon(Icons.fingerprint, color: AppTheme.primaryGreen),
+                    title: const Text('Déverrouillage biométrique'),
+                    value: context.watch<SecurityProvider>().biometricEnabled,
+                    onChanged: (v) => context.read<SecurityProvider>().setBiometric(v),
+                  ),
+                ListTile(
+                  leading: const Icon(Icons.pin, color: AppTheme.primaryGreen),
+                  title: const Text('Code PIN'),
+                  subtitle: Text(context.watch<SecurityProvider>().pinEnabled ? 'Activé' : 'Non configuré'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => _setPinDialog(context),
+                ),
+                if (context.watch<SecurityProvider>().pinEnabled)
+                  ListTile(
+                    leading: const Icon(Icons.lock_open, color: Colors.grey),
+                    title: const Text('Désactiver le PIN'),
+                    onTap: () => context.read<SecurityProvider>().clearPin(),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Column(
+              children: [
                 ListTile(
                   leading: const Icon(Icons.info_outline, color: AppTheme.primaryGreen),
                   title: const Text('À propos'),
-                  subtitle: Text('${AppConfig.appName} v5.0.0\n${AppConfig.appSubtitle}'),
+                  subtitle: Text('${AppConfig.appName} v${AppConfig.appVersion}\n${AppConfig.appSubtitle}'),
                 ),
               ],
             ),
