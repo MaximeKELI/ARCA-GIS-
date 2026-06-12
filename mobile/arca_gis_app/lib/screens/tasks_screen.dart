@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../services/api_service.dart';
+import '../utils/api_utils.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -15,7 +16,7 @@ class _TasksScreenState extends State<TasksScreen> {
   Future<void> _load() async {
     try {
       final data = await _api.get('/farm/tasks/');
-      setState(() => _tasks = data is List ? data : []);
+      setState(() => _tasks = parseApiList(data));
     } catch (_) {}
   }
 
