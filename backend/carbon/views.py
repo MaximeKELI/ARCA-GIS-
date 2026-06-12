@@ -26,7 +26,10 @@ class CarbonEstimateView(APIView):
         try:
             resp = requests.post(f"{settings.AI_MODULE_URL}/carbon-estimate",
                                  json={"area_hectares": area_ha, "crop_type": crop_type}, timeout=10)
-            return Response(resp.json())
+            data = resp.json()
+            if resp.status_code >= 400 or "co2_tons_year" not in data:
+                raise requests.RequestException()
+            return Response(data)
         except requests.RequestException:
             co2 = area_ha * 2.5
             return Response({

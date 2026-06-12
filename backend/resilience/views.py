@@ -38,7 +38,10 @@ class DroughtEWSView(APIView):
         try:
             resp = requests.post(f"{settings.AI_MODULE_URL}/drought-forecast",
                                  json={"region": region, "days": 90}, timeout=10)
-            return Response(resp.json())
+            data = resp.json()
+            if resp.status_code >= 400 or "risk_level" not in data:
+                raise requests.RequestException()
+            return Response(data)
         except requests.RequestException:
             return Response({
                 "region": region, "risk_level": "moderate", "forecast_days": 90,
