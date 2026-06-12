@@ -12,9 +12,15 @@ from forecast_engine import generate_forecast
 from ndvi_analyzer import compute_ndvi
 from parcel_detector import detect_parcels
 from sentinel_ndvi import compute_enhanced_ndvi
+from carbon_estimator import estimate_carbon
 from disease_detector import detect_from_image, detect_from_pest_count
+from drone_pest import analyze_drone_image
+from input_optimizer import optimize_inputs
 from irrigation_advisor import advise_irrigation
 from ml_model import predict_health, retrain
+from price_forecaster import forecast_price
+from rag_agent import rag_query
+from yield_fusion import fuse_yield
 from voice_assistant import get_voice_response
 from yield_predictor import predict_yield
 
@@ -54,7 +60,7 @@ class NDVIRequest(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "arca-gis-ai", "version": "4.0.0"}
+    return {"status": "ok", "service": "arca-gis-ai", "version": "5.0.0"}
 
 
 @app.post("/analyze")
