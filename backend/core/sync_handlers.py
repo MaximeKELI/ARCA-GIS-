@@ -1,4 +1,5 @@
 from django.contrib.gis.geos import Point
+from django.utils import timezone
 
 from farm_ops.models import FarmTask, FieldJournal, HarvestJournal
 from parcels.models import Parcel
