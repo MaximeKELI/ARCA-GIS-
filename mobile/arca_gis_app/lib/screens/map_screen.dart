@@ -138,7 +138,7 @@ class _MapScreenState extends State<MapScreen> {
             top: MediaQuery.of(context).padding.top + 8,
             left: 12,
             right: 12,
-            child: _buildLegend(mapProvider.showHeatmap),
+            child: _buildLegend(mapProvider.showHeatmap, mapProvider.showChoropleth),
           ),
           Positioned(
             bottom: 100,
@@ -234,7 +234,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Widget _buildLegend(bool showHeatmap) {
+  Widget _buildLegend(bool showHeatmap, bool showChoropleth) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -246,6 +246,8 @@ class _MapScreenState extends State<MapScreen> {
             _legendItem(Icons.emergency, 'SOS', AppTheme.sosRed),
             if (showHeatmap)
               _legendItem(Icons.blur_on, 'Heatmap', AppTheme.accentOrange),
+            if (showChoropleth)
+              _legendItem(Icons.layers, 'Choroplèthe', AppTheme.climateBlue),
           ],
         ),
       ),
