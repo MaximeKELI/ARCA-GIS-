@@ -48,7 +48,7 @@ urlpatterns = [
     path("api/economy/", include("economy.urls")),
     path("api/resilience/", include("resilience.urls")),
     path("api/inclusion/", include("inclusion.urls")),
-    path("developers/", TemplateView.as_view(template_name="developers/index.html"), name="developers"),
+    path("api/farm/", include("farm_ops.urls")),
 ]
 
 if settings.DEBUG:

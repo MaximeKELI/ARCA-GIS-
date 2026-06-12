@@ -18,4 +18,7 @@ urlpatterns = [
     path("<int:pk>/assign/", AssignIncidentView.as_view(), name="incident-assign"),
     path("<int:pk>/dispatch/", DispatchNearestRescueView.as_view()),
     path("evacuation-checklist/", EvacuationChecklistView.as_view()),
+    path("volunteers/", VolunteerListCreateView.as_view()),
+    path("<int:pk>/interventions/", InterventionLogView.as_view()),
+    path("<int:pk>/sla/", IncidentSLAView.as_view()),
 ]
