@@ -203,6 +203,8 @@ TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default="")
 SENTRY_DSN = env("SENTRY_DSN", default="")
 REGION = env("REGION", default="west-africa")
 MAP_TILE_CDN = env("MAP_TILE_CDN", default="https://tile.openstreetmap.org/{z}/{x}/{y}.png")
+GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID", default="")
+MS_OAUTH_CLIENT_ID = env("MS_OAUTH_CLIENT_ID", default="")
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "ARCA-GIS API",
