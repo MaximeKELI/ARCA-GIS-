@@ -346,7 +346,6 @@ class Command(BaseCommand):
             "quantity_kg": 5000, "max_price_per_kg": 300, "region": "Bouaké",
         })
         if first_parcel:
-            from datetime import date
             CarbonCredit.objects.get_or_create(parcel=first_parcel, owner=farmer, defaults={
                 "co2_tons_sequestered": 5.0, "period_start": date(2025, 1, 1),
                 "period_end": date(2025, 12, 31),
