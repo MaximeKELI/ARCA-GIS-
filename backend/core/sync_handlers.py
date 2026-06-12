@@ -44,9 +44,16 @@ def process_offline_item(item) -> bool:
         return True
 
     if item.action_type == "parcel_update":
-        Parcel.objects.filter(pk=data["parcel_id"], owner=user).update(
-            **{k: v for k, v in data.items() if k in ("soil_moisture", "health_status", "notes")}
-        )
+        parcel = Parcel.objects.filter(pk=data["parcel_id"], owner=user).first()
+        if not parcel:
+            return False
+        updates = {k: v for k, v in data.items() if k in ("soil_moisture", "health_status", "notes")}
+        if not updates:
+            return False
+        parcel._changed_by = user
+        for k, v in updates.items():
+            setattr(parcel, k, v)
+        parcel.save()
         return True
 
     return False
