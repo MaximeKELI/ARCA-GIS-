@@ -6,9 +6,12 @@ import 'config/theme.dart';
 import 'providers/auth_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/map_provider.dart';
+import 'providers/security_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/lock_screen.dart';
+import 'widgets/security_gate.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +29,7 @@ class ArcaGisApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MapProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()..load()),
+        ChangeNotifierProvider(create: (_) => SecurityProvider()),
       ],
       child: Consumer2<LocaleProvider, ThemeProvider>(
         builder: (context, locale, theme, _) => MaterialApp(
@@ -71,14 +75,34 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     final auth = context.read<AuthProvider>();
+    final security = context.read<SecurityProvider>();
     final isLoggedIn = await auth.checkAuth();
 
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => isLoggedIn ? const HomeScreen() : const LoginScreen(),
-      ),
-    );
+
+    if (isLoggedIn) {
+      await security.load(lockOnStart: true);
+      if (!mounted) return;
+      if (security.isLocked) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => LockScreen(
+              onUnlocked: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
+              ),
+            ),
+          ),
+        );
+        return;
+      }
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const SecurityGate(child: HomeScreen())),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    }
   }
 
   @override

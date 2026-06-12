@@ -10,4 +10,6 @@ class AppConfig {
 
   static const double defaultLat = 7.6900;
   static const double defaultLng = -5.0300;
+  static const double defaultZoom = 12.0;
   static const String appVersion = '7.7.0';
+}
