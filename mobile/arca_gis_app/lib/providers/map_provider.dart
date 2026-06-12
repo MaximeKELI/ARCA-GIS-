@@ -43,6 +43,17 @@ class MapProvider extends ChangeNotifier {
   bool get isOffline => _isOffline;
   String? get error => _error;
   Map<String, dynamic>? get aiAnalysis => _aiAnalysis;
+  bool get offlineTilesReady => _offlineTilesReady;
+
+  Future<void> downloadOfflineTiles({int zoom = 13}) async {
+    final pos = _userPosition;
+    if (pos == null) return;
+    final x = (pos.longitude + 180) ~/ 1;
+    final y = (pos.latitude + 90) ~/ 1;
+    await _tiles.downloadRegion(zoom: zoom, xMin: x - 1, xMax: x + 1, yMin: y - 1, yMax: y + 1);
+    _offlineTilesReady = true;
+    notifyListeners();
+  }
 
   Future<void> initialize() async {
     _ws.alertStream.listen((alert) {
