@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from users.permissions import IsAdmin
 
 from .services import broadcast_radio, generate_voice_message, handle_ussd, initiate_voice_call, send_sms
-from .whatsapp_service import send_whatsapp
+from .ussd_simulator import simulate_ussd
 
 
 class SendSMSView(APIView):
@@ -29,6 +29,14 @@ class USSDWebhookView(APIView):
         text = request.data.get("text", "")
         response_text = handle_ussd(session_id, phone, text)
         return Response(response_text, content_type="text/plain")
+
+
+class USSDSimulatorView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        text = request.data.get("text", "")
+        return Response({"response": simulate_ussd("", request.data.get("phone", ""), text)})
 
 
 class VoiceMessageView(APIView):
