@@ -81,11 +81,12 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - name: Analyze Flutter
+      - name: Analyze & test Flutter
         working-directory: mobile/arca_gis_app
         run: |
           flutter pub get
           flutter analyze
+          flutter test test/
       - name: Build PWA (web)
         working-directory: mobile/arca_gis_app
         run: flutter build web --release
