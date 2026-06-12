@@ -276,24 +276,30 @@ class ModernCharts {
           }).toList(),
         )),
       ]),
-    ));
+    ), isDark: isDark);
   }
 
   static Widget radarChart({
     required List<String> labels,
     required List<double> values,
     required String title,
+    bool isDark = false,
   }) {
+    final gridColor = (isDark ? Colors.white : Colors.grey).withValues(alpha: isDark ? 0.15 : 0.2);
     return _chartCard(title, AppTheme.climateBlue, SizedBox(
       height: 260,
       child: RadarChart(RadarChartData(
         radarShape: RadarShape.polygon,
         tickCount: 4,
         ticksTextStyle: const TextStyle(fontSize: 0),
-        radarBorderData: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
-        gridBorderData: BorderSide(color: Colors.grey.withValues(alpha: 0.15)),
-        tickBorderData: BorderSide(color: Colors.grey.withValues(alpha: 0.1)),
-        getTitle: (i, _) => RadarChartTitle(text: i < labels.length ? labels[i] : '', angle: 0),
+        radarBorderData: BorderSide(color: gridColor),
+        gridBorderData: BorderSide(color: gridColor),
+        tickBorderData: BorderSide(color: gridColor),
+        getTitle: (i, _) => RadarChartTitle(
+          text: i < labels.length ? labels[i] : '',
+          angle: 0,
+          style: TextStyle(fontSize: 11, color: isDark ? Colors.white70 : Colors.black87),
+        ),
         dataSets: [RadarDataSet(
           fillColor: AppTheme.climateBlue.withValues(alpha: 0.25),
           borderColor: AppTheme.climateBlue,
@@ -302,16 +308,16 @@ class ModernCharts {
           dataEntries: values.map((v) => RadarEntry(value: v)).toList(),
         )],
       )),
-    ));
+    ), isDark: isDark);
   }
 
-  static Widget _chartCard(String title, Color accent, Widget chart) {
+  static Widget _chartCard(String title, Color accent, Widget chart, {bool isDark = false}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
+        boxShadow: isDark ? null : [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
@@ -319,7 +325,7 @@ class ModernCharts {
           child: Row(children: [
             Container(width: 4, height: 20, decoration: BoxDecoration(color: accent, borderRadius: BorderRadius.circular(2))),
             const SizedBox(width: 10),
-            Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+            Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: isDark ? Colors.white : Colors.black87)),
           ]),
         ),
         Padding(padding: const EdgeInsets.all(12), child: chart),
