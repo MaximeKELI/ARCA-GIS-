@@ -206,3 +206,46 @@ pip install playwright pytest && pytest e2e/ -v
 - **Conflit `arca_gis_db`** : `docker compose down` puis relancer (les `container_name` fixes ont été retirés)
 
 ARCA-GIS © 2024 — Open Source
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
